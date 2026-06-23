@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+3:I[75049,["/langwatch-benchmark/_next/static/chunks/d2c13bb33c4fcd54.js","/langwatch-benchmark/_next/static/chunks/c21188132e0e0d48.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"buildId":"gA5SFc1TgGbcq-dpfudhr","rsc":["$","$1","c",{"children":["$L2",[["$","script","script-0",{"src":"/langwatch-benchmark/_next/static/chunks/c29f1c65db955c8e.js","async":true}],["$","script","script-1",{"src":"/langwatch-benchmark/_next/static/chunks/8917f1a1d3b5f6e3.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
+5:null
+2:E{"digest":"NEXT_REDIRECT;replace;/tasks;307;"}
