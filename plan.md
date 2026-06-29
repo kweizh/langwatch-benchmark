@@ -96,7 +96,7 @@ def handle_customer_request(user_query: str):
     # Access the active trace context
     trace = langwatch.get_current_trace()
     trace.update(metadata={"session_id": "sess_abc123"})
-    
+
     # Create a nested span for the retrieval step
     with langwatch.span(name="Document Retrieval", type="rag_retrieval") as span:
         # Simulate document lookup
@@ -105,7 +105,7 @@ def handle_customer_request(user_query: str):
             input={"query": user_query},
             output={"documents": retrieved_docs}
         )
-    
+
     # Create OpenAI client (calls are automatically captured via OpenAIInstrumentor)
     client = OpenAI()
     response = client.chat.completions.create(
@@ -115,7 +115,7 @@ def handle_customer_request(user_query: str):
             {"role": "user", "content": user_query}
         ]
     )
-    
+
     # Return result
     return response.choices[0].message.content
 ```
@@ -226,19 +226,19 @@ langwatch.setup()
 def generate_response(user_name: str, issue_description: str):
     # Retrieve the configured prompt by handle (and optionally, version)
     prompt = langwatch.prompts.get("customer-support-bot", version=3)
-    
+
     # Compile the prompt with dynamic template variables (e.g. {{user_name}}, {{issue}})
     compiled_prompt = prompt.compile(
         user_name=user_name,
         issue=issue_description
     )
-    
+
     # Execute completion. prompt.model and compiled_prompt.messages are passed dynamically
     response = completion(
         model=prompt.model,  # e.g., "openai/gpt-4o"
         messages=compiled_prompt.messages
     )
-    
+
     return response.choices[0].message.content
 ```
 
@@ -286,10 +286,10 @@ class HelpdeskAgentAdapter(scenario.AgentAdapter):
         # Retrieve the conversation history from the simulator
         messages = input.messages
         last_user_message = input.last_new_user_message_str()
-        
+
         # Call your actual underlying agent logic here
         agent_reply = f"Hello, I can help you with: {last_user_message}"
-        
+
         # Return the response as a string, OpenAI message, or list of messages
         return agent_reply
 
@@ -298,7 +298,7 @@ class HelpdeskAgentAdapter(scenario.AgentAdapter):
 @pytest.mark.asyncio
 async def test_helpdesk_agent_scenario():
     agent = HelpdeskAgentAdapter()
-    
+
     # Run the dynamic multi-turn conversation simulation
     result = await scenario.run(
         name="billing inquiry escalation test",
@@ -324,7 +324,7 @@ async def test_helpdesk_agent_scenario():
             scenario.succeed()         # Trigger success evaluation
         ]
     )
-    
+
     # Assert that the JudgeAgent marked the conversation as successful
     assert result.success, f"Test failed. Reason: {result.reasoning}"
 ```
@@ -382,7 +382,7 @@ def run_rag_pipeline(question: str):
     # ... execution logic ...
     answer = "The capital of France is Paris."
     retrieved_context = "Paris is the capital and most populous city of France."
-    
+
     # Log custom evaluation score directly to the current span
     langwatch.get_current_span().add_evaluation(
         name="groundedness_score",
@@ -409,7 +409,7 @@ evaluation = langwatch.evaluation.init("rag-accuracy-experiment")
 for index, row in evaluation.loop(df.iterrows()):
     # Run your production pipeline
     output = run_rag_pipeline(row["input"])
-    
+
     # Run the built-in RAGAS context utilization evaluator on the LangWatch backend
     evaluation.run(
         "legacy/ragas_context_utilization",
@@ -428,7 +428,7 @@ for index, row in evaluation.loop(df.iterrows()):
 
 ### Showcase Examples & Integration Patterns
 
-1. **Vercel AI SDK Integration**: 
+1. **Vercel AI SDK Integration**:
    LangWatch offers a native OpenTelemetry exporter package for TypeScript applications using Vercel's AI SDK. Messages, streaming tokens, tool calls, and model outputs are automatically traced and pushed to the LangWatch dashboard.
    * [Vercel AI SDK Integration Guide & Example](https://github.com/langwatch/langwatch/blob/main/typescript-sdk/example/lib/chat/vercel-ai.tsx)
 
@@ -478,6 +478,13 @@ for index, row in evaluation.loop(df.iterrows()):
 * **Underlying Cause**: The LangWatch DSPy visualizer explicitly checks and restricts the list of supported optimizers, failing with a `ValueError` if `SIMBA` (or other unsupported optimizers) is used.
 * **Resolution**: Use supported optimizers like `BootstrapFewShotWithRandomSearch` or `MIPROv2`, or extend the visualizer's parser to support SIMBA.
 * **Link**: [GitHub Issue #496](https://github.com/langwatch/langwatch/issues/496)
+
+
+### 4. Others
+1. **CSV Field Length Limit**: The CSV parsing libraries impose a maximum field length limit of 131072 characters. When creating a CSV file with LangWatch, ensure that each individual field's string representation does not exceed this limit. If it does, you may need to update the csv.field_size_limit before parsing.
+2. **Prompt Fallback Behavior**: When using LangWatch's prompt management, prompts may be resolved from the local workspace or materialized prompt files without contacting the configured endpoint.
+   Do not assume that setting LANGWATCH_ENDPOINT to an unreachable address guarantees that langwatch.prompts.get(...) throws a network error.
+   Only test fallback behavior when the task explicitly requires a deterministic way to make the SDK fail.
 
 ---
 
