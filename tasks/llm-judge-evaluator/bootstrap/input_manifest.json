@@ -1,0 +1,7 @@
+{
+  "library_name": "LangWatch",
+  "task_name": "llm-judge-evaluator",
+  "complexity_level": "much more complicated task that is not easy for LLM agents to solve",
+  "research_plan_path": "/Users/kw/code/zealt/langwatch-benchmark/plan.md",
+  "output_dir": "/Users/kw/code/zealt/langwatch-benchmark/scratchpad/pending-tasks"
+}

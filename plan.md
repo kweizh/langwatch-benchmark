@@ -16,10 +16,17 @@ LangWatch acts as a central control plane for LLM pipelines and AI agents, sitti
 To initialize and configure LangWatch in a non-interactive environment (such as a CI/CD pipeline or Docker container), developers use standard environment variables and package managers:
 
 #### 1. Installation
+
 Depending on the language stack, install the core LangWatch SDK and Scenario testing framework:
+
+Please note that should always install uv in container environment,
+and then use uv to install python packages since some packages are not compatible with the underlay OS.
+
 ```bash
 # Python
-pip install langwatch langwatch-scenario pytest
+cd /home/user/myproject
+uv venv
+source .venv/bin/activate && uv pip install langwatch langwatch-scenario
 
 # Node.js / TypeScript
 npm install langwatch @langwatch/scenario vitest
@@ -457,6 +464,11 @@ for index, row in evaluation.loop(df.iterrows()):
 * **Underlying Cause**: The `SerializableAndPydanticEncoder` in `langwatch/dspy/__init__.py` serializes Pydantic `BaseModel` objects by executing `o.model_dump(exclude_unset=True)`. This delegates serialization to Pydantic's internal high-performance serializer, which fails because it is unaware of how to serialize non-Pydantic types (like `dspy.Predict` or custom framework objects) that are nested within the models.
 * **Resolution**: Intercept Pydantic models in the encoder and serialize their fields manually using custom encoders, or bypass `model_dump()` for nested non-Pydantic objects.
 * **Link**: [GitHub Issue #468](https://github.com/langwatch/langwatch/issues/468)
+* **JSON Output Tests**: when testing the JSON output, it may contain other logs, so you need to filter the logs to only contain the JSON output.
+* **Python Packages Management**: MUST use uv to install langwatch related packages, especially langwatch-scenario, otherwise it will cause the following error:
+  ```
+  ERROR: Cannot uninstall pluggy 1.4.0, RECORD file not found. Hint: The package was installed by debian.
+  ```
 
 ### 2. Collector Endpoint Refusing Large Payloads (>1MB)
 * **Description**: Traces containing large retrieved contexts (RAG), extensive system instructions, or long multi-turn conversation histories fail to upload.
@@ -485,7 +497,7 @@ for index, row in evaluation.loop(df.iterrows()):
 2. **Prompt Fallback Behavior**: When using LangWatch's prompt management, prompts may be resolved from the local workspace or materialized prompt files without contacting the configured endpoint.
    Do not assume that setting LANGWATCH_ENDPOINT to an unreachable address guarantees that langwatch.prompts.get(...) throws a network error.
    Only test fallback behavior when the task explicitly requires a deterministic way to make the SDK fail.
-
+3. **Never mock any dependencies**: Do not mock any dependencies of the LangWatch SDK, including the underlying HTTP client, OpenTelemetry SDK, or any other transitive dependencies. If any dependencies required, read it from the environment variables.
 ---
 
 ## 5. Evaluation Ideas
