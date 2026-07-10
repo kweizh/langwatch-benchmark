@@ -1,0 +1,8 @@
+{
+    "task": [
+        "LANGWATCH_API_KEY"
+    ],
+    "verifier": [
+        "LANGWATCH_API_KEY"
+    ]
+}
