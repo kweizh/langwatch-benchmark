@@ -1,0 +1,311 @@
+- Initializing MCP connections...
+You
+# LangWatch: OpenTelemetry Integration with Selective Span Export Filtering ## Background A Python service already has its own **global OpenTelemetry `TracerProvider`** wired up for internal observability (spans are exported to the team's existing tracing backend). The team now wants to add **LangWatch** for LLM observability, but they must NOT send noisy internal spans (health checks and low-level database queries) to LangWatch, while still sending the meaningful LLM and RAG spans. LangWatch is OpenTelemetry-native: when `langwatch.setup()` attaches its exporter to a `TracerProvider`, **every** span managed by that provider is exported to LangWatch by default — including spans created directly with the OpenTelemetry API. LangWatch supports server-side selective filtering of its own export path via `span_exclude_rules`, which drop spans **before** they reach LangWatch **without** affecting any other exporter/processor attached to the same provider. Your job is to integrate LangWatch alongside the pre-existing global provider and apply span exclusion rules so that internal health-check and database spans never reach LangWatch, while LLM and RAG spans do. ## Requirements * Work inside a Python module named `observability.py` at the project root. * Implement `configure_langwatch(tracer_provider)`: * Attach LangWatch to the **already-existing** `tracer_provider` that is passed in (this provider is the current global provider; do NOT create a brand-new provider and do NOT replace the global one). * It must NOT remove, replace, or disturb any span processors/exporters already attached to that provider. * Configure LangWatch's export filtering so the following spans are **excluded** from being exported to LangWatch: * Any span whose name is exactly `GET /health_check`. * Any span whose name **starts with** `db.` (internal database operations). * All other spans must still be exported to LangWatch. * Read the LangWatch API key and endpoint from the environment (`LANGWATCH_API_KEY`, `LANGWATCH_ENDPOINT`). Do not hardcode credentials. * Implement `run_pipeline(query)`: * Using the **global** OpenTelemetry tracer (i.e. spans created through the shared global provider), execute a small RAG-style pipeline that produces the following spans, nested under a single root span: * Root span named `rag_pipeline`. * A span named `GET /health_check` (an internal health probe). * A span named `db.query.documents` (a database lookup). * A span named `rag.retrieve` (document retrieval). * A span named `llm.generate` (the LLM generation step). * Return a non-empty answer string derived from `query`. (No real LLM/network call is required — the `llm.generate` span merely represents that step.) * Provide a CLI entrypoint `main.py` that: builds/sets the application's global OpenTelemetry provider, calls `configure_langwatch(...)` with it, runs `run_pipeline(<query>)`, and prints the result. ## Implementation Hints * Install all Python dependencies with `uv` inside a virtual environment (some LangWatch-related packages misbehave with the system pip). LangWatch pulls in the OpenTelemetry SDK and the OTLP/HTTP exporter transitively. * Look at `langwatch.setup(...)`: it accepts an existing `tracer_provider` and a `span_exclude_rules` list. Passing the existing provider makes LangWatch attach its own filtered export processor to it rather than creating a new one. * Exclusion rules are expressed with `SpanProcessingExcludeRule` from `langwatch.domain`, matching on `span_name` with operations such as `exact_match` and `starts_with`. * Because LangWatch exports via a batching processor, make sure spans are flushed (e.g. force-flush the provider) before the process ends so nothing is lost. * Emit the pipeline spans with the plain OpenTelemetry API (`opentelemetry.trace.get_tracer(...).start_as_current_span(...)`) so they flow through whatever provider is currently global. Nest the child spans inside the `rag_pipeline` root span. ## Acceptance Criteria * Project path: /home/user/project * Command: `python main.py "<query>"` * Input argument: a single free-text `<query>` string. * The stdout must contain a line in the format: `Answer: <text>` where `<text>` is a non-empty string. * Importable module contract (used by the verifier): * `observability.configure_langwatch(tracer_provider)` attaches LangWatch, with span exclusion, to the provider passed in, and preserves any pre-existing span processors on that provider. * `observability.run_pipeline(query: str) -> str` emits, through the current global OpenTelemetry provider, spans named `rag_pipeline`, `GET /health_check`, `db.query.documents`, `rag.retrieve`, and `llm.generate`, and returns a non-empty answer string. * Export filtering behavior (observed on LangWatch's OTLP export endpoint `POST {LANGWATCH_ENDPOINT}/api/otel/v1/traces`): * Spans named `rag_pipeline`, `rag.retrieve`, and `llm.generate` ARE exported to LangWatch. * Spans named `GET /health_check` and `db.query.documents` are NOT exported to LangWatch. * All five spans still reach other (non-LangWatch) exporters attached to the same global provider.   
+
+Pochi
+💭 Thinking for 523 characters   
+I'll start by exploring the environment and understanding what's available, then planthe implementation.   
+💫 Executing which uv python python3 2>/dev/null; echo "---"; ls -la /home/user/project 2>/dev/null || echo "project dir does not exist"; echo "---"; uv --version 2>/dev/null || echo "uv not found" ✔ 
+💫 Executing ls -la /root 2>/dev/null; echo "---HOME---"; echo $HOME ✔ 
+💭 Thinking for 125 characters   
+There's already a project skeleton. Let me read the existing files to understand what's there.   
+📖 Reading /home/user/project/README.md ✔ 
+📖 Reading /home/user/project/main.py ✔ 
+📖 Reading /home/user/project/observability.py ✔ 
+💫 Executing ls -la /home/user/project/.venv/bin/ 2>/dev/null | head -30; echo "---"; cat /home/user/project/pyproject.toml 2>/dev/null || echo "no pyproject.toml"; echo "---"; cat /home/user/project/requirements.txt 2>/dev/null || echo "no requirements.txt" ✔ 
+💭 Thinking for 633 characters   
+Let me check what's installed in the venv and whether langwatch is available.   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch; print(langwatch.__version__); print(langwatch.__file__)" 2>&1; echo "==="; .venv/bin/python -c "import langwatch; help(langwatch.setup)" 2>&1 | head -60 ✔ 
+💫 Executing cd /home/user/project && .venv/bin/pip list 2>/dev/null || .venv/bin/python -m pip list 2>&1 | head -60 ✔ 
+💭 Thinking for 640 characters   
+LangWatch 0.26.0 is installed. Let me examine the `SpanProcessingExcludeRule` and the `setup`function internals.   
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+from langwatch.domain import SpanProcessingExcludeRule
+print(type(SpanProcessingExcludeRule))
+print(SpanProcessingExcludeRule)
+" 2>&1 ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import langwatch.domain as d
+import inspect
+# Find SpanProcessingExcludeRule
+src = inspect.getsource(d)
+# print lines around SpanProcessingExcludeRule
+lines = src.split('\n')
+for i, line in enumerate(lines):
+    if 'SpanProcessingExcludeRule' in line or 'ExcludeRule' in line or 'span_name' in line or 'exact_match' in line or 'starts_with' in line:
+        start = max(0, i-2)
+        end = min(len(lines), i+15)
+        for j in range(start, end):
+            print(f'{j}: {lines[j]}')
+        print('---')
+" 2>&1 ✔ 
+💭 Thinking for 423 characters   
+Now let me look at the `setup` function internals to understand how it interacts with the tracer provider.   
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import inspect
+from langwatch.utils.initialization import setup
+print(inspect.getsource(setup))
+" 2>&1 ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import inspect
+import langwatch
+print(inspect.getsource(langwatch))
+" 2>&1 | head -80 ✔ 
+💭 Thinking for 157 characters   
+Let me examine the `Client` class to understand how it attaches to the tracer provider and handles `skip_open_telemetry_setup`.   
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import inspect
+from langwatch.client import Client
+src = inspect.getsource(Client.__init__)
+print(src)
+" 2>&1 ✔ 
+💭 Thinking for 354 characters   
+Let me examine the `__ensure_otel_setup` and `__setup_tracer_provider` methods to understand how LangWatch attaches itsprocessor.   
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import inspect
+from langwatch.client import Client
+for name in ['_Client__ensure_otel_setup', '_Client__setup_tracer_provider', '_Client__attach_langwatch_processor', '_Client__detach_langwatch_processor']:
+    method = getattr(Client, name, None)
+    if method:
+        print('='*60)
+        print(name)
+        print('='*60)
+        print(inspect.getsource(method))
+" 2>&1 ✔ 
+Now let me look at `__set_langwatch_exporter` to understand how the exporter/processor is attached with the excluderules.   
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import inspect
+from langwatch.client import Client
+for name in ['_Client__set_langwatch_exporter', '_Client__create_new_tracer_provider']:
+    method = getattr(Client, name, None)
+    if method:
+        print('='*60)
+        print(name)
+        print('='*60)
+        print(inspect.getsource(method))
+" 2>&1 ✔ 
+💭 Thinking for 2824 characters   
+Let me check the environment variables and the `FilterableBatchSpanProcessor` to understand the exclusion mechanism.   
+💫 Executing env | grep -i langwatch 2>/dev/null; echo "---"; env | grep -i otel 2>/dev/null; echo "---done" ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import inspect
+from langwatch.client import Client
+# Find FilterableBatchSpanProcessor and ConditionalSpanExporter
+import langwatch.client as lc
+src = inspect.getsource(lc)
+# search for class definitions
+import re
+for m in re.finditer(r'^class\s+(\w+)', src, re.MULTILINE):
+    print(m.group(0))
+" 2>&1 ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import inspect
+from langwatch.client import ConditionalSpanExporter
+print(inspect.getsource(ConditionalSpanExporter))
+" 2>&1 ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import inspect
+# Find FilterableBatchSpanProcessor
+try:
+    from langwatch.telemetry.processors import FilterableBatchSpanProcessor
+    print(inspect.getsource(FilterableBatchSpanProcessor))
+except Exception as e:
+    print('err1:', e)
+    # try other locations
+    import langwatch
+    import pkgutil
+    for importer, modname, ispkg in pkgutil.walk_packages(langwatch.__path__, prefix='langwatch.'):
+        if 'processor' in modname.lower() or 'filter' in modname.lower():
+            print('found module:', modname)
+" 2>&1 ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import inspect
+from langwatch.client import Client
+src = inspect.getsource(inspect.getmodule(Client))
+# find FilterableBatchSpanProcessor import
+for line in src.split('\n'):
+    if 'FilterableBatchSpanProcessor' in line or 'import' in line and 'Filter' in line:
+        print(line)
+" 2>&1; echo "==="; .venv/bin/python -c "
+import langwatch.client as lc
+print([x for x in dir(lc) if 'Filter' in x or 'Processor' in x])
+" 2>&1 ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import inspect
+from langwatch.exporters.filterable_batch_span_exporter import FilterableBatchSpanProcessor
+print(inspect.getsource(FilterableBatchSpanProcessor))
+" 2>&1 ✔ 
+💭 Thinking for 15777 characters   
+I now have a complete understanding of the LangWatch internals. Let me verify all dependencies are present and check the OpenTelemetry packages.   
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import opentelemetry
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor, BatchSpanProcessor
+from opentelemetry.sdk.resources import Resource
+from langwatch.domain import SpanProcessingExcludeRule
+import langwatch
+print('All imports OK')
+print('langwatch version:', langwatch.__version__)
+# Test creating rules
+r1 = SpanProcessingExcludeRule(field_name='span_name', match_value='GET /health_check', match_operation='exact_match')
+r2 = SpanProcessingExcludeRule(field_name='span_name', match_value='db.', match_operation='starts_with')
+print('rule1:', r1)
+print('rule2:', r2)
+print('rule1.model_dump():', r1.model_dump())
+" 2>&1 ✔ 
+💭 Thinking for 80 characters   
+All dependencies are present. Let me verify the OTLP exporter is available and check if there's a `pyproject.toml` needed.   
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+print('OTLP HTTP exporter OK')
+" 2>&1; echo "==="; ls -la /home/user/project/*.toml /home/user/project/*.txt /home/user/project/*.lock 2>/dev/null || echo "no config files" ✔ 
+💭 Thinking for 4609 characters   
+Now I have a complete understanding of the LangWatch internals. Let me set up the todo list and implementthe solution.   
+📋 Updating todo list (4 items) ✔ 
+Let me check the installed package versions to create an accurate `pyproject.toml`.   
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import langwatch, opentelemetry
+print('langwatch:', langwatch.__version__)
+print('opentelemetry:', opentelemetry.__version__)
+from opentelemetry.sdk.trace import version as sdk_version
+print('otel-sdk:', sdk_version.__version__)
+" 2>&1; echo "==="; .venv/bin/python -c "
+try:
+    from importlib.metadata import version
+    for pkg in ['langwatch','opentelemetry-sdk','opentelemetry-api','opentelemetry-exporter-otlp-proto-http']:
+        print(f'{pkg}=={version(pkg)}')
+except Exception as e:
+    print('err:', e)
+" 2>&1 ✔ 
+💭 Thinking for 260 characters   
+Now I have all the versions. Let me create the `pyproject.toml` and implement `observability.py`.   
+✏️  Writing /home/user/project/pyproject.toml ✔ 
+📋 Updating todo list (4 items) ✔ 
+Now let me implement `observability.py`:   
+✏️  Writing /home/user/project/observability.py ✔ 
+📋 Updating todo list (4 items) ✔ 
+Now let me review the existing `main.py` and verify it's correct:   
+📖 Reading /home/user/project/main.py ✔ 
+💭 Thinking for 891 characters   
+The existing `main.py` is mostly correct. Let me improve it slightly to ensure `force_flush` always runs even if the pipeline raises an exception:   
+🔧 Applying diff to /home/user/project/main.py ✔ 
+📋 Updating todo list (4 items) ✔ 
+Now let me test the implementation. First, a basic run without env vars to verify graceful degradation:   
+💫 Executing cd /home/user/project && .venv/bin/python main.py "What is RAG?" 2>&1 ✔ 
+💭 Thinking for 2233 characters   
+The basic run works — all 5 spans appear in the console output and `Answer:` is printed. Now let me write a comprehensive test that verifies the LangWatch export filtering behavior using a mock OTLP endpoint.   
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+# Check what protobuf modules are available for decoding OTLP
+try:
+    from opentelemetry.proto.collector.trace.v1 import trace_service_pb2
+    print('trace_service_pb2 available')
+    print(dir(trace_service_pb2))
+except Exception as e:
+    print('err:', e)
+" 2>&1 ✔ 
+💭 Thinking for 790 characters   
+I can decode OTLP protobuf. Let me write a comprehensive test script that starts a mock OTLP endpoint and verifies the filtering behavior.   
+✏️  Writing /home/user/project/test_filtering.py ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python test_filtering.py 2>&1 ✔ 
+💭 Thinking for 600 characters   
+All assertions passed. The filtering works perfectly: - LangWatch received only `rag_pipeline`, `rag.retrieve`, `llm.generate` - `GET /health_check` and `db.query.documents` were excluded from LangWatch - All 5 spans reached the non-LangWatch processor - 2 span processors on the provider (existing + LangWatch's, no disturbance) Let me also verify `python main.py` works with env vars set (as the verifier would runit):   
+💫 Executing cd /home/user/project && LANGWATCH_API_KEY="test-key" LANGWATCH_ENDPOINT="http://127.0.0.1:19999" .venv/bin/python main.py "What is RAG?" 2>&1 | grep -E "^(Answer:|.*error|.*Error|.*Traceback)" | head -10 ✔ 
+💭 Thinking for 1522 characters   
+The program prints `Answer:` even when the endpoint is unreachable (transient errors go to stderr, not stdout). Let me verify stdoutspecifically:   
+💫 Executing cd /home/user/project && LANGWATCH_API_KEY="test-key" LANGWATCH_ENDPOINT="http://127.0.0.1:19999" timeout 60 .venv/bin/python main.py "What is RAG?" 2>/dev/null | grep "^Answer:" ✔ 
+💭 Thinking for 139 characters   
+Stdout correctly contains the `Answer:` line. Let me also verify the no-env-var graceful case and the importable module contract:   
+💫 Executing cd /home/user/project && env -u LANGWATCH_API_KEY -u LANGWATCH_ENDPOINT .venv/bin/python main.py "test query" 2>/dev/null | grep "^Answer:"; echo "exit: $?" ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import os
+os.environ['LANGWATCH_API_KEY'] = 'test-key'
+os.environ['LANGWATCH_ENDPOINT'] = 'http://127.0.0.1:19999'
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor, ConsoleSpanExporter
+import observability
+
+# Build a provider with an existing processor
+provider = TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))
+trace.set_tracer_provider(provider)
+
+# Snapshot existing processors
+before = list(provider._active_span_processor._span_processors)
+print('processors before:', len(before))
+
+# Attach LangWatch
+observability.configure_langwatch(provider)
+
+after = list(provider._active_span_processor._span_processors)
+print('processors after:', len(after))
+print('original processor preserved:', before[0] in after)
+print('new processor added:', len(after) == len(before) + 1)
+
+# Verify run_pipeline returns non-empty string and uses global tracer
+result = observability.run_pipeline('hello world')
+print('run_pipeline result non-empty:', bool(result))
+print('result:', result)
+
+# Verify global provider unchanged
+print('global provider unchanged:', trace.get_tracer_provider() is provider)
+provider.force_flush()
+" 2>&1 | grep -v "^{" | grep -v "^}" | grep -v "^    " ✔ 
+💭 Thinking for 3249 characters   
+Excellent! All key contract assertions pass: - Processors: 1 → 2 (LangWatch added one, original preserved) - Global provider unchanged - `run_pipeline` returns non-empty string Let me verify the `uv` project setup works correctly and do a final sync:   
+💫 Executing cd /home/user/project && uv sync 2>&1 | tail -20 ✔ 
+💭 Thinking for 456 characters   
+`uv sync` worked. Let me verify everything still works after the sync and run the full test suite onemore time:   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch, opentelemetry; print('imports OK')" 2>&1 && .venv/bin/python test_filtering.py 2>&1 ✔ 
+💭 Thinking for 163 characters   
+All tests pass. Let me do a final review of theimplementation files:   
+📖 Reading /home/user/project/observability.py ✔ 
+📖 Reading /home/user/project/main.py ✔ 
+💭 Thinking for 2110 characters   
+Everything looks correct. Let me do a final listing of the project and one last end-to-end verification:   
+💫 Executing cd /home/user/project && ls -la *.py *.toml *.lock 2>/dev/null; echo "==="; echo "Final run test (no env vars):"; env -u LANGWATCH_API_KEY -u LANGWATCH_ENDPOINT .venv/bin/python main.py "final test" 2>/dev/null | grep "^Answer:"; echo "exit: $?" ✔ 
+💭 Thinking for 175 characters   
+📋 Updating todo list (4 items) ✔ 
+🎉 Task Completed
+## LangWatch OpenTelemetry Integration with Selective Span Export Filtering
+
+All requirements have been implemented and verified at `/home/user/project`.
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `observability.py` | Core module with `configure_langwatch()` and `run_pipeline()` |
+| `main.py` | CLI entrypoint — builds global OTel provider, attaches LangWatch, runs pipeline |
+| `pyproject.toml` | Project + dependency declarations (managed with `uv`) |
+| `test_filtering.py` | Integration test with mock OTLP endpoint verifying filtering behavior |
+| `uv.lock` | Lock file from `uv sync` |
+
+### How it works
+
+**`configure_langwatch(tracer_provider)`** calls `langwatch.setup()` with:
+- `tracer_provider` — the *existing* global provider (LangWatch sets `_is_dedicated_provider=True`, which causes it to call `provider.add_span_processor()` to add its own `FilterableBatchSpanProcessor` **without** replacing the global provider or touching pre-existing processors).
+- `span_exclude_rules` — two `SpanProcessingExcludeRule` entries:
+  - `span_name` exact_match `GET /health_check`
+  - `span_name` starts_with `db.`
+- `api_key` / `endpoint_url` read from `LANGWATCH_API_KEY` / `LANGWATCH_ENDPOINT` env vars (no hardcoded credentials).
+
+LangWatch's `FilterableBatchSpanProcessor.on_end()` checks each span against the exclusion rules and **drops** matching spans *before* batching/exporting to the OTLP endpoint. Non-matching spans are exported normally. Other processors on the same provider (e.g. `ConsoleSpanProcessor`) still receive **all** spans because they are independent processors.
+
+**`run_pipeline(query)`** uses `opentelemetry.trace.get_tracer(__name__)` (the global tracer) to emit 5 nested spans under a `rag_pipeline` root: `GET /health_check`, `db.query.documents`, `rag.retrieve`, `llm.generate`. Returns a non-empty answer string.
+
+### Verified behavior
+
+```
+Spans exported to LangWatch:   ['llm.generate', 'rag.retrieve', 'rag_pipeline']
+Spans captured by non-LW proc: ['GET /health_check', 'db.query.documents', 'llm.generate', 'rag.retrieve', 'rag_pipeline']
+
+✅ rag_pipeline, rag.retrieve, llm.generate → exported to LangWatch
+✅ GET /health_check, db.query.documents   → excluded from LangWatch
+✅ All 5 spans → reached the non-LangWatch processor
+✅ Original span processor preserved (1 → 2 processors, no removal)
+✅ Global provider not replaced
+✅ python main.py "<query>" prints "Answer: <text>" to stdout
+```   
+  

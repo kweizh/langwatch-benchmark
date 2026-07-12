@@ -1,0 +1,66 @@
+{
+    "id": "2ba2e7f4-cfa7-4d41-a482-3ddf61c439bb",
+    "started_at": "2026-07-13T00:06:31.879930",
+    "updated_at": "2026-07-13T00:17:48.560907",
+    "finished_at": "2026-07-13T00:17:48.560907",
+    "n_total_trials": 14,
+    "stats": {
+        "n_completed_trials": 14,
+        "n_errored_trials": 9,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "pochi__deepseek-4-pro__tasks": {
+                "n_trials": 14,
+                "n_errors": 9,
+                "metrics": [
+                    {
+                        "mean": 0.42857142857142855
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "batch-process-rag-history__YX9uccp",
+                            "csv-field-size-limit__PLfnNbY",
+                            "litellm-prompt-compiler__d2z4sGC",
+                            "multi-turn-scenario-configuratio__n59pZ43",
+                            "payload-size-truncation__iDvArSf",
+                            "prompt-materialization-fallback__wDgjmxe",
+                            "ragas-offline-batch-eval__beWqPh3",
+                            "vercel-ai-sdk-telemetry-filterin__NENnLeL"
+                        ],
+                        "1.0": [
+                            "client-groundedness-eval__6mLUVBS",
+                            "client-side-payload-filtering__aTiBxbu",
+                            "dspy-pydantic-serialization-fix__Z4CYB2e",
+                            "fix-dspy-visualizer-crash__DMHXgZ5",
+                            "llm-judge-evaluator__rffYE7p",
+                            "otel-span-filtering__KqENEh4"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "AgentTimeoutError": [
+                        "client-groundedness-eval__6mLUVBS",
+                        "client-side-payload-filtering__aTiBxbu",
+                        "csv-field-size-limit__PLfnNbY",
+                        "litellm-prompt-compiler__d2z4sGC",
+                        "llm-judge-evaluator__rffYE7p",
+                        "payload-size-truncation__iDvArSf",
+                        "prompt-materialization-fallback__wDgjmxe",
+                        "ragas-offline-batch-eval__beWqPh3",
+                        "vercel-ai-sdk-telemetry-filterin__NENnLeL"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": 0,
+        "n_cache_tokens": 0,
+        "n_output_tokens": 14940005,
+        "cost_usd": null
+    }
+}

@@ -1,0 +1,81 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T16:02:06.857953+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 0,
+            "failed": 5,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783872126811,
+            "stop": 1783872126857
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_run_pipeline_returns_non_empty_answer",
+                "status": "failed",
+                "duration": 9,
+                "start": 1783872126838,
+                "stop": 1783872126847,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "@pytest.fixture(scope=\"session\")\n    def pipeline_execution():\n>       from opentelemetry import trace\nE       ModuleNotFoundError: No module named 'opentelemetry'\n\n/tests/test_final_state.py:109: ModuleNotFoundError"
+            },
+            {
+                "name": "test_final_state.py::test_all_spans_reach_existing_exporter",
+                "status": "failed",
+                "duration": 2,
+                "start": 1783872126847,
+                "stop": 1783872126849,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "@pytest.fixture(scope=\"session\")\n    def pipeline_execution():\n>       from opentelemetry import trace\nE       ModuleNotFoundError: No module named 'opentelemetry'\n\n/tests/test_final_state.py:109: ModuleNotFoundError"
+            },
+            {
+                "name": "test_final_state.py::test_excluded_spans_not_exported_to_langwatch",
+                "status": "failed",
+                "duration": 2,
+                "start": 1783872126850,
+                "stop": 1783872126852,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "@pytest.fixture(scope=\"session\")\n    def pipeline_execution():\n>       from opentelemetry import trace\nE       ModuleNotFoundError: No module named 'opentelemetry'\n\n/tests/test_final_state.py:109: ModuleNotFoundError"
+            },
+            {
+                "name": "test_final_state.py::test_included_spans_exported_to_langwatch",
+                "status": "failed",
+                "duration": 2,
+                "start": 1783872126852,
+                "stop": 1783872126854,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "@pytest.fixture(scope=\"session\")\n    def pipeline_execution():\n>       from opentelemetry import trace\nE       ModuleNotFoundError: No module named 'opentelemetry'\n\n/tests/test_final_state.py:109: ModuleNotFoundError"
+            },
+            {
+                "name": "test_final_state.py::test_cli_smoke",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3,
+                "start": 1783872126854,
+                "stop": 1783872126857,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_cli_smoke():\n        \"\"\"`python main.py \\\"<query>\\\"` should run the pipeline and print an answer.\"\"\"\n>       httpd, _received, port = _make_collector()\n\n/tests/test_final_state.py:209: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    def _make_collector():\n        \"\"\"Start a real local OTLP/HTTP collector that stands in for LangWatch.\n    \n        It records the names of every span POSTed to /api/otel/v1/traces by decoding\n        the OTLP protobuf payload. This is a genuine HTTP endpoint, not a mock of any\n        LangWatch or OpenTelemetry dependency.\n        \"\"\"\n>       from opentelemetry.proto.collector.trace.v1.trace_service_pb2 import (\n            ExportTraceServiceRequest,\n            ExportTraceServiceResponse,\n        )\nE       ModuleNotFoundError: No module named 'opentelemetry'\n\n/tests/test_final_state.py:41: ModuleNotFoundError",
+                "message": "The test failed in the call phase"
+            }
+        ]
+    }
+}

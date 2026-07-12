@@ -1,0 +1,94 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2
+collected 7 items
+
+../tests/test_final_state.py ...FFF.                                     [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_offline_compile_happy_path ________________________
+
+    def test_offline_compile_happy_path():
+        if os.path.exists(OUT):
+            os.remove(OUT)
+        result = _run_cli(FULL_VARS, offline=True)
+>       assert result.returncode == 0, (
+            f"Offline compile failed (exit {result.returncode}).\n"
+            f"STDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+        )
+E       AssertionError: Offline compile failed (exit 2).
+E         STDOUT:
+E         
+E         STDERR:
+E         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', 'run.py', '--handle', 'customer-support-bot', '--vars'...user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\n").returncode
+
+/tests/test_final_state.py:111: AssertionError
+__________________ test_loader_reads_local_materialized_cache __________________
+
+    def test_loader_reads_local_materialized_cache():
+        with open(MATERIALIZED, "rb") as f:
+            original = f.read()
+        try:
+            prompt = yaml.safe_load(original.decode("utf-8"))
+            for message in prompt.get("messages", []):
+                if isinstance(message, dict) and message.get("role") == "system":
+                    message["content"] = f"{message.get('content', '')} {SENTINEL}"
+                    break
+            with open(MATERIALIZED, "w") as f:
+                yaml.safe_dump(prompt, f, allow_unicode=True, sort_keys=False)
+    
+            if os.path.exists(OUT):
+                os.remove(OUT)
+            result = _run_cli(FULL_VARS, offline=True)
+>           assert result.returncode == 0, (
+                f"Offline compile failed after injecting sentinel.\n"
+                f"STDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+            )
+E           AssertionError: Offline compile failed after injecting sentinel.
+E             STDOUT:
+E             
+E             STDERR:
+E             /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory
+E             
+E           assert 2 == 0
+E            +  where 2 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', 'run.py', '--handle', 'customer-support-bot', '--vars'...user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\n").returncode
+
+/tests/test_final_state.py:173: AssertionError
+_____________________ test_missing_required_variable_fails _____________________
+
+    def test_missing_required_variable_fails():
+        if os.path.exists(OUT):
+            os.remove(OUT)
+        result = _run_cli(MISSING_VARS, offline=True)
+        assert result.returncode != 0, (
+            "Compiling with a missing required variable ('issue') must exit non-zero, "
+            f"but it succeeded.\nSTDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+        )
+        combined_err = (result.stdout + result.stderr).lower()
+>       assert "issue" in combined_err, (
+            "Expected the error output to mention the missing variable 'issue'.\n"
+            f"STDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+        )
+E       AssertionError: Expected the error output to mention the missing variable 'issue'.
+E         STDOUT:
+E         
+E         STDERR:
+E         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory
+E         
+E       assert 'issue' in "/home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [errno 2] no such file or directory\n"
+
+/tests/test_final_state.py:204: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_prompts_json_exists
+PASSED ../tests/test_final_state.py::test_lock_file_resolves_version_and_materialized_path
+PASSED ../tests/test_final_state.py::test_materialized_prompt_is_valid
+PASSED ../tests/test_final_state.py::test_missing_materialized_cache_offline_fails
+FAILED ../tests/test_final_state.py::test_offline_compile_happy_path - Assert...
+FAILED ../tests/test_final_state.py::test_loader_reads_local_materialized_cache
+FAILED ../tests/test_final_state.py::test_missing_required_variable_fails - A...
+========================= 3 failed, 4 passed in 0.11s ==========================

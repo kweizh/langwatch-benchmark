@@ -1,0 +1,222 @@
+- Initializing MCP connections...
+You
+# LangWatch: Client-Side RAG Payload Truncation to Survive the 1MB Collector Limit ## Background The LangWatch ingestion gateway (the `/api/collector` and OTLP `/api/otel/v1/traces` endpoints) enforces a strict **\~1MB body size limit** on incoming trace payloads. A Retrieval-Augmented-Generation (RAG) service retrieves several large documents per query and logs them as span context. When the retrieved documents are large, the exported trace exceeds the limit and the backend rejects it with `HTTP 413 Payload Too Large` (or the SDK silently drops the trace). Your job is to build a RAG pipeline instrumented with the **LangWatch Python SDK** that performs **client-side truncation** of the retrieved documents *before* they are logged to the active span, so that the exported trace stays safely under the collector limit while still preserving the trace structure and the essential identifying fields of every retrieved document. ## Provided Environment * A corpus file already exists at `/home/user/project/data/documents.json`. * It is a JSON array of retrieved documents. Each element is an object with the string fields `document_id`, `chunk_id`, and `content`. * The combined size of the raw `content` fields is deliberately **larger than 1MB**, so logging them verbatim would exceed the collector limit. ## Requirements Implement a Python module named `rag_payload.py` at the project root that exposes the following importable contract: 1. `truncate_contexts(documents, max_total_bytes, max_document_bytes)` -> `list[dict]` * Input `documents` is a list of dicts each having `document_id`, `chunk_id`, and `content`. * Return a new list, **one entry per input document (never drop a document)**, where each entry keeps the original `document_id` and `chunk_id` unchanged, exposes a (possibly shortened) `content`, and additionally records the original content size in bytes under the key `original_bytes`. * Any `content` whose UTF-8 byte length exceeds `max_document_bytes` MUST be shortened so its UTF-8 byte length is `<= max_document_bytes`, keeping the **beginning** of the original text and ending the shortened value with the marker substring `[truncated]`. * Content already within `max_document_bytes` MUST be returned unchanged (no marker added). * The whole returned list, when JSON-serialized, MUST have a UTF-8 byte length `<= max_total_bytes` (shorten further if the per-document cap alone is not enough to fit the total budget). 2. `run_pipeline(query)` -> `str` * Emit, through the LangWatch SDK, a trace whose root span is named `rag_pipeline`, containing a nested retrieval span named `rag.retrieve` (span type `rag`) and a nested generation span named `llm.generate` (span type `llm`). * The `rag.retrieve` span must load the documents from the corpus file, truncate them with `truncate_contexts`, and log the **truncated** documents as the span's RAG context. It MUST NOT log the raw, untruncated documents to the span. * The `llm.generate` span must produce and record a non-empty answer derived from `query` (no real network or LLM call is required — the span merely represents that step). * Return the non-empty answer string. * Ensure the trace is flushed/exported before the function's effect is relied upon. 3. A CLI entrypoint `main.py` that initializes LangWatch (reading credentials/endpoint from the environment), runs the pipeline for the query passed as the first CLI argument, and prints the answer. ## Implementation Hints * Install dependencies with `uv` inside a virtual environment (the LangWatch SDK misbehaves under the system `pip`). LangWatch pulls in the OpenTelemetry SDK and OTLP/HTTP exporter transitively. * Read `LANGWATCH_API_KEY` and `LANGWATCH_ENDPOINT` from environment variables; never hardcode credentials or the endpoint. * Look at `langwatch.setup(...)`, `langwatch.trace(...)`, and `langwatch.span(...)`. RAG context can be attached to a span via its `contexts` argument (see `RAGChunk` in `langwatch.domain`) or `span.update(...)`. * Byte length matters, not character count: size limits are on the UTF-8 encoded payload. Truncate on encoded bytes and take care not to split a multi-byte character in a way that corrupts the value. * Because LangWatch exports spans through a batching processor, force-flush the tracer provider before the process exits so nothing is lost (e.g. flush the global OpenTelemetry tracer provider). * Pick internal budgets (per-document and total) that leave clear headroom below the 1MB collector limit. ## Acceptance Criteria * Project path: /home/user/project * Command: `python main.py "<query>"` * Input argument: a single free-text `<query>` string. * The stdout MUST contain a line in the format `Answer: <text>` where `<text>` is a non-empty string. * Importable contract (used by the verifier): * `rag_payload.truncate_contexts(documents, max_total_bytes, max_document_bytes)` returns one entry per input document, preserves each `document_id` and `chunk_id`, records `original_bytes`, enforces the per-document UTF-8 byte cap, appends the `[truncated]` marker only to shortened content, keeps content already within the cap unchanged, and keeps the JSON-serialized total within `max_total_bytes`. * `rag_payload.run_pipeline(query: str) -> str` returns a non-empty string and exports a LangWatch trace containing spans named `rag_pipeline`, `rag.retrieve`, and `llm.generate`. * Exported trace behavior (observed on LangWatch's OTLP export endpoint `POST {LANGWATCH_ENDPOINT}/api/otel/v1/traces`): * The exported (decoded) OTLP trace payload for a single pipeline run is well under the 1MB collector limit. * Every retrieved document's `document_id` from the corpus still appears in the exported span data (essential identifiers are retained). * The truncation marker `[truncated]` appears in the exported span data. * The beginning of each document is retained, while the tail (end) of the oversized documents does not appear in the exported span data.   
+
+Pochi
+💭 Thinking for 328 characters   
+📋 Updating todo list (6 items) ✔ 
+📂 Listing files in /home/user/project recursively ✔ 
+💫 Executing cd /home/user/project && python -c "import json; d=json.load(open('data/documents.json')); print('count', len(d)); print('keys', list(d[0].keys())); print('total content bytes', sum(len(x['content'].encode('utf-8')) for x in d)); print('per doc bytes', [len(x['content'].encode('utf-8')) for x in d]); print('first 200 of first', repr(d[0]['content'][:200])); print('ids', [(x['document_id'], x['chunk_id']) for x in d])" ✔ 
+💭 Thinking for 192 characters   
+💫 Executing which uv python python3 pip; python3 --version; uv --version 2>/dev/null; echo "---"; pip show langwatch 2>/dev/null | head -5; echo "---env---"; env | grep -i langwatch; echo "done" ✔ 
+💭 Thinking for 251 characters   
+💫 Executing cd /home/user/project && uv venv .venv --python 3.12 2>&1 | tail -5 ✔ 
+💫 Executing cd /home/user/project && uv pip install langwatch 2>&1 | tail -20 ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch; print(langwatch.__version__); print([x for x in dir(langwatch) if not x.startswith('_')])" ✔ 
+💭 Thinking for 140 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch, inspect; print(inspect.signature(langwatch.setup)); print('---'); print(inspect.getsource(langwatch.setup))" 2>&1 | head -60 ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch, inspect; print(inspect.signature(langwatch.trace)); print('===SPAN==='); print(inspect.signature(langwatch.span))" ✔ 
+💭 Thinking for 74 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.domain as d, inspect; print(inspect.getsource(d.RAGChunk))" ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.telemetry.span as s, inspect; src=inspect.getsource(s); print(src)" 2>&1 | head -120 ✔ 
+💭 Thinking for 192 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.telemetry.span as s, inspect; src=inspect.getsource(s); print(src)" 2>&1 | sed -n '120,320p' ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.telemetry.span as s, inspect; src=inspect.getsource(s); print(src)" 2>&1 | sed -n '320,560p' ✔ 
+💭 Thinking for 506 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "from langwatch.utils.transformation import rag_contexts, truncate_object_recursively; import inspect; print(inspect.getsource(rag_contexts)); print('==='); print(inspect.getsource(truncate_object_recursively))" ✔ 
+💭 Thinking for 12310 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "from langwatch.utils.initialization import ensure_setup; import inspect; print(inspect.getsource(ensure_setup))" ✔ 
+💭 Thinking for 351 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.client as c, inspect; src=inspect.getsource(c); print(src)" 2>&1 | sed -n '1,120p' ✔ 
+💭 Thinking for 71 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.client as c, inspect; src=inspect.getsource(c); import re; idx=src.find('endpoint_url'); print(src[idx:idx+800])" ✔ 
+💫 Executing cd /home/user/project && grep -n "endpoint_url\|LANGWATCH_ENDPOINT\|get_endpoint\|self.endpoint_url\|self._endpoint_url" $(.venv/bin/python -c "import langwatch.client, os; print(langwatch.client.__file__)") | head -40 ✔ 
+💭 Thinking for 1580 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.telemetry.tracing as t, inspect; src=inspect.getsource(t); print(src)" 2>&1 | sed -n '1,140p' ✔ 
+💭 Thinking for 131 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.telemetry.tracing as t, inspect; src=inspect.getsource(t); print(src)" 2>&1 | sed -n '140,330p' ✔ 
+💭 Thinking for 119 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.telemetry.tracing as t, inspect; src=inspect.getsource(t); print(src)" 2>&1 | sed -n '330,520p' ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.telemetry.tracing as t, inspect; src=inspect.getsource(t); print(src)" 2>&1 | sed -n '520,720p' ✔ 
+💭 Thinking for 602 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import langwatch.telemetry.span as s, inspect; src=inspect.getsource(s); print(src)" 2>&1 | sed -n '560,760p' ✔ 
+💭 Thinking for 543 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "from langwatch.utils.transformation import validate_safe; import inspect; print(inspect.getsource(validate_safe))" ✔ 
+💭 Thinking for 9997 characters   
+💫 Executing cd /home/user/project && .venv/bin/python -c "import json; d=json.load(open('data/documents.json')); full=''.join(x['content'] for x in d); print('non-ascii?', any(ord(c)>127 for c in full)); print('sample tail', repr(d[0]['content'][-120:]))" ✔ 
+💭 Thinking for 14744 characters   
+💫 Executing cd /home/user/project && python -c "import langwatch; print('verifier py has langwatch', langwatch.__version__)" 2>&1 | head; echo "---which python---"; which python; echo "---venv py---"; .venv/bin/python -c "import langwatch; print('venv ok', langwatch.__version__)" ✔ 
+💭 Thinking for 1186 characters   
+💫 Executing cd /home/user/project && python -c "import langwatch; print(langwatch.__file__)"; echo "---"; .venv/bin/python -c "import langwatch; print(langwatch.__file__)" ✔ 
+💭 Thinking for 2915 characters   
+Now I have a thorough understanding of the LangWatch SDK. Let me write the implementation files.   
+✏️  Writing /home/user/project/rag_payload.py ✔ 
+✏️  Writing /home/user/project/main.py ✔ 
+💭 Thinking for 76 characters   
+Now let me test the truncation contract in isolation.   
+💫 Executing cd /home/user/project && python -c "
+import json
+from rag_payload import truncate_contexts
+
+docs = json.load(open('data/documents.json'))
+print('input count:', len(docs))
+print('raw total content bytes:', sum(len(d['content'].encode('utf-8')) for d in docs))
+
+out = truncate_contexts(docs, max_total_bytes=512*1024, max_document_bytes=80*1024)
+print('output count:', len(out))
+assert len(out) == len(docs), 'must keep one entry per doc'
+
+# per-doc cap check
+for o in out:
+    cb = len(o['content'].encode('utf-8'))
+    assert cb <= 80*1024, f'content {cb} exceeds doc cap'
+    assert 'document_id' in o and 'chunk_id' in o and 'original_bytes' in o
+    assert o['original_bytes'] == 324028
+
+# total check
+total = len(json.dumps(out).encode('utf-8'))
+print('serialized total bytes:', total)
+assert total <= 512*1024
+
+# marker present + tail gone
+has_marker = any('[truncated]' in o['content'] for o in out)
+print('has marker:', has_marker)
+assert has_marker
+# beginning retained
+assert out[0]['content'].startswith('HEAD_CANARY_0'), out[0]['content'][:30]
+# tail (TAIL_CANARY) gone from truncated docs
+assert 'TAIL_CANARY_0' not in out[0]['content']
+print('all ids:', [o['document_id'] for o in out])
+print('first content tail:', repr(out[0]['content'][-40:]))
+print('OK')
+" ✔ 
+💭 Thinking for 260 characters   
+Truncation contract works. Let me test edge cases: unchanged-when-within-cap, secondary total-budget shrink, and UTF-8 multi-byte safety.   
+💫 Executing cd /home/user/project && python -c "
+import json
+from rag_payload import truncate_contexts
+
+# 1. Content within cap -> unchanged, no marker
+docs = [{'document_id':'a','chunk_id':'c1','content':'hello world'}]
+out = truncate_contexts(docs, max_total_bytes=10000, max_document_bytes=100)
+assert out[0]['content']=='hello world', out[0]['content']
+assert '[truncated]' not in out[0]['content']
+assert out[0]['original_bytes']==11
+print('case1 OK (within cap unchanged)')
+
+# 2. Secondary total-budget shrink: small total forces further truncation
+docs2 = [{'document_id':f'd{i}','chunk_id':f'c{i}','content':'X'*5000} for i in range(5)]
+out2 = truncate_contexts(docs2, max_total_bytes=4000, max_document_bytes=5000)
+# per-doc cap (5000) doesn't trigger since each is exactly 5000; but total 5*5000=25000 > 4000
+# Actually 5000 <= 5000 so unchanged in pass1; total huge -> secondary shrink
+total2 = len(json.dumps(out2).encode('utf-8'))
+print('case2 total:', total2, '<= 4000?', total2 <= 4000)
+assert total2 <= 4000
+assert len(out2)==5
+for o in out2:
+    assert o['original_bytes']==5000
+    assert '[truncated]' in o['content']  # shortened in secondary pass
+print('case2 OK (secondary shrink keeps all docs + markers)')
+
+# 3. UTF-8 multi-byte safety: emoji + accented chars
+s = ' café ' + 'é'*10 + ' 🚀🚀🚀 end'
+docs3 = [{'document_id':'u','chunk_id':'c','content':s}]
+out3 = truncate_contexts(docs3, max_total_bytes=100000, max_document_bytes=30)
+c = out3[0]['content']
+print('case3 content:', repr(c), 'bytes:', len(c.encode('utf-8')))
+assert len(c.encode('utf-8')) <= 30
+assert c.endswith('[truncated]')
+# must be valid decodable (no broken chars) - already a str so fine
+c.encode('utf-8')  # round-trips
+print('case3 OK (multi-byte safe)')
+
+# 4. marker only on shortened content; small doc among big ones keeps unchanged
+mix = [{'document_id':'big','chunk_id':'c','content':'B'*10000},
+       {'document_id':'small','chunk_id':'c','content':'tiny'}]
+outm = truncate_contexts(mix, max_total_bytes=20000, max_document_bytes=2000)
+big = [o for o in outm if o['document_id']=='big'][0]
+small = [o for o in outm if o['document_id']=='small'][0]
+assert '[truncated]' in big['content']
+assert small['content']=='tiny' and '[truncated]' not in small['content']
+print('case4 OK (small doc unchanged among big)')
+print('ALL EDGE CASES PASS')
+" ✔ 
+💭 Thinking for 784 characters   
+All edge cases pass. Now let me test `run_pipeline` end-to-end.   
+💫 Executing cd /home/user/project && timeout 60 python -c "
+from rag_payload import run_pipeline
+ans = run_pipeline('What is the capital of France?')
+print('ANSWER:', repr(ans))
+assert ans and len(ans) > 0
+print('run_pipeline OK')
+" 2>&1 | tail -20 ✔ 
+💭 Thinking for 1698 characters   
+`run_pipeline` works. Now let me verify the actual exported OTLP payload by capturing it with a local endpoint and decoding the protobuf, to confirm it's under 1MB and contains the expected fields.   
+💫 Executing cd /home/user/project && python -c "
+import opentelemetry.proto as p, os
+print('proto path:', os.path.dirname(p.__file__))
+from opentelemetry.proto.collector.trace.v1 import trace_service_pb2
+print('trace_service_pb2 OK')
+from opentelemetry.proto.trace.v1 import trace_pb2
+print('trace_pb2 OK')
+" 2>&1 | head ✔ 
+💭 Thinking for 849 characters   
+✏️  Writing /home/user/project/_verify_export.py ✔ 
+💫 Executing cd /home/user/project && timeout 90 python _verify_export.py 2>&1 | tail -40 ✔ 
+💭 Thinking for 1547 characters   
+All acceptance criteria pass against the captured OTLP payload. Now let me test the CLI `main.py`.   
+💫 Executing cd /home/user/project && LANGWATCH_ENDPOINT=http://127.0.0.1:18100 timeout 60 python -c "
+import http.server, threading, time
+class H(http.server.BaseHTTPRequestHandler):
+    def do_POST(self):
+        l=int(self.headers.get('Content-Length',0)); self.rfile.read(l)
+        self.send_response(200); self.end_headers(); self.wfile.write(b'')
+    def log_message(self,*a,**k): pass
+s=http.server.HTTPServer(('127.0.0.1',18100),H); threading.Thread(target=s.serve_forever,daemon=True).start()
+time.sleep(0.3)
+import subprocess
+r=subprocess.run(['python','main.py','What is the capital of France?'],capture_output=True,text=True,timeout=55,env={**__import__('os').environ,'LANGWATCH_ENDPOINT':'http://127.0.0.1:18100'})
+print('RC',r.returncode)
+print('STDOUT:',repr(r.stdout))
+print('STDERR tail:',r.stderr[-500:])
+s.shutdown()
+assert 'Answer:' in r.stdout
+assert r.stdout.strip().startswith('Answer:')
+print('CLI OK')
+" ✖ "Command exited with code 1"
+💭 Thinking for 4628 characters   
+The CLI works and stdout contains the `Answer:` line. There's a noisy LangWatch warning logged to stdout though. Let me investigate and clean it up so the `Answer:` line is unambiguous.   
+💫 Executing cd /home/user/project && grep -n "existing global tracer provider\|ignore_global_tracer_provider_override_warning\|_skip_open_telemetry_setup\|set_tracer_provider\|force_flush" $(python -c "import langwatch.client,os;print(langwatch.client.__file__)") | head -30 ✔ 
+💫 Executing cd /home/user/project && sed -n '680,760p' $(python -c "import langwatch.client,os;print(langwatch.client.__file__)") ✔ 
+💭 Thinking for 74 characters   
+💫 Executing cd /home/user/project && grep -rn "existing global tracer provider\|Attaching LangWatch exporter to the existing" $(python -c "import langwatch,os;print(os.path.dirname(langwatch.__file__))") ✔ 
+💫 Executing cd /home/user/project && sed -n '620,660p' $(python -c "import langwatch.client,os;print(langwatch.client.__file__)") ✔ 
+💭 Thinking for 2890 characters   
+The warning is caused by a double `setup()` call (main.py then run_pipeline). Let me make `_ensure_langwatch_setup` skip setup when a client already exists, avoiding the second call.   
+🔧 Applying diff to /home/user/project/rag_payload.py ✔ 
+💫 Executing cd /home/user/project && LANGWATCH_ENDPOINT=http://127.0.0.1:18101 timeout 60 python -c "
+import http.server, threading, time, os, subprocess
+class H(http.server.BaseHTTPRequestHandler):
+    def do_POST(self):
+        l=int(self.headers.get('Content-Length',0)); self.rfile.read(l)
+        self.send_response(200); self.end_headers(); self.wfile.write(b'')
+    def log_message(self,*a,**k): pass
+s=http.server.HTTPServer(('127.0.0.1',18101),H); threading.Thread(target=s.serve_forever,daemon=True).start()
+time.sleep(0.3)
+env={**os.environ,'LANGWATCH_ENDPOINT':'http://127.0.0.1:18101'}
+r=subprocess.run(['python','main.py','What is the capital of France?'],capture_output=True,text=True,timeout=55,env=env)
+print('RC',r.returncode)
+print('STDOUT:',repr(r.stdout))
+print('STDERR:',repr(r.stderr[-400:]))
+s.shutdown()
+lines=[l for l in r.stdout.splitlines() if l.startswith('Answer:')]
+assert len(lines)>=1, 'no Answer line'
+assert lines[0].split('Answer:',1)[1].strip() != '', 'empty answer text'
+print('CLI OK ->', lines[0][:80])
+" ✔ 
+💭 Thinking for 249 characters   
+Clean output now — just the `Answer:` line, no warnings. Let me re-run the full export verification to confirm nothing broke.   
+💫 Executing cd /home/user/project && timeout 90 python _verify_export.py 2>&1 | tail -20 ✔ 
+💭 Thinking for 1115 characters   
+Let me also verify `main.py` works against the real configured endpoint (to ensure the export doesn't hang or getrejected).   
+💫 Executing cd /home/user/project && timeout 70 python main.py "What is the capital of France?" 2>&1 | tail -10; echo "EXIT=$?" ✔ 

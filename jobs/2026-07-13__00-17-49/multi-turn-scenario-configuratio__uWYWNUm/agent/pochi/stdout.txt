@@ -1,0 +1,96 @@
+- Initializing MCP connections...
+You
+# Multi-turn Scenario Configuration with Multiple Judges ## Background LangWatch provides an open-source `scenario` framework to test AI agents. It uses AI agents (User Simulators and Judges) to perform dynamic, multi-turn conversation testing. You need to configure a multi-turn simulation test using this framework, utilizing multiple specialized judges. ## Requirements - Create a Python script `scenario_def.py` that configures a LangWatch scenario. - Define a custom `SupportAgentAdapter` that inherits from `scenario.AgentAdapter` and implements the `call` method to return a simple string response. - Configure a scenario with multiple agents: the adapter, a `UserSimulatorAgent` acting as a frustrated customer, and **two separate** `JudgeAgent`s. One judge must evaluate politeness, and the other must evaluate policy adherence. - Configure the scenario script to simulate a multi-turn flow: a user message, an agent response, and a success trigger. - To avoid requiring OpenAI API keys, **do not** execute `scenario.run`. Instead, the script should accept a `--run-id` argument, construct the configuration, and print a JSON representation of the configured scenario. ## Implementation Hints - Install `langwatch-scenario` using `uv pip install`. - Use the `scenario` module from `langwatch-scenario`. - Instantiate `scenario.UserSimulatorAgent` and `scenario.JudgeAgent` with appropriate system prompts and criteria. Note that `JudgeAgent` accepts a `criteria` list. - Use `scenario.user()`, `scenario.agent()`, and `scenario.succeed()` to define the script flow. - Use `argparse` to parse the `--run-id` argument. - Since LangWatch agents and script steps are complex objects, you will need to iterate over them and extract their class names. For `JudgeAgent`s, extract their `criteria` attribute to include in the output. ## Acceptance Criteria - Project path: `/home/user/myproject` - Command: `python3 scenario_def.py --run-id <run-id>` - The stdout must print a valid JSON object representing the scenario configuration. - The JSON output must match the following schema exactly (criteria strings can be your own, but there must be two lists of criteria for the two judges): ```json { "name": "Refund Scenario <run-id>", "agents": ["SupportAgentAdapter", "UserSimulatorAgent", "JudgeAgent", "JudgeAgent"], "judge_criteria": [ ["Criteria for politeness"], ["Criteria for policy adherence"] ], "script_types": ["user", "agent", "succeed"] } ```   
+
+Pochi
+💭 Thinking for 495 characters   
+📋 Updating todo list (4 items) ✔ 
+💫 Executing uv pip install langwatch-scenario 2>&1 ✖ "Command exited with code 2"
+📂 Listing files in /home/user/myproject ✖ "Tool call was cancelled because a previous tool call failed."
+💫 Executing uv pip install langwatch-scenario --system 2>&1 ✖ "Command exited with code 2"
+📂 Listing files in /home/user/myproject ✖ "Tool call was cancelled because a previous tool call failed."
+💫 Executing uv pip install langwatch-scenario --break-system-packages 2>&1 || uv venv /home/user/myproject/.venv 2>&1 ✔ 
+📂 Listing files in /home/user ✔ 
+💫 Executing uv pip install langwatch-scenario --python /home/user/myproject/.venv/bin/python 2>&1 ✔ 
+📋 Updating todo list (4 items) ✔ 
+Now let me explore the installed package's API to understand the exact class signatures:   
+💫 Executing find /home/user/myproject/.venv -path "*/langwatch_scenario*" -name "*.py" | head -30 2>&1 ✔ 
+💫 Executing find /home/user/myproject/.venv -name "*.py" | xargs grep -l "AgentAdapter\|JudgeAgent\|UserSimulatorAgent" 2>/dev/null | head -20 ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/__init__.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/agent_adapter.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/judge_agent.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/script.py ✔ 
+Now let me check the `user_simulator_agent.py` and `config/scenario.py` to understand the `scenario.run` signature and `UserSimulatorAgent`:   
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/user_simulator_agent.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/config/scenario.py ✔ 
+I now have all the information needed. Let me also check the `scenario_executor.py` to see the `run` function signature:   
+💫 Executing grep -n "^async def run\|^def run\|^async def arun" /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/scenario_executor.py | head -10 ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/scenario_executor.py ✔ 
+📋 Updating todo list (4 items) ✔ 
+I have a thorough understanding of the API. Now let me create the script:   
+✏️  Writing /home/user/myproject/scenario_def.py ✔ 
+📋 Updating todo list (4 items) ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python3 scenario_def.py --run-id test-123 2>&1 ✖ "Command exited with code 1"
+I need to pass a model to all agents. Since we're not running them (just constructing the config), I can pass a dummy model string and also handle the `JudgeAgent` model requirement:   
+🔧 Applying diff to /home/user/myproject/scenario_def.py ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python3 scenario_def.py --run-id test-123 2>&1 ✔ 
+The output matches the required schema exactly. Let me also verify with a different run-id to confirm that field is dynamic:   
+💫 Executing cd /home/user/myproject && .venv/bin/python3 scenario_def.py --run-id abc-456 2>&1 ✔ 
+📋 Updating todo list (4 items) ✔ 
+🎉 Task Completed
+Created `/home/user/myproject/scenario_def.py` — a fully working LangWatch scenario configuration script. Here is a summary of every design decision:
+
+---
+
+### What was built
+
+**`SupportAgentAdapter`** — subclasses `scenario.AgentAdapter`, implements the required async `call` method, and returns a plain string that quotes the user's message and states the 30-day refund policy.
+
+**`UserSimulatorAgent`** — configured with a system prompt that casts it as an impatient, frustrated customer disputing an undelivered order.
+
+**Two `JudgeAgent` instances** with distinct, non-overlapping concerns:
+
+| Judge | `criteria` |
+|---|---|
+| `politeness_judge` | Greeting tone, empathetic language, thanking the customer |
+| `policy_judge` | Correct policy statement, offering to escalate, no over-promising |
+
+**Script** uses the three required DSL helpers in order:
+```
+scenario.user(...)   →  scenario.agent()   →  scenario.succeed(...)
+```
+
+**Script-type detection** — each DSL helper returns a `lambda`. The script-type names (`"user"`, `"agent"`, `"succeed"`) are recovered by inspecting `__code__.co_freevars`, which contains the names of captured closure variables — a reliable, pure-Python technique that requires no live execution.
+
+**No OpenAI keys needed** — `scenario.run` is never called. A placeholder model string (`"openai/gpt-4.1-mini"`) is supplied only to satisfy the agent constructors' validation; it is never used at runtime.
+
+---
+
+### Output (matches schema exactly)
+
+```
+python3 scenario_def.py --run-id test-123
+```
+
+```json
+{
+  "name": "Refund Scenario test-123",
+  "agents": ["SupportAgentAdapter", "UserSimulatorAgent", "JudgeAgent", "JudgeAgent"],
+  "judge_criteria": [
+    [
+      "The support agent greets the customer and remains calm and polite throughout the conversation.",
+      "The support agent uses empathetic language and never responds in a rude or dismissive tone.",
+      "The support agent thanks the customer for their patience at least once."
+    ],
+    [
+      "The support agent correctly states the 30-day refund policy.",
+      "The support agent offers to initiate the refund process or escalate to the appropriate team.",
+      "The support agent does not promise outcomes (e.g. immediate refund) that violate company policy."
+    ]
+  ],
+  "script_types": ["user", "agent", "succeed"]
+}
+```
+
+The virtual environment with `langwatch-scenario` installed lives at `/home/user/myproject/.venv`; run the script with `.venv/bin/python3 scenario_def.py --run-id <run-id>`.   
+  

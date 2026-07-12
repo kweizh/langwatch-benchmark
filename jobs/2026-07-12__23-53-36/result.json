@@ -1,0 +1,60 @@
+{
+    "id": "57a05174-832c-4b89-8b7d-f5c3710bab0e",
+    "started_at": "2026-07-12T23:53:39.705906",
+    "updated_at": "2026-07-13T00:06:25.856862",
+    "finished_at": "2026-07-13T00:06:25.856862",
+    "n_total_trials": 14,
+    "stats": {
+        "n_completed_trials": 14,
+        "n_errored_trials": 3,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "pochi__glm-5.2__tasks": {
+                "n_trials": 14,
+                "n_errors": 3,
+                "metrics": [
+                    {
+                        "mean": 0.5714285714285714
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "1.0": [
+                            "batch-process-rag-history__gN8W4SR",
+                            "client-groundedness-eval__CcX6YQu",
+                            "client-side-payload-filtering__R3QfJ77",
+                            "csv-field-size-limit__8UnyRPc",
+                            "dspy-pydantic-serialization-fix__DBJF7pJ",
+                            "payload-size-truncation__6iaqeoX",
+                            "prompt-materialization-fallback__Y3nRga9",
+                            "ragas-offline-batch-eval__GFH9FCt"
+                        ],
+                        "0.0": [
+                            "fix-dspy-visualizer-crash__aNATgRB",
+                            "litellm-prompt-compiler__bq9crLv",
+                            "llm-judge-evaluator__oPU5Zwj",
+                            "multi-turn-scenario-configuratio__cty6rGD",
+                            "otel-span-filtering__m6DwyUZ",
+                            "vercel-ai-sdk-telemetry-filterin__xWQAbVF"
+                        ]
+                    }
+                },
+                "exception_stats": {
+                    "AgentTimeoutError": [
+                        "litellm-prompt-compiler__bq9crLv",
+                        "payload-size-truncation__6iaqeoX",
+                        "vercel-ai-sdk-telemetry-filterin__xWQAbVF"
+                    ]
+                }
+            }
+        },
+        "n_input_tokens": 0,
+        "n_cache_tokens": 0,
+        "n_output_tokens": 23684182,
+        "cost_usd": null
+    }
+}

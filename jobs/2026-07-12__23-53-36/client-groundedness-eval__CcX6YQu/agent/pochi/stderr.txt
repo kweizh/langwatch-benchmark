@@ -1,0 +1,246 @@
+[37m2026-07-12 15:53:56.467[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m[39m[0m[0m[1m[37m	Pochi[39m[22m[0m[0m	pochi v0.6.17
+[37m2026-07-12 15:53:56.472[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37mnative:7[39m[0m[0m[1m[37m	PochiConfigManager[39m[22m[0m[0m	add workspace config: /root/.pochi/config.jsonc
+[37m2026-07-12 15:53:56.816[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37mnative:7[39m[0m[0m[1m[37m	BuiltInBundle[39m[22m[0m[0m	Materializing 16 built-in files to /tmp/pochi-builtin-2e56a4fb1f88f581
+[37m2026-07-12 15:53:57.059[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:524760[39m[0m[0m[1m[37m	loadAgents[39m[22m[0m[0m	Loaded 6 custom agents (6 valid, 0 invalid)
+[37m2026-07-12 15:53:57.153[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:524761[39m[0m[0m[1m[37m	loadSkills[39m[22m[0m[0m	Loaded 3 skills (3 valid, 0 invalid)
+[37m2026-07-12 15:53:57.248[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:443843[39m[0m[0m[1m[37m	PochiVendor[39m[22m[0m[0m	JWT is expiring or missing, fetching a new one
+[37m2026-07-12 15:53:58.359[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:419945[39m[0m[0m[1m[37m	MCPHub[39m[22m[0m[0m	MCP servers configuration changed via signal:
+[37m2026-07-12 15:53:58.360[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:420057[39m[0m[0m[1m[37m	MCPHub[39m[22m[0m[0m	Build MCPHub Status
+[37m2026-07-12 15:53:58.472[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37mnative:7[39m[0m[0m[1m[37m	Pochi[39m[22m[0m[0m	Starting task runner...
+[37m2026-07-12 15:53:58.661[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:491186[39m[0m[0m[1m[37m	generateTaskTitle[39m[22m[0m[0m	Generating task title, old: null, new: # LangWatch: Client-Side Groundedness Evaluation on a RAG Span
+[37m2026-07-12 15:54:14.505[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:522862[39m[0m[0m[1m[37m	listFiles[39m[22m[0m[0m	handling listFile with dirPath /home/user/project and recursive [90mundefined[39m
+[37m2026-07-12 15:54:16.871[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:491186[39m[0m[0m[1m[37m	generateTaskTitle[39m[22m[0m[0m	Generating task title, old: # LangWatch: Client-Side Groundedness Evaluation on a RAG Span, new: Implement a RAG pipeline with client-side groundedness evaluation wired to LangWatch spans
+[37m2026-07-12 15:54:17.076[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/README.md" resolvedPath="/home/user/project/README.md" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:54:17.077[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:54:17.080[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/README.md" mtime=1783870033118 contentLen=280
+[37m2026-07-12 15:54:20.264[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/pipeline.py" resolvedPath="/home/user/project/pipeline.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:54:20.264[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:54:20.265[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/pipeline.py" mtime=1783870032515 contentLen=1867
+[37m2026-07-12 15:54:22.000[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/main.py" resolvedPath="/home/user/project/main.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:54:22.000[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:54:22.001[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/main.py" mtime=1783870032805 contentLen=570
+[37m2026-07-12 15:55:01.459[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry def get_current_span|__enter__|__exit__|def add_evaluation|class LangWatchSpan|class LangWatchTrace [90mundefined[39m
+[37m2026-07-12 15:55:01.460[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified 'def get_current_span|__enter__|__exit__|def add_evaluation|class LangWatchSpan|class LangWatchTrace' '/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry'
+[37m2026-07-12 15:55:01.465[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/__pycache__/context.cpython-312.pyc"},"lines":{"bytes":"2gh3YXJuaW5nc9oEd2FybtoJdHJhY2VfYXBp2hBnZXRfY3VycmVudF9zcGFu2hBnZXRfc3Bhbl9jb250ZXh02gdzcGFuX2lk2glfX2VudGVyX1/aE3NldF9zcGFuX2luX2NvbnRleHRyBwo="},"line_number":580,"absolute_offset":1565,"submatches":[{"match":{"text":"__enter__"},"start":74,"end":83}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:55:01.466[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/__pycache__/context.cpython-312.pyc"},"lines":{"bytes":"2gZhdHRhY2jaCF9fZXhpdF9fKQdyEQo="},"line_number":583,"absolute_offset":1674,"submatches":[{"match":{"text":"__exit__"},"start":10,"end":18}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:55:01.466[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/__pycache__/span.cpython-312.pyc"},"lines":{"bytes":"2glfX2VudGVyX1/aEV9zZXRfY3VycmVudF9zcGFucmwK"},"line_number":3718,"absolute_offset":9979,"submatches":[{"match":{"text":"__enter__"},"start":2,"end":11}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:55:01.466[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/__pycache__/span.cpython-312.pyc"},"lines":{"bytes":"2ghfX2V4aXRfX3J5Cg=="},"line_number":7431,"absolute_offset":19563,"submatches":[{"match":{"text":"__exit__"},"start":2,"end":10}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:55:01.466[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/__pycache__/span.cpython-312.pyc"},"lines":{"bytes":"eilMYW5nV2F0Y2hTcGFuLl9fZW50ZXJfXy48bG9jYWxzPi48bGFtYmRhPqwCCg=="},"line_number":9857,"absolute_offset":26033,"submatches":[{"match":{"text":"__enter__"},"start":16,"end":25}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:55:01.466[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/__pycache__/span.cpython-312.pyc"},"lines":{"bytes":"ehdMYW5nV2F0Y2hTcGFuLl9fZW50ZXJfX6ECCg=="},"line_number":9922,"absolute_offset":26249,"submatches":[{"match":{"text":"__enter__"},"start":16,"end":25}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:55:01.467[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/__pycache__/span.cpython-312.pyc"},"lines":{"bytes":"ehZMYW5nV2F0Y2hTcGFuLl9fZXhpdF9ftwIK"},"line_number":10121,"absolute_offset":26828,"submatches":[{"match":{"text":"__exit__"},"start":16,"end":24}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:55:01.467[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/__pycache__/tracing.cpython-312.pyc"},"lines":{"bytes":"2glfX2VudGVyX1/aDnNldF9hdHRyaWJ1dGVzck4K"},"line_number":3134,"absolute_offset":9619,"submatches":[{"match":{"text":"__enter__"},"start":2,"end":11}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:55:01.467[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/__pycache__/tracing.cpython-312.pyc"},"lines":{"bytes":"2ghfX2V4aXRfX3KxCg=="},"line_number":7917,"absolute_offset":23466,"submatches":[{"match":{"text":"__exit__"},"start":2,"end":10}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:55:03.920[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" isVirtual=false cacheExists=true shouldCache=true startLine=673 endLine=720
+[37m2026-07-12 15:55:03.920[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:55:03.930[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" mtime=1783870034623 contentLen=1910
+[37m2026-07-12 15:55:06.918[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/context.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/context.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:55:06.919[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:55:06.925[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/context.py" mtime=1783870034622 contentLen=4940
+[37m2026-07-12 15:55:10.625[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" isVirtual=false cacheExists=true shouldCache=true startLine=71 endLine=300
+[37m2026-07-12 15:55:10.625[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState={startLine=673, endLine=720, timestamp=1783870034623}
+[37m2026-07-12 15:55:10.630[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" mtime=1783870034623 contentLen=8879
+[37m2026-07-12 15:55:13.466[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" isVirtual=false cacheExists=true shouldCache=true startLine=453 endLine=560
+[37m2026-07-12 15:55:13.466[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState={startLine=71, endLine=300, timestamp=1783870034623}
+[37m2026-07-12 15:55:13.473[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" mtime=1783870034623 contentLen=3633
+[37m2026-07-12 15:55:22.786[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/evaluations.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/evaluations.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:55:22.786[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:55:22.796[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/evaluations.py" mtime=1783870034298 contentLen=8983
+[37m2026-07-12 15:55:25.646[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /home/user/project/.venv/lib/python3.12/site-packages/langwatch/evaluation def _add_evaluation [90mundefined[39m
+[37m2026-07-12 15:55:25.646[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified 'def _add_evaluation' '/home/user/project/.venv/lib/python3.12/site-packages/langwatch/evaluation'
+[37m2026-07-12 15:55:27.982[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/evaluation/__init__.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/evaluation/__init__.py" isVirtual=false cacheExists=true shouldCache=true startLine=390 endLine=520
+[37m2026-07-12 15:55:27.983[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:55:27.996[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/evaluation/__init__.py" mtime=1783870034330 contentLen=4474
+[37m2026-07-12 15:55:37.334[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=453
+[37m2026-07-12 15:55:37.334[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState={startLine=453, endLine=560, timestamp=1783870034623}
+[37m2026-07-12 15:55:37.348[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" mtime=1783870034623 contentLen=16609
+[37m2026-07-12 15:55:44.252[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py def wrap_otel_span [90mundefined[39m
+[37m2026-07-12 15:55:44.253[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified 'def wrap_otel_span' '/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py'
+[37m2026-07-12 15:55:47.035[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" isVirtual=false cacheExists=true shouldCache=true startLine=804 endLine=undefined
+[37m2026-07-12 15:55:47.035[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState={startLine=undefined, endLine=453, timestamp=1783870034623}
+[37m2026-07-12 15:55:47.041[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py" mtime=1783870034623 contentLen=4437
+[37m2026-07-12 15:55:56.262[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py def flush_on_exit|def _flush_on_exit|force_flush|atexit|def shutdown [90mundefined[39m
+[37m2026-07-12 15:55:56.262[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified 'def flush_on_exit|def _flush_on_exit|force_flush|atexit|def shutdown' '/home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py'
+[37m2026-07-12 15:55:58.569[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py" isVirtual=false cacheExists=true shouldCache=true startLine=434 endLine=580
+[37m2026-07-12 15:55:58.570[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:55:58.582[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py" mtime=1783870034296 contentLen=5961
+[37m2026-07-12 15:56:03.274[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py" isVirtual=false cacheExists=true shouldCache=true startLine=760 endLine=undefined
+[37m2026-07-12 15:56:03.275[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState={startLine=434, endLine=580, timestamp=1783870034296}
+[37m2026-07-12 15:56:03.294[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py" mtime=1783870034296 contentLen=800
+[37m2026-07-12 15:56:06.521[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py def get_instance|def force_flush|^def |^class [90mundefined[39m
+[37m2026-07-12 15:56:06.521[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified 'def get_instance|def force_flush|^def |^class' '/home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py'
+[37m2026-07-12 15:56:09.537[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /home/user/project/.venv/lib/python3.12/site-packages/langwatch def get_instance|get_singleton_instance [90mundefined[39m
+[37m2026-07-12 15:56:09.537[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified 'def get_instance|get_singleton_instance' '/home/user/project/.venv/lib/python3.12/site-packages/langwatch'
+[37m2026-07-12 15:56:09.591[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/home/user/project/.venv/lib/python3.12/site-packages/langwatch/__pycache__/client.cpython-312.pyc"},"lines":{"bytes":"2hZnZXRfc2luZ2xldG9uX2luc3RhbmNleh1DbGllbnQuZ2V0X3NpbmdsZXRvbl9pbnN0YW5jZZgBCg=="},"line_number":4897,"absolute_offset":13861,"submatches":[{"match":{"text":"get_singleton_instance"},"start":2,"end":24},{"match":{"text":"get_singleton_instance"},"start":33,"end":55}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:56:11.593[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/state.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/state.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:56:11.593[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:56:11.612[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/state.py" mtime=1783870034314 contentLen=1204
+[37m2026-07-12 15:56:17.732[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/tracing.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/tracing.py" isVirtual=false cacheExists=true shouldCache=true startLine=622 endLine=undefined
+[37m2026-07-12 15:56:17.732[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:56:17.746[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/tracing.py" mtime=1783870034623 contentLen=8190
+[37m2026-07-12 15:56:21.196[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/tracing.py def _create_root_span|_root_span_params|name=name [90mundefined[39m
+[37m2026-07-12 15:56:21.197[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified 'def _create_root_span|_root_span_params|name=name' '/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/tracing.py'
+[37m2026-07-12 15:56:23.931[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/tracing.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/tracing.py" isVirtual=false cacheExists=true shouldCache=true startLine=225 endLine=260
+[37m2026-07-12 15:56:23.931[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState={startLine=622, endLine=undefined, timestamp=1783870034623}
+[37m2026-07-12 15:56:23.942[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/tracing.py" mtime=1783870034623 contentLen=1607
+[37m2026-07-12 15:58:05.964[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/utils/initialization.py" resolvedPath="/home/user/project/.venv/lib/python3.12/site-packages/langwatch/utils/initialization.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:58:05.964[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:58:05.977[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/.venv/lib/python3.12/site-packages/langwatch/utils/initialization.py" mtime=1783870034624 contentLen=4915
+[37m2026-07-12 15:58:13.784[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py endpoint_url|LANGWATCH_ENDPOINT|_endpoint_url [90mundefined[39m
+[37m2026-07-12 15:58:13.784[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified 'endpoint_url|LANGWATCH_ENDPOINT|_endpoint_url' '/home/user/project/.venv/lib/python3.12/site-packages/langwatch/client.py'
+[37m2026-07-12 16:02:55.643[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/project/pipeline.py" resolvedPath="/home/user/project/pipeline.py" isVirtual=false cacheExists=true shouldCache=true startLine=142 endLine=undefined
+[37m2026-07-12 16:02:55.644[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState={startLine=undefined, endLine=undefined, timestamp=1783871971626}
+[37m2026-07-12 16:02:55.744[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/project/pipeline.py" mtime=1783871971626 contentLen=5001
+[37m2026-07-12 16:03:14.748[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37mnative:7[39m[0m[0m[1m[37m	Pochi[39m[22m[0m[0m	Task runner finished successfully.
+[37m2026-07-12 16:03:14.749[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37mnative:7[39m[0m[0m[1m[37m	Pochi[39m[22m[0m[0m	Shutting down...
+[37m2026-07-12 16:03:14.954[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37mnative:7[39m[0m[0m[1m[37m	Pochi[39m[22m[0m[0m	Shutdown completed. Process will exit.
+[37m2026-07-12 16:03:14.954[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m[39m[0m[0m[1m[37m	Pochi[39m[22m[0m[0m	Process exiting with code 0

@@ -1,0 +1,54 @@
+{
+    "id": "294ce5ce-2faf-41c2-ba95-96bf1ce3e9b9",
+    "started_at": "2026-07-13T00:17:52.701517",
+    "updated_at": "2026-07-13T00:24:01.034328",
+    "finished_at": "2026-07-13T00:24:01.034328",
+    "n_total_trials": 14,
+    "stats": {
+        "n_completed_trials": 14,
+        "n_errored_trials": 0,
+        "n_running_trials": 0,
+        "n_pending_trials": 0,
+        "n_cancelled_trials": 0,
+        "n_retries": 0,
+        "evals": {
+            "pochi__claude-4-6-sonnet__tasks": {
+                "n_trials": 14,
+                "n_errors": 0,
+                "metrics": [
+                    {
+                        "mean": 0.8571428571428571
+                    }
+                ],
+                "pass_at_k": {},
+                "reward_stats": {
+                    "reward": {
+                        "0.0": [
+                            "batch-process-rag-history__mHGEbVL",
+                            "multi-turn-scenario-configuratio__uWYWNUm"
+                        ],
+                        "1.0": [
+                            "client-groundedness-eval__ZrpjyNY",
+                            "client-side-payload-filtering__ZFVu8n2",
+                            "csv-field-size-limit__wiT3ZcR",
+                            "dspy-pydantic-serialization-fix__3mFgezR",
+                            "fix-dspy-visualizer-crash__XfJdphJ",
+                            "litellm-prompt-compiler__a5vNgMi",
+                            "llm-judge-evaluator__ekqv7Jn",
+                            "otel-span-filtering__DDSdMWy",
+                            "payload-size-truncation__6kGt3uC",
+                            "prompt-materialization-fallback__YbveMnb",
+                            "ragas-offline-batch-eval__EAGDmSg",
+                            "vercel-ai-sdk-telemetry-filterin__MSzdsQp"
+                        ]
+                    }
+                },
+                "exception_stats": {}
+            }
+        },
+        "n_input_tokens": 0,
+        "n_cache_tokens": 0,
+        "n_output_tokens": 13499729,
+        "cost_usd": null
+    }
+}

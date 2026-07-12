@@ -1,0 +1,153 @@
+{
+  "resourceSpans": [
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "telemetry.sdk.language",
+            "value": {
+              "stringValue": "python"
+            }
+          },
+          {
+            "key": "telemetry.sdk.name",
+            "value": {
+              "stringValue": "opentelemetry"
+            }
+          },
+          {
+            "key": "telemetry.sdk.version",
+            "value": {
+              "stringValue": "1.43.0"
+            }
+          },
+          {
+            "key": "service.instance.id",
+            "value": {
+              "stringValue": "0fc651fb-15be-4b14-aa26-47b1b135a244"
+            }
+          },
+          {
+            "key": "langwatch.sdk.name",
+            "value": {
+              "stringValue": "langwatch-observability-sdk"
+            }
+          },
+          {
+            "key": "langwatch.sdk.version",
+            "value": {
+              "stringValue": "0.26.0"
+            }
+          },
+          {
+            "key": "langwatch.sdk.language",
+            "value": {
+              "stringValue": "python"
+            }
+          },
+          {
+            "key": "service.name",
+            "value": {
+              "stringValue": "unknown_service"
+            }
+          }
+        ]
+      },
+      "scopeSpans": [
+        {
+          "scope": {
+            "name": "langwatch",
+            "version": "0.26.0"
+          },
+          "spans": [
+            {
+              "traceId": "q/xuN8NOLqM81yhbMiuiPQ==",
+              "spanId": "1TiAAQ2+MZU=",
+              "parentSpanId": "X8VMobOjf2Y=",
+              "name": "Document Retrieval",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1783870333729712599",
+              "endTimeUnixNano": "1783870333729794309",
+              "attributes": [
+                {
+                  "key": "langwatch.span.type",
+                  "value": {
+                    "stringValue": "rag_retrieval"
+                  }
+                },
+                {
+                  "key": "langwatch.timestamps",
+                  "value": {
+                    "stringValue": "{}"
+                  }
+                },
+                {
+                  "key": "langwatch.input",
+                  "value": {
+                    "stringValue": "{\"type\": \"json\", \"value\": {\"query\": \"What is the capital of France?\"}}"
+                  }
+                },
+                {
+                  "key": "langwatch.output",
+                  "value": {
+                    "stringValue": "{\"type\": \"json\", \"value\": {\"documents\": [\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"]}}"
+                  }
+                }
+              ],
+              "status": {},
+              "flags": 256
+            },
+            {
+              "traceId": "q/xuN8NOLqM81yhbMiuiPQ==",
+              "spanId": "X8VMobOjf2Y=",
+              "name": "RAG Pipeline",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1783870333725739527",
+              "endTimeUnixNano": "1783870333731970185",
+              "attributes": [
+                {
+                  "key": "metadata",
+                  "value": {
+                    "stringValue": "{}"
+                  }
+                },
+                {
+                  "key": "langwatch.span.type",
+                  "value": {
+                    "stringValue": "span"
+                  }
+                },
+                {
+                  "key": "langwatch.timestamps",
+                  "value": {
+                    "stringValue": "{}"
+                  }
+                },
+                {
+                  "key": "langwatch.origin",
+                  "value": {
+                    "stringValue": "application"
+                  }
+                },
+                {
+                  "key": "langwatch.input",
+                  "value": {
+                    "stringValue": "{\"type\": \"json\", \"value\": {\"question\": \"What is the capital of France?\"}}"
+                  }
+                },
+                {
+                  "key": "langwatch.output",
+                  "value": {
+                    "stringValue": "{\"type\": \"text\", \"value\": \"The capital of France is Paris.\"}"
+                  }
+                }
+              ],
+              "status": {},
+              "flags": 256
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

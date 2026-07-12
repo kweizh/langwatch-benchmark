@@ -1,0 +1,19 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2, anyio-4.14.1
+collected 3 items
+
+../tests/test_final_state.py ...                                         [100%]
+
+==================================== PASSES ====================================
+____________________ test_run_script_executes_successfully _____________________
+---------------------------- Captured stderr setup -----------------------------
+127.0.0.1 - - [12/Jul/2026 15:57:41] "GET /health HTTP/1.1" 200 -
+----------------------------- Captured stderr call -----------------------------
+127.0.0.1 - - [12/Jul/2026 15:57:43] "POST /api/otel/v1/traces HTTP/1.1" 200 -
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_run_script_executes_successfully
+PASSED ../tests/test_final_state.py::test_payload_file_exists
+PASSED ../tests/test_final_state.py::test_payload_document_is_truncated
+============================== 3 passed in 3.43s ===============================

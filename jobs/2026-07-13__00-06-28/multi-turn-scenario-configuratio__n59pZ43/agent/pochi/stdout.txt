@@ -1,0 +1,173 @@
+- Initializing MCP connections...
+You
+# Multi-turn Scenario Configuration with Multiple Judges ## Background LangWatch provides an open-source `scenario` framework to test AI agents. It uses AI agents (User Simulators and Judges) to perform dynamic, multi-turn conversation testing. You need to configure a multi-turn simulation test using this framework, utilizing multiple specialized judges. ## Requirements - Create a Python script `scenario_def.py` that configures a LangWatch scenario. - Define a custom `SupportAgentAdapter` that inherits from `scenario.AgentAdapter` and implements the `call` method to return a simple string response. - Configure a scenario with multiple agents: the adapter, a `UserSimulatorAgent` acting as a frustrated customer, and **two separate** `JudgeAgent`s. One judge must evaluate politeness, and the other must evaluate policy adherence. - Configure the scenario script to simulate a multi-turn flow: a user message, an agent response, and a success trigger. - To avoid requiring OpenAI API keys, **do not** execute `scenario.run`. Instead, the script should accept a `--run-id` argument, construct the configuration, and print a JSON representation of the configured scenario. ## Implementation Hints - Install `langwatch-scenario` using `uv pip install`. - Use the `scenario` module from `langwatch-scenario`. - Instantiate `scenario.UserSimulatorAgent` and `scenario.JudgeAgent` with appropriate system prompts and criteria. Note that `JudgeAgent` accepts a `criteria` list. - Use `scenario.user()`, `scenario.agent()`, and `scenario.succeed()` to define the script flow. - Use `argparse` to parse the `--run-id` argument. - Since LangWatch agents and script steps are complex objects, you will need to iterate over them and extract their class names. For `JudgeAgent`s, extract their `criteria` attribute to include in the output. ## Acceptance Criteria - Project path: `/home/user/myproject` - Command: `python3 scenario_def.py --run-id <run-id>` - The stdout must print a valid JSON object representing the scenario configuration. - The JSON output must match the following schema exactly (criteria strings can be your own, but there must be two lists of criteria for the two judges): ```json { "name": "Refund Scenario <run-id>", "agents": ["SupportAgentAdapter", "UserSimulatorAgent", "JudgeAgent", "JudgeAgent"], "judge_criteria": [ ["Criteria for politeness"], ["Criteria for policy adherence"] ], "script_types": ["user", "agent", "succeed"] } ```   
+
+Pochi
+I'll start by exploring the `langwatch-scenario` package to understand its API before writing the script.   
+📋 Updating todo list (4 items) ✔ 
+💫 Executing pip install langwatch-scenario 2>&1 | tail -20 ✔ 
+💫 Executing uv pip install langwatch-scenario 2>&1 | tail -20 ✔ 
+💫 Executing mkdir -p /home/user/myproject && cd /home/user/myproject && uv venv 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && uv pip install langwatch-scenario 2>&1 | tail -20 ✔ 
+📋 Updating todo list (4 items) ✔ 
+💫 Executing cd /home/user/myproject && python3 -c "import scenario; print(dir(scenario))" 2>&1 ✖ "Command exited with code 1"
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "import scenario; print(dir(scenario))" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import inspect
+import scenario
+
+# Inspect key classes
+for name in ['AgentAdapter', 'UserSimulatorAgent', 'JudgeAgent', 'ScenarioConfig']:
+    cls = getattr(scenario, name)
+    print(f'=== {name} ===')
+    sig = inspect.signature(cls.__init__)
+    print(f'__init__ params: {list(sig.parameters.keys())}')
+    print()
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import scenario
+
+# Inspect script functions
+for name in ['user', 'agent', 'succeed', 'fail', 'judge', 'sleep', 'silence', 'message', 'proceed']:
+    fn = getattr(scenario, name)
+    import inspect
+    sig = inspect.signature(fn)
+    print(f'{name}: params={list(sig.parameters.keys())}')
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import inspect, scenario
+
+# Inspect AgentAdapter more deeply
+print('=== AgentAdapter source ===')
+print(inspect.getsource(scenario.AgentAdapter))
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import inspect, scenario
+
+# Inspect ScenarioConfig and how it's built
+print('=== ScenarioConfig source ===')
+print(inspect.getsource(scenario.ScenarioConfig))
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import inspect, scenario
+
+# Check the run function signature
+print('=== run function ===')
+sig = inspect.signature(scenario.run)
+print(f'params: {list(sig.parameters.keys())}')
+
+# Check what arun returns
+print()
+print('=== arun function ===')
+sig = inspect.signature(scenario.arun)
+print(f'params: {list(sig.parameters.keys())}')
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import inspect, scenario
+
+# Look at the script function
+print('=== script function ===')
+print(inspect.getsource(scenario.script))
+
+# Look at the run function source
+print('=== run function ===')
+print(inspect.getsource(scenario.run))
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import scenario, inspect
+
+# Check what _build_scenario does
+print(inspect.getsource(scenario._generated._build_scenario))
+" 2>&1 ✖ "Command exited with code 1"
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import scenario, inspect
+
+# Check how UserSimulatorAgent and JudgeAgent look as objects
+usa = scenario.UserSimulatorAgent(system_prompt='test')
+ja = scenario.JudgeAgent(criteria=['test criteria'], system_prompt='judge test')
+
+print('UserSimulatorAgent type:', type(usa))
+print('UserSimulatorAgent class:', usa.__class__.__name__)
+print()
+print('JudgeAgent type:', type(ja))
+print('JudgeAgent class:', ja.__class__.__name__)
+print('JudgeAgent criteria:', ja.criteria)
+print()
+print('JudgeAgent attrs:', [a for a in dir(ja) if not a.startswith('_')])
+" 2>&1 ✖ "Command exited with code 1"
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import scenario, inspect
+
+scenario.configure(default_model='openai/gpt-4.1-mini')
+
+usa = scenario.UserSimulatorAgent(system_prompt='test')
+ja = scenario.JudgeAgent(criteria=['test criteria'], system_prompt='judge test')
+
+print('UserSimulatorAgent type:', type(usa))
+print('UserSimulatorAgent class:', usa.__class__.__name__)
+print()
+print('JudgeAgent type:', type(ja))
+print('JudgeAgent class:', ja.__class__.__name__)
+print('JudgeAgent criteria:', ja.criteria)
+print()
+print('JudgeAgent attrs:', [a for a in dir(ja) if not a.startswith('_')])
+print()
+print('UserSimulatorAgent attrs:', [a for a in dir(usa) if not a.startswith('_')])
+" 2>&1 ✔ 
+📋 Updating todo list (4 items) ✔ 
+Now I have a clear understanding of the API. Let me write the script:   
+✏️  Writing /home/user/myproject/scenario_def.py ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python scenario_def.py --run-id test123 2>&1 ✔ 
+The output matches the required schema exactly. Let me verify it's valid JSON and matches all fields:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import json, subprocess
+
+result = subprocess.run(['.venv/bin/python', 'scenario_def.py', '--run-id', 'verify42'], capture_output=True, text=True)
+output = result.stdout.strip()
+data = json.loads(output)
+
+# Verify schema
+assert data['name'] == 'Refund Scenario verify42', f'name mismatch: {data[\"name\"]}'
+assert data['agents'] == ['SupportAgentAdapter', 'UserSimulatorAgent', 'JudgeAgent', 'JudgeAgent'], f'agents mismatch: {data[\"agents\"]}'
+assert len(data['judge_criteria']) == 2, f'expected 2 judge criteria lists, got {len(data[\"judge_criteria\"])}'
+assert all(isinstance(c, list) for c in data['judge_criteria']), 'judge_criteria must be list of lists'
+assert data['script_types'] == ['user', 'agent', 'succeed'], f'script_types mismatch: {data[\"script_types\"]}'
+
+print('All assertions passed!')
+print(json.dumps(data, indent=2))
+" 2>&1 ✔ 
+📋 Updating todo list (4 items) ✔ 
+🎉 Task Completed
+The `scenario_def.py` script has been created at `/home/user/myproject/scenario_def.py` and is fully functional.
+
+**What it does:**
+
+1. **`SupportAgentAdapter`** — A custom class inheriting from `scenario.AgentAdapter` that implements the `async call` method, returning a simple string response based on the user's last message.
+
+2. **Scenario configuration** — Builds a multi-turn scenario with:
+   - A `UserSimulatorAgent` acting as a frustrated customer waiting for a refund
+   - Two separate `JudgeAgent`s: one evaluating **politeness** (respectful language, acknowledging frustration, no dismissive tone) and one evaluating **policy adherence** (eligibility verification, clear process explanation, no out-of-policy promises)
+
+3. **Script flow** — Defines a `user → agent → succeed` multi-turn sequence using `scenario.user()`, `scenario.agent()`, and `scenario.succeed()`.
+
+4. **CLI** — Accepts `--run-id` via `argparse` and prints the JSON configuration to stdout without executing `scenario.run`.
+
+**JSON output schema** (verified):
+```json
+{
+  "name": "Refund Scenario <run-id>",
+  "agents": ["SupportAgentAdapter", "UserSimulatorAgent", "JudgeAgent", "JudgeAgent"],
+  "judge_criteria": [
+    ["Agent uses polite and respectful language", "Agent acknowledges the customer's frustration", "Agent avoids dismissive or defensive language"],
+    ["Agent verifies the customer's eligibility for a refund", "Agent explains the refund timeline and process clearly", "Agent does not make promises outside the refund policy"]
+  ],
+  "script_types": ["user", "agent", "succeed"]
+}
+```
+
+**Usage:**
+```bash
+cd /home/user/myproject
+.venv/bin/python scenario_def.py --run-id <run-id>
+```   
+  

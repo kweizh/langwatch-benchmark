@@ -1,0 +1,122 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T16:17:15.317284+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 8,
+            "passed": 1,
+            "failed": 7,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783873033515,
+            "stop": 1783873035317
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_script_runs_successfully",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 1485,
+                "start": 1783873033534,
+                "stop": 1783873035019,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}\n\n    def test_script_runs_successfully(evaluation_run):\n>       assert evaluation_run[\"returncode\"] == 0, (\n            \"`python run_evaluation.py` exited with \"\n            f\"{evaluation_run['returncode']}.\\nstdout:\\n{evaluation_run['stdout']}\\n\"\n            f\"stderr:\\n{evaluation_run['stderr']}\"\n        )\nE       AssertionError: `python run_evaluation.py` exited with 1.\nE         stdout:\nE         Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr899jz8pj?runId=zr899jz8pj\nE         \nE         stderr:\nE         \nE         Evaluating:   0%|          | 0/6 [00:00<?, ?it/s]\nE         Evaluating:   0%|          | 0/6 [00:00<?, ?it/s]\nE         Traceback (most recent call last):\nE           File \"/home/user/project/run_evaluation.py\", line 185, in <module>\nE             main()\nE           File \"/home/user/project/run_evaluation.py\", line 151, in main\nE             question = row[\"question\"]\nE                        ~~~^^^^^^^^^^^^\nE         TypeError: string indices must be integers, not 'str'\nE         \nE       assert 1 == 0\n\n/tests/test_final_state.py:176: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_single_batch_evaluation_run_initialized",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873035019,
+                "stop": 1783873035020,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_evaluator_called_once_per_row",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4,
+                "start": 1783873035020,
+                "stop": 1783873035024,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}\n\n    def test_evaluator_called_once_per_row(evaluation_run):\n        questions = _read_questions()\n        n = len(questions)\n        ragas_calls = [\n            body for (slug, body) in evaluation_run[\"evaluate_calls\"]\n            if slug == EVALUATOR_SLUG\n        ]\n>       assert len(ragas_calls) == n, (\n            f\"Expected exactly {n} calls to the built-in evaluator '{EVALUATOR_SLUG}' \"\n            f\"(one per dataset row), got {len(ragas_calls)}. \"\n            f\"All evaluator slugs seen: {[s for s, _ in evaluation_run['evaluate_calls']]}\"\n        )\nE       AssertionError: Expected exactly 6 calls to the built-in evaluator 'legacy/ragas_context_utilization' (one per dataset row), got 0. All evaluator slugs seen: []\nE       assert 0 == 6\nE        +  where 0 = len([])\n\n/tests/test_final_state.py:207: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_evaluator_payload_shape",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4,
+                "start": 1783873035024,
+                "stop": 1783873035028,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}\n\n    def test_evaluator_payload_shape(evaluation_run):\n        ragas_calls = [\n            body for (slug, body) in evaluation_run[\"evaluate_calls\"]\n            if slug == EVALUATOR_SLUG\n        ]\n>       assert ragas_calls, f\"No calls to evaluator '{EVALUATOR_SLUG}' were captured.\"\nE       AssertionError: No calls to evaluator 'legacy/ragas_context_utilization' were captured.\nE       assert []\n\n/tests/test_final_state.py:219: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_all_questions_covered_exactly_once",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 4,
+                "start": 1783873035028,
+                "stop": 1783873035032,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}\n\n    def test_all_questions_covered_exactly_once(evaluation_run):\n        questions = sorted(_read_questions())\n        inputs = sorted(\n            str((body.get(\"data\") or {}).get(\"input\", \"\")).strip()\n            for (slug, body) in evaluation_run[\"evaluate_calls\"]\n            if slug == EVALUATOR_SLUG\n        )\n>       assert inputs == questions, (\n            \"The set of evaluator 'input' values must equal the exact set of dataset \"\n            f\"questions.\\nExpected: {questions}\\nGot:      {inputs}\"\n        )\nE       AssertionError: The set of evaluator 'input' values must equal the exact set of dataset questions.\nE         Expected: ['How can prompts be fetched and compiled with the LangWatch SDK?', 'How do I initialize a batch evaluation run in the LangWatch Python SDK?', 'How does LangWatch export telemetry data?', 'Which built-in evaluator measures how well an answer uses the retrieved contexts?', 'Which environment variable holds the LangWatch API key?', 'Which package manager should be used to install LangWatch Python packages?']\nE         Got:      []\nE       assert [] == ['How can pro...on packages?']\nE         \nE         Right contains 6 more items, first extra item: 'How can prompts be fetched and compiled with the LangWatch SDK?'\nE         Use -v to get more diff\n\n/tests/test_final_state.py:246: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_contexts_grounded_in_knowledge_base",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 5,
+                "start": 1783873035032,
+                "stop": 1783873035037,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}\n\n    def test_contexts_grounded_in_knowledge_base(evaluation_run):\n        kb_contents = _read_kb_contents()\n        ragas_calls = [\n            body for (slug, body) in evaluation_run[\"evaluate_calls\"]\n            if slug == EVALUATOR_SLUG\n        ]\n        grounded = False\n        for body in ragas_calls:\n            contexts = (body.get(\"data\") or {}).get(\"contexts\") or []\n            for ctx in contexts:\n                ctx_s = str(ctx).strip()\n                if not ctx_s:\n                    continue\n                for content in kb_contents:\n                    if ctx_s in content or content.strip() in ctx_s:\n                        grounded = True\n                        break\n                if grounded:\n                    break\n            if grounded:\n                break\n>       assert grounded, (\n            \"None of the evaluator 'contexts' matched any knowledge-base document \"\n            \"content; contexts must be really retrieved from data/knowledge_base.json.\"\n        )\nE       AssertionError: None of the evaluator 'contexts' matched any knowledge-base document content; contexts must be really retrieved from data/knowledge_base.json.\nE       assert False\n\n/tests/test_final_state.py:273: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_summary_artifact",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3,
+                "start": 1783873035037,
+                "stop": 1783873035040,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}\n\n    def test_summary_artifact(evaluation_run):\n>       assert os.path.isfile(SUMMARY_PATH), f\"Summary artifact {SUMMARY_PATH} was not created.\"\nE       AssertionError: Summary artifact /home/user/project/eval_summary.json was not created.\nE       assert False\nE        +  where False = <function isfile at 0x728efba74220>('/home/user/project/eval_summary.json')\nE        +    where <function isfile at 0x728efba74220> = <module 'posixpath' (frozen)>.isfile\nE        +      where <module 'posixpath' (frozen)> = os.path\n\n/tests/test_final_state.py:280: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_stdout_reports_row_count",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 275,
+                "start": 1783873035041,
+                "stop": 1783873035316,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}\n\n    def test_stdout_reports_row_count(evaluation_run):\n        n = len(_read_questions())\n>       assert re.search(rf\"Rows evaluated:\\s*{n}\\b\", evaluation_run[\"stdout\"]), (\n            f\"Expected a line matching 'Rows evaluated: {n}' in stdout, got:\\n{evaluation_run['stdout']}\"\n        )\nE       AssertionError: Expected a line matching 'Rows evaluated: 6' in stdout, got:\nE         Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr899jz8pj?runId=zr899jz8pj\nE         \nE       assert None\nE        +  where None = <function search at 0x728efba0f9c0>('Rows evaluated:\\\\s*6\\\\b', 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr899jz8pj?runId=zr899jz8pj\\n')\nE        +    where <function search at 0x728efba0f9c0> = re.search\n\n/tests/test_final_state.py:299: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

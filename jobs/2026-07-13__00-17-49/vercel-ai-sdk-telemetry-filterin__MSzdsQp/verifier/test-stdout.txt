@@ -1,0 +1,18 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: xprocess-1.0.2, json-ctrf-0.5.2
+collected 2 items
+
+../tests/test_final_state.py ..                                          [100%]
+
+==================================== PASSES ====================================
+_______________________________ test_safe_prompt _______________________________
+---------------------------- Captured stdout setup -----------------------------
+/tests/.pytest_cache/d/.xprocess/mock_server$ python3 /tmp/mock_server.py
+process 'mock_server' started pid=1441
+mock_server process startup detected
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_safe_prompt
+PASSED ../tests/test_final_state.py::test_sensitive_prompt
+============================== 2 passed in 4.93s ===============================

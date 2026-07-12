@@ -1,0 +1,86 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T15:48:47.195338+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 6,
+            "passed": 5,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783871323578,
+            "stop": 1783871327195
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_truncate_contexts_behaviour",
+                "status": "passed",
+                "duration": 1759,
+                "start": 1783871323612,
+                "stop": 1783871325371,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_cli_prints_answer",
+                "status": "passed",
+                "duration": 1424,
+                "start": 1783871325372,
+                "stop": 1783871326796,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_trace_structure_exported",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783871326796,
+                "stop": 1783871326797,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_payload_under_collector_limit",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 83,
+                "start": 1783871326797,
+                "stop": 1783871326880,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "pipeline_run = CompletedProcess(args=['/home/user/project/.venv/bin/python', 'main.py', 'Summarize the onboarding documents'], return...d of each document while truncating the tails to stay under the LangWatch collector's 1MB payload limit.\\n\", stderr='')\ncollector = <test_final_state._OTLPCollector object at 0x7a2bcdcc14f0>\n\n    def test_payload_under_collector_limit(pipeline_run, collector):\n        assert collector.requests, f\"No OTLP payload captured. CLI stderr:\\n{pipeline_run.stderr}\"\n        raw_total = sum(len(item[\"content\"].encode(\"utf-8\")) for item in _load_corpus())\n        assert raw_total > COLLECTOR_LIMIT_BYTES, (\n            \"Sanity check: the raw corpus must exceed the collector limit so a small \"\n            f\"exported payload proves truncation (raw={raw_total}).\"\n        )\n        assert collector.max_payload_bytes() < COLLECTOR_LIMIT_BYTES, (\n            \"Each exported OTLP body must be under the 1MB collector limit \"\n            f\"(max body={collector.max_payload_bytes()}).\"\n        )\n>       assert collector.total_payload_bytes() < 600_000, (\n            \"The exported trace payload must be far below the limit after truncation \"\n            f\"(total={collector.total_payload_bytes()}).\"\n        )\nE       AssertionError: The exported trace payload must be far below the limit after truncation (total=769988).\nE       assert 769988 < 600000\nE        +  where 769988 = total_payload_bytes()\nE        +    where total_payload_bytes = <test_final_state._OTLPCollector object at 0x7a2bcdcc14f0>.total_payload_bytes\n\n/tests/test_final_state.py:251: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_document_ids_and_marker_retained",
+                "status": "passed",
+                "duration": 4,
+                "start": 1783871326880,
+                "stop": 1783871326884,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_heads_retained_tails_dropped",
+                "status": "passed",
+                "duration": 310,
+                "start": 1783871326884,
+                "stop": 1783871327194,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            }
+        ]
+    }
+}

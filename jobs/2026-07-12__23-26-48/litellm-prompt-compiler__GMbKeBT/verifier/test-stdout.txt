@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2, anyio-4.14.1
+collected 6 items
+
+../tests/test_final_state.py ......                                      [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_run_script_exists
+PASSED ../tests/test_final_state.py::test_happy_path_explicit_version
+PASSED ../tests/test_final_state.py::test_trace_linkage_artifact
+PASSED ../tests/test_final_state.py::test_default_version_resolution
+PASSED ../tests/test_final_state.py::test_version_mismatch_fails
+PASSED ../tests/test_final_state.py::test_missing_variable_fails
+============================== 6 passed in 16.74s ==============================

@@ -1,0 +1,83 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T16:04:19.583185+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 6,
+            "passed": 6,
+            "failed": 0,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783872257475,
+            "stop": 1783872259583
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_truncate_contexts_behaviour",
+                "status": "passed",
+                "duration": 789,
+                "start": 1783872257508,
+                "stop": 1783872258297,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_cli_prints_answer",
+                "status": "passed",
+                "duration": 894,
+                "start": 1783872258297,
+                "stop": 1783872259191,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_trace_structure_exported",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783872259192,
+                "stop": 1783872259192,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_payload_under_collector_limit",
+                "status": "passed",
+                "duration": 4,
+                "start": 1783872259192,
+                "stop": 1783872259196,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_document_ids_and_marker_retained",
+                "status": "passed",
+                "duration": 3,
+                "start": 1783872259196,
+                "stop": 1783872259199,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_heads_retained_tails_dropped",
+                "status": "passed",
+                "duration": 382,
+                "start": 1783872259200,
+                "stop": 1783872259582,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            }
+        ]
+    }
+}

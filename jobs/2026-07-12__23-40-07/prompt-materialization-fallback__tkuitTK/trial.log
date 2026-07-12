@@ -1,0 +1,152 @@
+Selected strategy: _DaytonaDirect
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/prompt-materialization-fallback/environment/Dockerfile
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Command outputs captured
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model minimax/MiniMax-M3 --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# LangWatch Prompt Materialization with Offline Fallback Loader
+
+## Background
+You are hardening the prompt-delivery path of a Python service that uses [LangWatch Prompt Management](https://langwatch.ai/docs/prompt-management/getting-started). In production the service fetches versioned prompts from the LangWatch API, but the deployment target is an air-gapped / CI environment where the LangWatch API can be unreachable. To keep the service running under LangWatch's *Guaranteed Availability* model, prompts are materialized to local YAML files with the Prompts CLI and the application must transparently fall back to that local cache.
+
+Your job is to (1) scaffold and materialize a versioned prompt locally as YAML, and (2) implement a robust, deterministic fallback loader plus a small CLI that compiles the prompt with dynamic variables — working correctly even when the LangWatch API is not reachable.
+
+## Requirements
+- Scaffold a LangWatch prompts project so that the following tracking files exist at the project root: `prompts.json` and `prompts-lock.json`.
+- Provide a locally materialized, versioned prompt for the handle `customer-support-bot` at `prompts/.materialized/customer-support-bot.prompt.yaml`. The prompt must:
+  - Use a model identifier of the form `openai/<model>` (e.g. `openai/gpt-4o-mini`).
+  - Contain at least a `system` message and a `user` message.
+  - Reference the two template variables `{{user_name}}` and `{{issue}}` (the `{{...}}` mustache syntax used by LangWatch prompts) across its messages.
+- `prompts-lock.json` must resolve the `customer-support-bot` dependency to a concrete integer version (use version `3`) and record the path to the materialized YAML file.
+- Implement a Python CLI application `run.py` that loads the prompt through a fallback loader and compiles it with runtime variables.
+- The fallback loader must be **deterministic and offline-capable**: when the application runs in offline mode it must load the prompt strictly from the local materialized cache (never depending on a network call), and report where the prompt was sourced from.
+- Variable compilation must substitute every `{{variable}}` placeholder with the provided value and must fail loudly (non-zero exit) if a required variable is missing. No `{{` / `}}` placeholders may remain in the compiled output.
+- Do NOT mock LangWatch, its HTTP client, or any transitive dependency. The real `langwatch` package must be installed and importable.
+
+## Implementation Hints
+- Use the LangWatch Prompts CLI (`langwatch prompt init`, `langwatch prompt create`) to scaffold the project layout and the prompt YAML. The CLI is available in the environment. Creating/initializing prompts is a local operation and does not require network access.
+- Materialized prompts live under `prompts/.materialized/` and follow the `.prompt.yaml` format (`model`, optional `modelParameters`, and a `messages` list of `{role, content}`). See the [Prompts CLI](https://langwatch.ai/docs/prompt-management/cli) and [Guaranteed Availability](https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability) docs.
+- For the offline path, resolve the materialized file location from `prompts-lock.json` and parse the YAML yourself rather than assuming a network fetch. Note: pointing `LANGWATCH_ENDPOINT` at a bad address does not reliably raise a network error, so drive the fallback with an explicit offline execution path instead.
+- Implement mustache-style `{{variable}}` substitution deterministically. Collect the set of variables referenced by the template to decide which ones are required.
+- Use `uv` to create the virtualenv and install Python packages (`uv venv`, then `uv pip install ...`).
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Command: `python run.py --handle <handle> --vars <json_object> [--version <int>] [--offline] --out <path>`
+  - `--handle`: the prompt handle to load (e.g. `customer-support-bot`).
+  - `--vars`: a JSON object string mapping variable names to string values.
+  - `--version`: optional integer version; when omitted, the version recorded in `prompts-lock.json` is used.
+  - `--offline`: when present, the loader must load only from the local materialized cache.
+  - `--out`: path to write the compiled result JSON.
+- The command writes a JSON object to the `--out` path with this shape:
+  ```json
+  {
+    "handle": string,
+    "version": integer,
+    "model": string,
+    "source": string,
+    "messages": [ { "role": string, "content": string } ]
+  }
+  ```
+  - `source` is `"local_materialized"` when the prompt was loaded from the local cache and `"remote_api"` when loaded from the LangWatch API.
+  - When `--offline` is passed, `source` must be `"local_materialized"`.
+  - `model` must be the model string from the materialized prompt (begins with `openai/`).
+  - `version` must be the resolved integer version.
+  - Every message `content` must have all `{{...}}` placeholders replaced; no `{{` substring may remain.
+- Required artifacts at the project root: `prompts.json`, `prompts-lock.json`, and `prompts/.materialized/customer-support-bot.prompt.yaml`.
+- Error handling: if a required template variable is not supplied in `--vars`, the command must exit with a non-zero status and must not write a successful compiled output. If `--offline` is set and the materialized file cannot be found, the command must also exit non-zero.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Collecting main service artifacts
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './myproject/.venv/bin/python' is a link to an absolute path

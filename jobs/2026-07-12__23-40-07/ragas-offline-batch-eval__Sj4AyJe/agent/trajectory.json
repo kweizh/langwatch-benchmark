@@ -1,0 +1,172 @@
+{
+  "schema_version": "ATIF-v1.6",
+  "session_id": "unknown",
+  "agent": {
+    "name": "pochi",
+    "version": "unknown",
+    "model_name": "minimax/MiniMax-M3"
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 2,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 3,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 4,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 5,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 6,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 7,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 8,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 9,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 10,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 11,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 12,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 13,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 14,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 15,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 16,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 17,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 18,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 19,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 20,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 21,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 22,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 23,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 24,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 25,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 26,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 27,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 28,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 29,
+      "source": "user",
+      "message": ""
+    },
+    {
+      "step_id": 30,
+      "source": "user",
+      "message": ""
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 0,
+    "total_completion_tokens": 5355619,
+    "total_cached_tokens": 0,
+    "total_steps": 30,
+    "extra": {
+      "total_tokens": 5355619,
+      "system_tokens": 0,
+      "tools_tokens": 0
+    }
+  }
+}

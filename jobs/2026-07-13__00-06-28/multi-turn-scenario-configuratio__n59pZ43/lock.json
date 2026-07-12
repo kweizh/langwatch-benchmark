@@ -1,0 +1,45 @@
+{
+    "schema_version": 1,
+    "task": {
+        "name": "multi-turn-scenario-configuration",
+        "type": "local",
+        "digest": "sha256:baee85384f4caad7bf6564bd73ade5e0b389ee719841ecdd547f13f168cbb003",
+        "source": "tasks",
+        "path": "/home/kw/code/zealt/langwatch-benchmark/tasks/multi-turn-scenario-configuration"
+    },
+    "install_only": false,
+    "timeout_multiplier": 1.0,
+    "agent": {
+        "import_path": "agents.pochi:Pochi",
+        "model_name": "deepseek/deepseek-4-pro",
+        "skills": [],
+        "extra_allowed_hosts": [],
+        "kwargs": {},
+        "env": {
+            "POCHI_API_KEY": "${POCHI_API_KEY}"
+        },
+        "mcp_servers": []
+    },
+    "skills": [],
+    "environment": {
+        "type": "daytona",
+        "force_build": false,
+        "delete": true,
+        "cpu_enforcement_policy": "auto",
+        "memory_enforcement_policy": "auto",
+        "override_memory_mb": 1024,
+        "mounts": [
+            {
+                "type": "bind",
+                "source": "test_initial_state.py",
+                "target": "/bootstrap/test_initial_state.py"
+            }
+        ],
+        "extra_docker_compose": [],
+        "kwargs": {},
+        "extra_allowed_hosts": []
+    },
+    "verifier": {
+        "disable": false
+    }
+}

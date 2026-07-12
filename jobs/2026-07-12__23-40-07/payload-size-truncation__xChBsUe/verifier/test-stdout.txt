@@ -1,0 +1,44 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /tests
+plugins: anyio-4.14.1, json-ctrf-0.5.2
+collected 6 items
+
+../tests/test_final_state.py ...F..                                      [100%]
+
+=================================== FAILURES ===================================
+______________________ test_payload_under_collector_limit ______________________
+
+pipeline_run = CompletedProcess(args=['/home/user/project/.venv/bin/python', 'main.py', 'Summarize the onboarding documents'], return...d of each document while truncating the tails to stay under the LangWatch collector's 1MB payload limit.\n", stderr='')
+collector = <test_final_state._OTLPCollector object at 0x7a2bcdcc14f0>
+
+    def test_payload_under_collector_limit(pipeline_run, collector):
+        assert collector.requests, f"No OTLP payload captured. CLI stderr:\n{pipeline_run.stderr}"
+        raw_total = sum(len(item["content"].encode("utf-8")) for item in _load_corpus())
+        assert raw_total > COLLECTOR_LIMIT_BYTES, (
+            "Sanity check: the raw corpus must exceed the collector limit so a small "
+            f"exported payload proves truncation (raw={raw_total})."
+        )
+        assert collector.max_payload_bytes() < COLLECTOR_LIMIT_BYTES, (
+            "Each exported OTLP body must be under the 1MB collector limit "
+            f"(max body={collector.max_payload_bytes()})."
+        )
+>       assert collector.total_payload_bytes() < 600_000, (
+            "The exported trace payload must be far below the limit after truncation "
+            f"(total={collector.total_payload_bytes()})."
+        )
+E       AssertionError: The exported trace payload must be far below the limit after truncation (total=769988).
+E       assert 769988 < 600000
+E        +  where 769988 = total_payload_bytes()
+E        +    where total_payload_bytes = <test_final_state._OTLPCollector object at 0x7a2bcdcc14f0>.total_payload_bytes
+
+/tests/test_final_state.py:251: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_truncate_contexts_behaviour
+PASSED ../tests/test_final_state.py::test_cli_prints_answer
+PASSED ../tests/test_final_state.py::test_trace_structure_exported
+PASSED ../tests/test_final_state.py::test_document_ids_and_marker_retained
+PASSED ../tests/test_final_state.py::test_heads_retained_tails_dropped
+FAILED ../tests/test_final_state.py::test_payload_under_collector_limit - Ass...
+========================= 1 failed, 5 passed in 3.62s ==========================

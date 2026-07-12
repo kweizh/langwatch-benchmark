@@ -1,0 +1,18 @@
+{
+  "name": "myproject",
+  "version": "1.0.0",
+  "description": "Vercel AI SDK Telemetry Filtering",
+  "main": "run.ts",
+  "scripts": {
+    "start": "tsx run.ts"
+  },
+  "dependencies": {
+    "ai": "^3.1.0",
+    "langwatch": "^0.34.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

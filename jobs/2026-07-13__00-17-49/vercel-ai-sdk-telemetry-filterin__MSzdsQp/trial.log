@@ -1,0 +1,97 @@
+Selected strategy: _DaytonaDirect
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/vercel-ai-sdk-telemetry-filtering/environment/Dockerfile
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Command outputs captured
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model anthropic/claude-4-6-sonnet --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# Vercel AI SDK Telemetry Filtering with LangWatch
+
+## Background
+When integrating Vercel AI SDK with LangWatch observability, you may encounter situations where traces contain sensitive information or exceed payload size limits. You need to implement client-side telemetry filtering to redact sensitive data before it is sent to the LangWatch collector.
+
+## Requirements
+- Create a TypeScript script `run.ts` that accepts a `--prompt` argument.
+- Use the Vercel AI SDK (`generateText`) to generate a response based on the prompt.
+- To avoid needing a real LLM API key, implement and use a simple mock Vercel AI SDK provider (e.g., a custom `LanguageModelV1` implementation) that simply echoes the prompt or returns a dummy string.
+- Initialize LangWatch observability for Node.js.
+- Configure client-side payload filtering using the `dataCapture` callback (or equivalent filtering mechanism in the LangWatch SDK) to redact any occurrence of the exact string `SECRET_TOKEN`, replacing it with `[REDACTED]` in the outgoing telemetry payloads.
+- Ensure that the telemetry is flushed and sent to the LangWatch endpoint before the script exits.
+
+## Implementation Hints
+- Use `setupObservability` from `langwatch/observability/node`.
+- Look into the LangWatch SDK configuration options to find the `dataCapture` callback or OpenTelemetry span processor filtering to modify span attributes before they are exported.
+- Vercel AI SDK allows creating custom providers by implementing the `LanguageModelV1` interface. You can create a minimal mock provider to satisfy the `generateText` call without making real HTTP requests.
+- Use `npx tsx run.ts` to execute the script.
+- Make sure to properly await the completion of the LLM call and any telemetry flushing.
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Command: `npx tsx run.ts --prompt <text>`
+- The command must execute without errors and output the generated text.
+- The command must not require or use a real OpenAI API key.
+- The script must send OpenTelemetry traces to the configured `LANGWATCH_ENDPOINT`.
+- The outgoing telemetry payload must not contain the string `SECRET_TOKEN`; it must be replaced with `[REDACTED]`.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Collecting main service artifacts

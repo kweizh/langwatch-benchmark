@@ -1,0 +1,68 @@
+{
+  "resource_spans": [
+    {
+      "resource": {
+        "attributes": {
+          "telemetry.sdk.language": "python",
+          "telemetry.sdk.name": "opentelemetry",
+          "telemetry.sdk.version": "1.43.0",
+          "service.instance.id": "bff868f6-9d35-4421-9ab6-2d2668b13bed",
+          "langwatch.sdk.name": "langwatch-observability-sdk",
+          "langwatch.sdk.version": "0.26.0",
+          "langwatch.sdk.language": "python",
+          "service.name": "unknown_service"
+        }
+      },
+      "scope_spans": [
+        {
+          "scope": {
+            "name": "langwatch",
+            "version": "0.26.0"
+          },
+          "spans": [
+            {
+              "trace_id": "5d5b8a736407fffebaaf7f0ac98d4a33",
+              "span_id": "01ae97faa1491a4c",
+              "parent_span_id": "ccff2571665aa870",
+              "name": "Document Retrieval",
+              "kind": 1,
+              "start_time_unix_nano": 1783873196979781339,
+              "end_time_unix_nano": 1783873196979866449,
+              "attributes": {
+                "langwatch.span.type": "rag_retrieval",
+                "langwatch.timestamps": "{}",
+                "langwatch.input": "{\"type\": \"json\", \"value\": {\"query\": \"What is the capital of France?\"}}",
+                "langwatch.output": "{\"type\": \"json\", \"value\": {\"documents\": [\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\"]}}"
+              },
+              "status": {
+                "code": 0,
+                "message": ""
+              }
+            },
+            {
+              "trace_id": "5d5b8a736407fffebaaf7f0ac98d4a33",
+              "span_id": "ccff2571665aa870",
+              "parent_span_id": "",
+              "name": "RAG Pipeline",
+              "kind": 1,
+              "start_time_unix_nano": 1783873196976119925,
+              "end_time_unix_nano": 1783873196982034005,
+              "attributes": {
+                "metadata": "{}",
+                "langwatch.span.type": "span",
+                "langwatch.timestamps": "{}",
+                "langwatch.origin": "application",
+                "langwatch.input": "{\"type\": \"json\", \"value\": {\"question\": \"What is the capital of France?\"}}",
+                "langwatch.output": "{\"type\": \"text\", \"value\": \"The capital of France is Paris.\"}"
+              },
+              "status": {
+                "code": 0,
+                "message": ""
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

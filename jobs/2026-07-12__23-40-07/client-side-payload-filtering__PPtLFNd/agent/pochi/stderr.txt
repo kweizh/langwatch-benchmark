@@ -1,0 +1,92 @@
+[37m2026-07-12 15:42:39.301[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m[39m[0m[0m[1m[37m	Pochi[39m[22m[0m[0m	pochi v0.6.17
+[37m2026-07-12 15:42:39.306[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37mnative:7[39m[0m[0m[1m[37m	PochiConfigManager[39m[22m[0m[0m	add workspace config: /root/.pochi/config.jsonc
+[37m2026-07-12 15:42:39.421[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37mnative:7[39m[0m[0m[1m[37m	BuiltInBundle[39m[22m[0m[0m	Materializing 16 built-in files to /tmp/pochi-builtin-2e56a4fb1f88f581
+[37m2026-07-12 15:42:39.634[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:524760[39m[0m[0m[1m[37m	loadAgents[39m[22m[0m[0m	Loaded 6 custom agents (6 valid, 0 invalid)
+[37m2026-07-12 15:42:39.732[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:524761[39m[0m[0m[1m[37m	loadSkills[39m[22m[0m[0m	Loaded 3 skills (3 valid, 0 invalid)
+[37m2026-07-12 15:42:39.749[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:443843[39m[0m[0m[1m[37m	PochiVendor[39m[22m[0m[0m	JWT is expiring or missing, fetching a new one
+[37m2026-07-12 15:42:41.154[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:419945[39m[0m[0m[1m[37m	MCPHub[39m[22m[0m[0m	MCP servers configuration changed via signal:
+[37m2026-07-12 15:42:41.154[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:420057[39m[0m[0m[1m[37m	MCPHub[39m[22m[0m[0m	Build MCPHub Status
+[37m2026-07-12 15:42:41.320[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37mnative:7[39m[0m[0m[1m[37m	Pochi[39m[22m[0m[0m	Starting task runner...
+[37m2026-07-12 15:42:41.432[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:491186[39m[0m[0m[1m[37m	generateTaskTitle[39m[22m[0m[0m	Generating task title, old: null, new: # Implement Client-Side Payload Filtering for Large Traces
+[37m2026-07-12 15:42:49.048[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:522862[39m[0m[0m[1m[37m	listFiles[39m[22m[0m[0m	handling listFile with dirPath /home/user/myproject and recursive [90mundefined[39m
+[37m2026-07-12 15:42:50.887[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:491186[39m[0m[0m[1m[37m	generateTaskTitle[39m[22m[0m[0m	Generating task title, old: # Implement Client-Side Payload Filtering for Large Traces, new: <think>
+The user wants me to create a concise and descriptive title for the task. Let me look at the conversation history:
+
+The task is about implementing client-side payload filtering for large traces in LangWatch, specifically:
+- Modifying run.py to truncate document strings to 1000 characters
+- Working with a mock collector for testing
+- Python script for RAG pipeline tracing
+
+A concise title would be something like:
+- Implement client-side payload filtering for largeLangWatch traces
+- Truncate large trace payloads in LangWatch RAG pipeline
+- Add payload size filtering to LangWatch trace script
+
+I'll go with something concise.
+</think>
+
+Implement client-side payload filtering for large LangWatch traces
+[37m2026-07-12 15:42:52.200[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/myproject/run.py" resolvedPath="/home/user/myproject/run.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:42:52.200[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:42:52.201[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/myproject/mock_collector.py" resolvedPath="/home/user/myproject/mock_collector.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:42:52.201[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:42:52.203[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/myproject/run.py" mtime=1783870034107 contentLen=740
+[37m2026-07-12 15:42:52.205[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/myproject/mock_collector.py" mtime=1783870033966 contentLen=754
+[37m2026-07-12 15:43:08.018[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:440296[39m[0m[0m[1m[37m	TaskRunner[39m[22m[0m[0m	Tool call executeCommand (call_019f56ff1e3b7193b8be11fc) cancelled: previous-tool-call-failed
+[37m2026-07-12 15:43:19.331[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/myproject/run.py" resolvedPath="/home/user/myproject/run.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:43:19.331[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState={startLine=undefined, endLine=undefined, timestamp=1783870997927}
+[37m2026-07-12 15:43:19.346[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/myproject/run.py" mtime=1783870997927 contentLen=941
+[37m2026-07-12 15:43:40.577[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /usr/local/lib/python3.12/dist-packages/langwatch LANGWATCH_ENDPOINT [90mundefined[39m
+[37m2026-07-12 15:43:40.577[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified 'LANGWATCH_ENDPOINT' '/usr/local/lib/python3.12/dist-packages/langwatch'
+[37m2026-07-12 15:43:40.644[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/usr/local/lib/python3.12/dist-packages/langwatch/__pycache__/state.cpython-312.pyc"},"lines":{"bytes":"KQN6NUdldCB0aGUgY3VycmVudCBlbmRwb2ludCBVUkwgb2YgdGhlIExhbmdXYXRjaCBjbGllbnQu2hJMQU5HV0FUQ0hfRU5EUE9JTlR6GGh0dHBzOi8vYXBwLmxhbmd3YXRjaC5haSkEcgYK"},"line_number":253,"absolute_offset":761,"submatches":[{"match":{"text":"LANGWATCH_ENDPOINT"},"start":59,"end":77}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:43:40.645[39m[0m[0m	[31m[1mERROR[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	Failed to parse rg JSON output line: {"type":"match","data":{"path":{"text":"/usr/local/lib/python3.12/dist-packages/langwatch/__pycache__/client.cpython-312.pyc"},"lines":{"bytes":"2hRMQU5HV0FUQ0hfUFJPSkVDVF9JRNoSTEFOR1dBVENIX0VORFBPSU5UehhodHRwczovL2FwcC5sYW5nd2F0Y2guYWlyJQo="},"line_number":3846,"absolute_offset":9367,"submatches":[{"match":{"text":"LANGWATCH_ENDPOINT"},"start":24,"end":42}]}}
+
+[97m[101m[1m TypeError [22m[49m[39m[0m[0m undefined is not an object (evaluating 'matchData.lines.text.replace'), 464256, 42, 464256, 42, /$bunfs/root/pochi[0m[0m
+error stack:
+  • [33mpochi[39m[0m[0m	searchFilesWithRipgrep[0m[0m
+	[37m/$bunfs/pochi:464256[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async <anonymous>[0m[0m
+	[37m/$bunfs/pochi:523582[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCall2[0m[0m
+	[37m/$bunfs/pochi:523692[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async executeToolCallItem[0m[0m
+	[37m/$bunfs/pochi:524363[39m[0m[0m
+  • [33mpochi[39m[0m[0m	async runToolCall[0m[0m
+	[37m/$bunfs/pochi:524342[39m[0m[0m
+  • [33mnative[39m[0m[0m	processTicksAndRejections[0m[0m
+	[37mnative:7[39m[0m[0m[0m[0m
+[37m2026-07-12 15:45:31.610[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /usr/local/lib/python3.12/dist-packages/langwatch OTLPSpanExporter|OTLPHttpExporter|protobuf|application/json *.py
+[37m2026-07-12 15:45:31.611[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified --glob '*.py' 'OTLPSpanExporter|OTLPHttpExporter|protobuf|application/json' '/usr/local/lib/python3.12/dist-packages/langwatch'
+[37m2026-07-12 15:45:35.107[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/usr/local/lib/python3.12/dist-packages/langwatch/client.py" resolvedPath="/usr/local/lib/python3.12/dist-packages/langwatch/client.py" isVirtual=false cacheExists=true shouldCache=true startLine=700 endLine=740
+[37m2026-07-12 15:45:35.108[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:45:35.202[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/usr/local/lib/python3.12/dist-packages/langwatch/client.py" mtime=1783870031973 contentLen=1618
+[37m2026-07-12 15:47:04.972[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /usr/local/lib/python3.12/dist-packages json|OTLPSpanExporter|trace_exporter *.py
+[37m2026-07-12 15:47:04.972[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified --glob '*.py' 'json|OTLPSpanExporter|trace_exporter' '/usr/local/lib/python3.12/dist-packages'
+[37m2026-07-12 15:47:18.645[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /usr/local/lib/python3.12/dist-packages/opentelemetry class OTLPSpanExporter *.py
+[37m2026-07-12 15:47:18.645[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified --glob '*.py' 'class OTLPSpanExporter' '/usr/local/lib/python3.12/dist-packages/opentelemetry'
+[37m2026-07-12 15:47:29.471[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/usr/local/lib/python3.12/dist-packages/opentelemetry/exporter/otlp/proto/http/trace_exporter/__init__.py" resolvedPath="/usr/local/lib/python3.12/dist-packages/opentelemetry/exporter/otlp/proto/http/trace_exporter/__init__.py" isVirtual=false cacheExists=true shouldCache=true startLine=60 endLine=200
+[37m2026-07-12 15:47:29.471[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:47:29.923[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/usr/local/lib/python3.12/dist-packages/opentelemetry/exporter/otlp/proto/http/trace_exporter/__init__.py" mtime=1783870031879 contentLen=5470
+[37m2026-07-12 15:47:33.661[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	searchFiles /usr/local/lib/python3.12/dist-packages/opentelemetry/exporter/otlp/proto/http _OTLP_HTTP_HEADERS|application/json|json_trace *.py
+[37m2026-07-12 15:47:33.661[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523582[39m[0m[0m[1m[37m	RipgrepUtils[39m[22m[0m[0m	command "/usr/bin/rg" --json --case-sensitive --binary --sortr modified --glob '*.py' '_OTLP_HTTP_HEADERS|application/json|json_trace' '/usr/local/lib/python3.12/dist-packages/opentelemetry/exporter/otlp/proto/http'
+[37m2026-07-12 15:47:38.165[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/usr/local/lib/python3.12/dist-packages/opentelemetry/exporter/otlp/proto/http/__init__.py" resolvedPath="/usr/local/lib/python3.12/dist-packages/opentelemetry/exporter/otlp/proto/http/__init__.py" isVirtual=false cacheExists=true shouldCache=true startLine=60 endLine=80
+[37m2026-07-12 15:47:38.165[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState=undefined
+[37m2026-07-12 15:47:38.576[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/usr/local/lib/python3.12/dist-packages/opentelemetry/exporter/otlp/proto/http/__init__.py" mtime=1783870031878 contentLen=286
+[37m2026-07-12 15:52:28.700[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: path="/home/user/myproject/run.py" resolvedPath="/home/user/myproject/run.py" isVirtual=false cacheExists=true shouldCache=true startLine=undefined endLine=undefined
+[37m2026-07-12 15:52:28.700[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: existingState={startLine=undefined, endLine=undefined, timestamp=1783871451193}
+[37m2026-07-12 15:52:31.028[39m[0m[0m	[32m[1mDEBUG[22m[39m[0m[0m	[37m/$bunfs/pochi:523534[39m[0m[0m[1m[37m	FileStateCache[39m[22m[0m[0m	withReadFileCache: populating cache for "/home/user/myproject/run.py" mtime=1783871451193 contentLen=2998

@@ -1,0 +1,92 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T16:22:18.834267+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 7,
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783873332170,
+            "stop": 1783873338834
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_cli_smoke",
+                "status": "passed",
+                "duration": 1766,
+                "start": 1783873332199,
+                "stop": 1783873333965,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_retrieve_is_deterministic_and_non_empty",
+                "status": "passed",
+                "duration": 4367,
+                "start": 1783873333966,
+                "stop": 1783873338333,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_run_pipeline_returns_answer_and_verdict",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873338333,
+                "stop": 1783873338334,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_llm_judge_evaluator_invoked",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873338334,
+                "stop": 1783873338335,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_spans_emitted_and_evaluation_bound_to_answer_span",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873338335,
+                "stop": 1783873338336,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_judge_result_persisted",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873338336,
+                "stop": 1783873338337,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_verdict_tracks_evaluator_response",
+                "status": "passed",
+                "duration": 496,
+                "start": 1783873338337,
+                "stop": 1783873338833,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            }
+        ]
+    }
+}

@@ -1,0 +1,27 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2, anyio-4.14.1
+collected 10 items
+
+../tests/test_final_state.py ..........                                  [100%]
+
+=============================== warnings summary ===============================
+test_final_state.py::test_run_pipeline_returns_non_empty_answer
+  /home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py:472: DeprecationWarning: Call to deprecated function (or staticmethod) _add_evaluation. (Please use the new `langwatch.evaluation` module instead.)
+    return evaluations._add_evaluation(  # type: ignore
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_cli_smoke
+PASSED ../tests/test_final_state.py::test_compute_groundedness_matches_reference[LangWatch observability platform-contexts0-1.0-True-grounded]
+PASSED ../tests/test_final_state.py::test_compute_groundedness_matches_reference[langwatch tracing rockets bananas-contexts1-0.5-False-weakly_grounded]
+PASSED ../tests/test_final_state.py::test_compute_groundedness_matches_reference[unicorns dragons wizards langwatch-contexts2-0.25-False-hallucinated]
+PASSED ../tests/test_final_state.py::test_compute_groundedness_matches_reference[the is of and-contexts3-0.0-False-hallucinated]
+PASSED ../tests/test_final_state.py::test_retrieve_is_deterministic_and_non_empty
+PASSED ../tests/test_final_state.py::test_run_pipeline_returns_non_empty_answer
+PASSED ../tests/test_final_state.py::test_expected_spans_emitted
+PASSED ../tests/test_final_state.py::test_evaluation_attached_to_generate_answer_span
+PASSED ../tests/test_final_state.py::test_logged_evaluation_fields_match_reference
+======================== 10 passed, 1 warning in 5.26s =========================

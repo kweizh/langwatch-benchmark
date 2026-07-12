@@ -1,0 +1,233 @@
+- Initializing MCP connections...
+You
+# LangWatch Prompt Materialization with Offline Fallback Loader ## Background You are hardening the prompt-delivery path of a Python service that uses https://langwatch.ai/docs/prompt-management/getting-started. In production the service fetches versioned prompts from the LangWatch API, but the deployment target is an air-gapped / CI environment where the LangWatch API can be unreachable. To keep the service running under LangWatch's *Guaranteed Availability* model, prompts are materialized to local YAML files with the Prompts CLI and the application must transparently fall back to that local cache. Your job is to (1) scaffold and materialize a versioned prompt locally as YAML, and (2) implement a robust, deterministic fallback loader plus a small CLI that compiles the prompt with dynamic variables — working correctly even when the LangWatch API is not reachable. ## Requirements * Scaffold a LangWatch prompts project so that the following tracking files exist at the project root: `prompts.json` and `prompts-lock.json`. * Provide a locally materialized, versioned prompt for the handle `customer-support-bot` at `prompts/.materialized/customer-support-bot.prompt.yaml`. The prompt must: * Use a model identifier of the form `openai/<model>` (e.g. `openai/gpt-4o-mini`). * Contain at least a `system` message and a `user` message. * Reference the two template variables `{{user_name}}` and `{{issue}}` (the `{{...}}` mustache syntax used by LangWatch prompts) across its messages. * `prompts-lock.json` must resolve the `customer-support-bot` dependency to a concrete integer version (use version `3`) and record the path to the materialized YAML file. * Implement a Python CLI application `run.py` that loads the prompt through a fallback loader and compiles it with runtime variables. * The fallback loader must be **deterministic and offline-capable**: when the application runs in offline mode it must load the prompt strictly from the local materialized cache (never depending on a network call), and report where the prompt was sourced from. * Variable compilation must substitute every `{{variable}}` placeholder with the provided value and must fail loudly (non-zero exit) if a required variable is missing. No `{{` / `}}` placeholders may remain in the compiled output. * Do NOT mock LangWatch, its HTTP client, or any transitive dependency. The real `langwatch` package must be installed and importable. ## Implementation Hints * Use the LangWatch Prompts CLI (`langwatch prompt init`, `langwatch prompt create`) to scaffold the project layout and the prompt YAML. The CLI is available in the environment. Creating/initializing prompts is a local operation and does not require network access. * Materialized prompts live under `prompts/.materialized/` and follow the `.prompt.yaml` format (`model`, optional `modelParameters`, and a `messages` list of `{role, content}`). See the https://langwatch.ai/docs/prompt-management/cli and https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability docs. * For the offline path, resolve the materialized file location from `prompts-lock.json` and parse the YAML yourself rather than assuming a network fetch. Note: pointing `LANGWATCH_ENDPOINT` at a bad address does not reliably raise a network error, so drive the fallback with an explicit offline execution path instead. * Implement mustache-style `{{variable}}` substitution deterministically. Collect the set of variables referenced by the template to decide which ones are required. * Use `uv` to create the virtualenv and install Python packages (`uv venv`, then `uv pip install ...`). ## Acceptance Criteria * Project path: /home/user/myproject * Command: `python run.py --handle <handle> --vars <json_object> [--version <int>] [--offline] --out <path>` * `--handle`: the prompt handle to load (e.g. `customer-support-bot`). * `--vars`: a JSON object string mapping variable names to string values. * `--version`: optional integer version; when omitted, the version recorded in `prompts-lock.json` is used. * `--offline`: when present, the loader must load only from the local materialized cache. * `--out`: path to write the compiled result JSON. * The command writes a JSON object to the `--out` path with this shape: ```json { "handle": string, "version": integer, "model": string, "source": string, "messages": [ { "role": string, "content": string } ] } ``` * `source` is `"local_materialized"` when the prompt was loaded from the local cache and `"remote_api"` when loaded from the LangWatch API. * When `--offline` is passed, `source` must be `"local_materialized"`. * `model` must be the model string from the materialized prompt (begins with `openai/`). * `version` must be the resolved integer version. * Every message `content` must have all `{{...}}` placeholders replaced; no `{{` substring may remain. * Required artifacts at the project root: `prompts.json`, `prompts-lock.json`, and `prompts/.materialized/customer-support-bot.prompt.yaml`. * Error handling: if a required template variable is not supplied in `--vars`, the command must exit with a non-zero status and must not write a successful compiled output. If `--offline` is set and the materialized file cannot be found, the command must also exit non-zero.   
+
+Pochi
+💭 Thinking for 399 characters   
+📋 Updating todo list (6 items) ✔ 
+💫 Executing ls /home/user/myproject 2>/dev/null || echo "EMPTY_OR_MISSING" && which uv && which langwatch 2>/dev/null || echo "langwatch not found globally" && uv --version ✔ 
+💫 Executing langwatch prompt --help 2>&1 || echo "langwatch CLI not in PATH" ✔ 
+💫 Executing ls /home/user/myproject/ 2>/dev/null && echo "---exists---" || (mkdir -p /home/user/myproject && echo "created") ✔ 
+💫 Executing langwatch prompt init --help 2>&1 ✔ 
+💫 Executing ls -la /home/user/myproject/ ✔ 
+💫 Executing langwatch prompt create --help 2>&1 && echo "---" && langwatch prompt add --help 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && langwatch prompt init 2>&1 ✔ 
+💫 Executing cat /home/user/myproject/prompts.json && echo "===" && cat /home/user/myproject/prompts-lock.json ✔ 
+💫 Executing ls -la /home/user/myproject/prompts/ 2>/dev/null ✔ 
+📋 Updating todo list (7 items) ✔ 
+Now let me use the LangWatch CLI to create the prompt YAML, then inspect its format:   
+💫 Executing cd /home/user/myproject && langwatch prompt create customer-support-bot 2>&1 ✖ "Command exited with code 1"
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy langwatch prompt create customer-support-bot 2>&1 ✔ 
+💫 Executing cat /home/user/myproject/prompts/customer-support-bot.prompt.yaml ✔ 
+Now I understand the format. Let me also check the LangWatch docs for the materialized format:   
+🌐 Fetching https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability ✔ 
+🌐 Fetching https://langwatch.ai/docs/prompt-management/cli ✔ 
+Excellent! Now I have a clear picture of the lock file format and the materialized YAML format. Let me also check what the langwatch Python package exposes:   
+💫 Executing cd /home/user/myproject && langwatch prompt add customer-support-bot ./prompts/customer-support-bot.prompt.yaml 2>&1 ✔ 
+💫 Executing cat /home/user/myproject/prompts.json && echo "===" && cat /home/user/myproject/prompts-lock.json ✔ 
+Now I understand the full picture. I need to: 1. Update the materialized YAML at `prompts/.materialized/customer-support-bot.prompt.yaml` 2. Update `prompts.json` and `prompts-lock.json` to reflect a remote prompt pinned at version 3 with the proper materialized path 3. Set up Python venv and implement `run.py` Let me now create all the artifacts:   
+✏️  Writing /home/user/myproject/prompts/.materialized/customer-support-bot.prompt.yaml ✔ 
+Now update `prompts.json` to reflect a remote versioned dependency (not a local file reference) at version 3:   
+✏️  Writing /home/user/myproject/prompts.json ✖ "File has not been read yet. Please read the file before writing it."
+📖 Reading /home/user/myproject/prompts.json ✔ 
+📖 Reading /home/user/myproject/prompts-lock.json ✔ 
+🔧 Applying diff to /home/user/myproject/prompts.json ✔ 
+🔧 Applying diff to /home/user/myproject/prompts-lock.json ✔ 
+📋 Updating todo list (7 items) ✔ 
+Now set up the Python virtual environment and install packages:   
+💫 Executing cd /home/user/myproject && uv venv .venv 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && uv pip install --python .venv/bin/python langwatch pyyaml 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "import langwatch; print(dir(langwatch))" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "import langwatch.prompts; help(langwatch.prompts)" 2>&1 | head -100 ✔ 
+💫 Executing find /home/user/myproject/.venv/lib -name "*.py" -path "*/langwatch/prompts*" | head -20 ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/local_loader.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/prompt.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/types/prompt_data.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/prompt_facade.py ✔ 
+Now I have a thorough understanding of the langwatch SDK internals. I can see that: - `LocalPromptLoader` reads from `prompts-lock.json` to find the materialized path - `PromptsFacade.get()` has `FetchPolicy.MATERIALIZED_ONLY` for offline-only mode - `Prompt.compile_strict()` fails on missing variables - The `Prompt` object uses Liquid templating (`{{variable}}` syntax) Now let me implement the `run.py` with clear understanding of how to use the real SDK:   
+📋 Updating todo list (7 items) ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/types/fetch_policy.py ✔ 
+Now I have everything I need. Let me write `run.py`:   
+✏️  Writing /home/user/myproject/run.py ✔ 
+Now let's run the acceptance tests:   
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py --handle customer-support-bot --vars '{"user_name": "Alice", "issue": "I cannot log in to my account."}' --offline --out /tmp/offline_result.json 2>&1 ✔ 
+💫 Executing cat /tmp/offline_result.json ✔ 
+Offline mode works perfectly. Now test online mode (SDK path — will use local materialized since the file exists):   
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy .venv/bin/python run.py --handle customer-support-bot --vars '{"user_name": "Bob", "issue": "My order was delayed."}' --out /tmp/online_result.json 2>&1 ✖ "Command exited with code 1"
+The `prompt.messages` returns `Message` objects, not dicts. Let me fix that:   
+🔧 Applying diff to /home/user/myproject/run.py ✔ 
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy .venv/bin/python run.py --handle customer-support-bot --vars '{"user_name": "Bob", "issue": "My order was delayed."}' --out /tmp/online_result.json 2>&1 ✔ 
+💫 Executing cat /tmp/online_result.json ✔ 
+Now test error handling — missing required variable:   
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py --handle customer-support-bot --vars '{"user_name": "Alice"}' --offline --out /tmp/missing_var.json 2>&1; echo "EXIT CODE: $?" ✔ 
+Non-zero exit with clear error message. Now test offline with missing materialized file:   
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py --handle nonexistent-bot --vars '{}' --offline --out /tmp/no_handle.json 2>&1; echo "EXIT CODE: $?" ✔ 
+Now test with explicit `--version`:   
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py --handle customer-support-bot --vars '{"user_name": "Carol", "issue": "Refund needed."}' --version 3 --offline --out /tmp/explicit_version.json 2>&1 && cat /tmp/explicit_version.json ✔ 
+Let me verify no `{{` placeholders remain in the output and do a final check of all the required artifacts:   
+💫 Executing python3 -c "
+import json, sys
+
+with open('/tmp/offline_result.json') as f:
+    data = json.load(f)
+
+# Check shape
+assert 'handle' in data
+assert 'version' in data
+assert 'model' in data
+assert 'source' in data
+assert 'messages' in data
+
+# Check source
+assert data['source'] == 'local_materialized', f\"source={data['source']}\"
+
+# Check model begins with openai/
+assert data['model'].startswith('openai/'), f\"model={data['model']}\"
+
+# Check version is integer
+assert isinstance(data['version'], int), f\"version type={type(data['version'])}\"
+assert data['version'] == 3
+
+# Check no {{ in messages
+for msg in data['messages']:
+    assert '{{' not in msg['content'], f\"Placeholder remaining: {msg['content']}\"
+
+print('ALL CHECKS PASSED:', json.dumps(data, indent=2))
+" ✔ 
+💫 Executing ls -la /home/user/myproject/prompts.json /home/user/myproject/prompts-lock.json /home/user/myproject/prompts/.materialized/customer-support-bot.prompt.yaml && echo "---" && cat /home/user/myproject/prompts.json && echo "---" && cat /home/user/myproject/prompts-lock.json && echo "---" && cat /home/user/myproject/prompts/.materialized/customer-support-bot.prompt.yaml ✔ 
+💫 Executing # Verify langwatch is genuinely importable and not mocked
+cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+import langwatch.prompts
+from langwatch.prompts.local_loader import LocalPromptLoader
+from langwatch.prompts.types import FetchPolicy
+print('langwatch version:', langwatch.__version__)
+print('FetchPolicy values:', [p.value for p in FetchPolicy])
+print('All real package imports: OK')
+" ✔ 
+📋 Updating todo list (7 items) ✔ 
+💫 Executing ls -la /home/user/myproject/ ✔ 
+Everything is in place. Let me run one final comprehensive verification:   
+💫 Executing cd /home/user/myproject && echo "=== TEST 1: Offline mode ===" && \
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Alice", "issue": "Cannot reset my password."}' \
+  --offline \
+  --out /tmp/test1.json && \
+python3 -c "
+import json
+d = json.load(open('/tmp/test1.json'))
+assert d['source'] == 'local_materialized'
+assert d['version'] == 3
+assert d['model'].startswith('openai/')
+assert all('{{' not in m['content'] for m in d['messages'])
+print('PASS: source=%s version=%s model=%s messages=%d' % (d['source'], d['version'], d['model'], len(d['messages'])))
+" && \
+echo "=== TEST 2: Online mode (SDK, local materialized) ===" && \
+LANGWATCH_API_KEY=dummy .venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Dave", "issue": "Billing discrepancy."}' \
+  --out /tmp/test2.json && \
+python3 -c "
+import json
+d = json.load(open('/tmp/test2.json'))
+assert d['source'] == 'local_materialized'
+assert d['version'] == 3
+assert d['model'].startswith('openai/')
+assert all('{{' not in m['content'] for m in d['messages'])
+print('PASS: source=%s version=%s model=%s messages=%d' % (d['source'], d['version'], d['model'], len(d['messages'])))
+" && \
+echo "=== TEST 3: Missing variable exits non-zero ===" && \
+(.venv/bin/python run.py --handle customer-support-bot --vars '{"user_name": "Eve"}' --offline --out /tmp/test3.json 2>&1; [ $? -ne 0 ] && echo "PASS: non-zero exit on missing variable" || echo "FAIL") && \
+echo "=== TEST 4: Unknown handle exits non-zero ===" && \
+(.venv/bin/python run.py --handle unknown --vars '{}' --offline --out /tmp/test4.json 2>&1; [ $? -ne 0 ] && echo "PASS: non-zero exit on unknown handle" || echo "FAIL") && \
+echo "=== ALL TESTS PASSED ===" ✔ 
+All 4 tests pass. Let me provide a full summary of what was built:   
+🎉 Task Completed
+## LangWatch Prompt Materialization with Offline Fallback — Complete
+
+### Project layout at `/home/user/myproject`
+
+```
+myproject/
+├── prompts.json                                         # Declares dependency: customer-support-bot@3
+├── prompts-lock.json                                    # Resolves to integer version 3 + materialized path
+├── prompts/
+│   └── .materialized/
+│       └── customer-support-bot.prompt.yaml            # Materialized versioned prompt
+├── run.py                                              # CLI application
+└── .venv/                                              # uv-managed virtualenv (langwatch 0.26.0 + pyyaml)
+```
+
+---
+
+### Scaffold artifacts
+
+**`prompts.json`** — pinned at version 3:
+```json
+{ "prompts": { "customer-support-bot": "3" } }
+```
+
+**`prompts-lock.json`** — concrete integer version + materialized path:
+```json
+{
+  "lockfileVersion": 1,
+  "prompts": {
+    "customer-support-bot": {
+      "version": 3,
+      "versionId": "prompt_version_customer_support_bot_v3",
+      "materialized": "prompts/.materialized/customer-support-bot.prompt.yaml"
+    }
+  }
+}
+```
+
+**`prompts/.materialized/customer-support-bot.prompt.yaml`** — model `openai/gpt-4o-mini`, a `system` and `user` message, both referencing `{{user_name}}` and `{{issue}}`.
+
+---
+
+### CLI usage
+
+```bash
+# Offline — strictly local cache, no network
+python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Alice", "issue": "Cannot reset my password."}' \
+  --offline \
+  --out result.json
+
+# Online — SDK with MATERIALIZED_FIRST policy (also works offline when pre-materialised)
+LANGWATCH_API_KEY=<key> python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Bob", "issue": "Billing discrepancy."}' \
+  --out result.json
+
+# Explicit version override
+python run.py --handle customer-support-bot --version 3 --vars '...' --offline --out result.json
+```
+
+### Output JSON shape
+```json
+{
+  "handle": "customer-support-bot",
+  "version": 3,
+  "model": "openai/gpt-4o-mini",
+  "source": "local_materialized",
+  "messages": [
+    { "role": "system", "content": "...Alice..." },
+    { "role": "user",   "content": "...Cannot reset my password...." }
+  ]
+}
+```
+
+### Key design decisions
+
+| Concern | Approach |
+|---|---|
+| **Offline determinism** | `--offline` reads YAML directly from the path resolved in `prompts-lock.json` — zero network calls, zero SDK initialization |
+| **Online with local-first** | Uses the real `langwatch` SDK with `FetchPolicy.MATERIALIZED_FIRST`; `source` is set to `"local_materialized"` when the SDK sources from the local file |
+| **Variable substitution** | Custom `{{variable}}` regex scan; collects required variables from all messages before substitution; fails loudly (exit 2) if any are missing; verifies no `{{` remains post-compile |
+| **Version resolution** | `--version` overrides; otherwise reads integer version from `prompts-lock.json` |
+| **No mocking** | The real `langwatch` package (v0.26.0) is installed via `uv pip install langwatch` and imported directly |
+| **Error handling** | Non-zero exits for missing variables, unknown handles, missing materialized files, and malformed `--vars` JSON |   
+  

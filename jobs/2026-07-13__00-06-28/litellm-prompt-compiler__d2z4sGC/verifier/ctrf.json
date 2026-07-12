@@ -1,0 +1,92 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T16:17:42.707128+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 6,
+            "passed": 3,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783873044945,
+            "stop": 1783873062706
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_run_script_exists",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873044973,
+                "stop": 1783873044974,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_happy_path_explicit_version",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3610,
+                "start": 1783873044974,
+                "stop": 1783873048584,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_happy_path_explicit_version():\n        _cleanup(\"result.json\", \"trace_spans.jsonl\")\n        out_path = os.path.join(PROJECT_DIR, \"result.json\")\n        proc = _run(\n            [\n                \"--handle\",\n                HANDLE,\n                \"--version\",\n                \"2\",\n                \"--vars\",\n                json.dumps(FULL_VARS),\n                \"--out\",\n                out_path,\n            ]\n        )\n>       assert proc.returncode == 0, (\n            f\"Expected exit code 0 for the happy path.\\n\"\n            f\"stdout:\\n{proc.stdout}\\nstderr:\\n{proc.stderr}\"\n        )\nE       AssertionError: Expected exit code 0 for the happy path.\nE         stdout:\nE         2026-07-12 16:17:27,487 - langwatch.prompts.local_loader - INFO - Successfully loaded prompt 'support-triage-agent' from local file: /home/user/myproject/prompts/.materialized/support-triage-agent.prompt.yaml\nE         \nE         stderr:\nE         Traceback (most recent call last):\nE           File \"/home/user/myproject/run.py\", line 226, in <module>\nE             main()\nE           File \"/home/user/myproject/run.py\", line 222, in main\nE             run(args.handle, vars_dict, args.version, args.out)\nE           File \"/home/user/myproject/run.py\", line 183, in run\nE             f.write(json.dump(record) + \"\\n\")\nE                     ^^^^^^^^^^^^^^^^^\nE         TypeError: dump() missing 1 required positional argument: 'fp'\nE         \nE       assert 1 == 0\nE        +  where 1 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...p(record) + \"\\\\n\")\\n            ^^^^^^^^^^^^^^^^^\\nTypeError: dump() missing 1 required positional argument: \\'fp\\'\\n').returncode\n\n/tests/test_final_state.py:80: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_trace_linkage_artifact",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3237,
+                "start": 1783873048584,
+                "stop": 1783873051821,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_trace_linkage_artifact():\n        # Depends on the happy-path run having produced the trace artifact.\n        _cleanup(\"result.json\", \"trace_spans.jsonl\")\n        out_path = os.path.join(PROJECT_DIR, \"result.json\")\n        proc = _run(\n            [\n                \"--handle\",\n                HANDLE,\n                \"--version\",\n                \"2\",\n                \"--vars\",\n                json.dumps(FULL_VARS),\n                \"--out\",\n                out_path,\n            ]\n        )\n>       assert proc.returncode == 0, (\n            f\"Expected exit code 0 before checking the trace artifact.\\n\"\n            f\"stdout:\\n{proc.stdout}\\nstderr:\\n{proc.stderr}\"\n        )\nE       AssertionError: Expected exit code 0 before checking the trace artifact.\nE         stdout:\nE         2026-07-12 16:17:31,096 - langwatch.prompts.local_loader - INFO - Successfully loaded prompt 'support-triage-agent' from local file: /home/user/myproject/prompts/.materialized/support-triage-agent.prompt.yaml\nE         \nE         stderr:\nE         Traceback (most recent call last):\nE           File \"/home/user/myproject/run.py\", line 226, in <module>\nE             main()\nE           File \"/home/user/myproject/run.py\", line 222, in main\nE             run(args.handle, vars_dict, args.version, args.out)\nE           File \"/home/user/myproject/run.py\", line 183, in run\nE             f.write(json.dump(record) + \"\\n\")\nE                     ^^^^^^^^^^^^^^^^^\nE         TypeError: dump() missing 1 required positional argument: 'fp'\nE         \nE       assert 1 == 0\nE        +  where 1 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...p(record) + \"\\\\n\")\\n            ^^^^^^^^^^^^^^^^^\\nTypeError: dump() missing 1 required positional argument: \\'fp\\'\\n').returncode\n\n/tests/test_final_state.py:144: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_default_version_resolution",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3647,
+                "start": 1783873051821,
+                "stop": 1783873055468,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_default_version_resolution():\n        _cleanup(\"result_default.json\")\n        out_path = os.path.join(PROJECT_DIR, \"result_default.json\")\n        default_vars = {\n            \"customer_name\": \"Bob Diaz\",\n            \"account_tier\": \"Free\",\n            \"issue_summary\": \"App crashes on login\",\n            \"priority\": \"P3\",\n        }\n        proc = _run(\n            [\n                \"--handle\",\n                HANDLE,\n                \"--vars\",\n                json.dumps(default_vars),\n                \"--out\",\n                out_path,\n            ]\n        )\n>       assert proc.returncode == 0, (\n            f\"Expected exit code 0 when --version is omitted.\\n\"\n            f\"stdout:\\n{proc.stdout}\\nstderr:\\n{proc.stderr}\"\n        )\nE       AssertionError: Expected exit code 0 when --version is omitted.\nE         stdout:\nE         2026-07-12 16:17:34,409 - langwatch.prompts.local_loader - INFO - Successfully loaded prompt 'support-triage-agent' from local file: /home/user/myproject/prompts/.materialized/support-triage-agent.prompt.yaml\nE         \nE         stderr:\nE         Traceback (most recent call last):\nE           File \"/home/user/myproject/run.py\", line 226, in <module>\nE             main()\nE           File \"/home/user/myproject/run.py\", line 222, in main\nE             run(args.handle, vars_dict, args.version, args.out)\nE           File \"/home/user/myproject/run.py\", line 183, in run\nE             f.write(json.dump(record) + \"\\n\")\nE                     ^^^^^^^^^^^^^^^^^\nE         TypeError: dump() missing 1 required positional argument: 'fp'\nE         \nE       assert 1 == 0\nE        +  where 1 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...p(record) + \"\\\\n\")\\n            ^^^^^^^^^^^^^^^^^\\nTypeError: dump() missing 1 required positional argument: \\'fp\\'\\n').returncode\n\n/tests/test_final_state.py:216: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_version_mismatch_fails",
+                "status": "passed",
+                "duration": 3601,
+                "start": 1783873055468,
+                "stop": 1783873059069,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_missing_variable_fails",
+                "status": "passed",
+                "duration": 3637,
+                "start": 1783873059069,
+                "stop": 1783873062706,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            }
+        ]
+    }
+}

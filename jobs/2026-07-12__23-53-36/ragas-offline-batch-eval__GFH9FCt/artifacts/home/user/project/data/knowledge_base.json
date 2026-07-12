@@ -1,0 +1,42 @@
+[
+  {
+    "id": "kb-init",
+    "title": "Initializing a batch evaluation run",
+    "content": "In the LangWatch Python SDK you start a server-side offline batch evaluation by initializing an evaluation run with a descriptive name, then looping over your dataset so every row is tracked as part of the run."
+  },
+  {
+    "id": "kb-apikey",
+    "title": "Authentication configuration",
+    "content": "The LangWatch SDK reads credentials from the environment. The LANGWATCH_API_KEY environment variable holds the API key, LANGWATCH_ENDPOINT points at the backend, and LANGWATCH_PROJECT_ID is required for service-scoped keys."
+  },
+  {
+    "id": "kb-ragas",
+    "title": "RAG quality evaluators",
+    "content": "LangWatch ships built-in RAGAS evaluators that run on the backend. The context-utilization evaluator measures how well the generated answer makes use of the retrieved contexts, and is referenced by the slug legacy/ragas_context_utilization."
+  },
+  {
+    "id": "kb-otel",
+    "title": "OpenTelemetry export",
+    "content": "LangWatch is OpenTelemetry-native and exports telemetry as OTLP traces over HTTP to the configured endpoint, so it integrates with any OpenTelemetry compatible pipeline without vendor lock-in."
+  },
+  {
+    "id": "kb-uv",
+    "title": "Installing the SDK",
+    "content": "LangWatch Python packages should be installed with the uv package manager inside a virtual environment, because some dependencies are not compatible with the system pip on the underlying operating system."
+  },
+  {
+    "id": "kb-prompts",
+    "title": "Prompt management",
+    "content": "The prompts API lets you fetch a versioned prompt by handle and compile it with dynamic template variables, producing ready-to-use chat messages for your model call."
+  },
+  {
+    "id": "kb-loop",
+    "title": "Iterating datasets",
+    "content": "Wrapping your dataset iterator with the evaluation loop primitive keeps every entry tracked and lets you run built-in evaluators and log custom metrics for each row, optionally in parallel across threads."
+  },
+  {
+    "id": "kb-contexts",
+    "title": "Structuring evaluator data",
+    "content": "Built-in evaluators receive a data object containing the input question, the produced output answer, and the retrieved contexts as a list, so the metric can compare the answer against each individual retrieved chunk."
+  }
+]

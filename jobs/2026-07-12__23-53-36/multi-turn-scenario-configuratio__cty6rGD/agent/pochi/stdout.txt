@@ -1,0 +1,122 @@
+- Initializing MCP connections...
+You
+# Multi-turn Scenario Configuration with Multiple Judges ## Background LangWatch provides an open-source `scenario` framework to test AI agents. It uses AI agents (User Simulators and Judges) to perform dynamic, multi-turn conversation testing. You need to configure a multi-turn simulation test using this framework, utilizing multiple specialized judges. ## Requirements - Create a Python script `scenario_def.py` that configures a LangWatch scenario. - Define a custom `SupportAgentAdapter` that inherits from `scenario.AgentAdapter` and implements the `call` method to return a simple string response. - Configure a scenario with multiple agents: the adapter, a `UserSimulatorAgent` acting as a frustrated customer, and **two separate** `JudgeAgent`s. One judge must evaluate politeness, and the other must evaluate policy adherence. - Configure the scenario script to simulate a multi-turn flow: a user message, an agent response, and a success trigger. - To avoid requiring OpenAI API keys, **do not** execute `scenario.run`. Instead, the script should accept a `--run-id` argument, construct the configuration, and print a JSON representation of the configured scenario. ## Implementation Hints - Install `langwatch-scenario` using `uv pip install`. - Use the `scenario` module from `langwatch-scenario`. - Instantiate `scenario.UserSimulatorAgent` and `scenario.JudgeAgent` with appropriate system prompts and criteria. Note that `JudgeAgent` accepts a `criteria` list. - Use `scenario.user()`, `scenario.agent()`, and `scenario.succeed()` to define the script flow. - Use `argparse` to parse the `--run-id` argument. - Since LangWatch agents and script steps are complex objects, you will need to iterate over them and extract their class names. For `JudgeAgent`s, extract their `criteria` attribute to include in the output. ## Acceptance Criteria - Project path: `/home/user/myproject` - Command: `python3 scenario_def.py --run-id <run-id>` - The stdout must print a valid JSON object representing the scenario configuration. - The JSON output must match the following schema exactly (criteria strings can be your own, but there must be two lists of criteria for the two judges): ```json { "name": "Refund Scenario <run-id>", "agents": ["SupportAgentAdapter", "UserSimulatorAgent", "JudgeAgent", "JudgeAgent"], "judge_criteria": [ ["Criteria for politeness"], ["Criteria for policy adherence"] ], "script_types": ["user", "agent", "succeed"] } ```   
+
+Pochi
+💭 Thinking for 719 characters   
+I'll start by exploring the project directory and understanding the langwatch-scenario package structure.   
+📋 Updating todo list (4 items) ✔ 
+💭 Thinking for 72 characters   
+📂 Listing files in /home/user/myproject ✔ 
+💫 Executing which python3 && python3 --version && which uv && uv --version ✔ 
+💭 Thinking for 95 characters   
+The project directory is empty. Let me install `langwatch-scenario` and explore itsstructure.   
+💫 Executing cd /home/user/myproject && uv pip install langwatch-scenario --system 2>&1 ✖ "Command exited with code 2"
+💭 Thinking for 89 characters   
+I need to create a virtual environment first. Let me setthat up.   
+💫 Executing cd /home/user/myproject && python3 -m venv .venv && . .venv/bin/activate && uv pip install langwatch-scenario 2>&1 ✖ "Command exited with code 1"
+💭 Thinking for 55 characters   
+💫 Executing apt install -y python3.12-venv 2>&1 | tail -5 ✔ 
+💭 Thinking for 139 characters   
+Let me use `uv` to create the virtual environment instead, since it doesn't requireensurepip.   
+💫 Executing cd /home/user/myproject && uv venv .venv 2>&1 && . .venv/bin/activate && uv pip install langwatch-scenario 2>&1 ✖ "Command exited with code 2"
+💫 Executing cd /home/user/myproject && uv venv .venv --clear 2>&1 && . .venv/bin/activate && uv pip install langwatch-scenario 2>&1 ✔ 
+💭 Thinking for 314 characters   
+Package installed successfully. Now let me explore the `scenario` module to understand its API.   
+💫 Executing cd /home/user/myproject && . .venv/bin/activate && python3 -c "import scenario; print(scenario.__file__)" ✔ 
+💫 Executing cd /home/user/myproject && cat .venv/lib/python3.12/site-packages/scenario/__init__.py ✔ 
+💭 Thinking for 137 characters   
+Now let me examine the key modules: `AgentAdapter`, `JudgeAgent`, `UserSimulatorAgent`, and the script functions.   
+💫 Executing cd /home/user/myproject && cat .venv/lib/python3.12/site-packages/scenario/agent_adapter.py ✔ 
+💫 Executing cd /home/user/myproject && cat .venv/lib/python3.12/site-packages/scenario/judge_agent.py ✔ 
+💫 Executing cd /home/user/myproject && cat .venv/lib/python3.12/site-packages/scenario/user_simulator_agent.py ✔ 
+💭 Thinking for 610 characters   
+Now let me look at the script module and the `run` function signature.   
+💫 Executing cd /home/user/myproject && cat .venv/lib/python3.12/site-packages/scenario/script.py ✔ 
+💭 Thinking for 202 characters   
+Let me check the `run` function signature and the `ScriptStep`type.   
+💫 Executing cd /home/user/myproject && head -120 .venv/lib/python3.12/site-packages/scenario/scenario_executor.py ✔ 
+💫 Executing cd /home/user/myproject && grep -n "ScriptStep" .venv/lib/python3.12/site-packages/scenario/types.py ✔ 
+💫 Executing cd /home/user/myproject && sed -n '300,320p' .venv/lib/python3.12/site-packages/scenario/types.py ✔ 
+💫 Executing cd /home/user/myproject && grep -n "^async def run\|^def run\|^async def arun\|^def arun" .venv/lib/python3.12/site-packages/scenario/scenario_executor.py ✔ 
+💫 Executing cd /home/user/myproject && sed -n '1782,1920p' .venv/lib/python3.12/site-packages/scenario/scenario_executor.py ✔ 
+💭 Thinking for 8102 characters   
+I now have a thorough understanding of the API. Let me update my todos and test the script step introspection approach.   
+📋 Updating todo list (4 items) ✔ 
+Let me test how to introspect the script step lambdas to identify their types.   
+💫 Executing cd /home/user/myproject && . .venv/bin/activate && python3 -c "
+import scenario
+import dis
+
+scenario.configure(default_model='openai/gpt-4.1-mini')
+
+steps = [
+    scenario.user('I want a refund now!'),
+    scenario.agent(),
+    scenario.succeed('done'),
+]
+
+for step in steps:
+    code = step.__code__
+    print('co_names:', code.co_names)
+    print('co_consts:', code.co_consts)
+    print('---')
+" ✔ 
+💭 Thinking for 727 characters   
+The `co_names` attribute cleanly identifies each script step type (`user`, `agent`, `succeed`). Now let me create the `scenario_def.py`script.   
+✏️  Writing /home/user/myproject/scenario_def.py ✔ 
+Now let me test thescript with a samplerun-id.   
+💫 Executing cd /home/user/myproject && . .venv/bin/activate && python3 scenario_def.py --run-id test-123 2>&1 ✔ 
+💭 Thinking for 551 characters   
+The output matches the schema perfectly. Let me verify the JSON is valid and test with a different run-id to confirm parameterization works correctly.   
+💫 Executing cd /home/user/myproject && . .venv/bin/activate && python3 scenario_def.py --run-id test-123 2>&1 | python3 -c "import sys, json; data=json.load(sys.stdin); assert data['name']=='Refund Scenario test-123'; assert data['agents']==['SupportAgentAdapter','UserSimulatorAgent','JudgeAgent','JudgeAgent']; assert len(data['judge_criteria'])==2; assert all(isinstance(c, list) for c in data['judge_criteria']); assert data['script_types']==['user','agent','succeed']; print('All assertions passed!')" ✔ 
+💫 Executing cd /home/user/myproject && . .venv/bin/activate && python3 scenario_def.py --run-id abc-xyz-789 2>&1 | python3 -c "import sys, json; data=json.load(sys.stdin); print('name:', data['name']); print('agents:', data['agents']); print('script_types:', data['script_types'])" ✔ 
+All assertions pass and the run-id is correctly parameterized. Let me also verify the script handles the missing `--run-id` argument gracefully.   
+💫 Executing cd /home/user/myproject && . .venv/bin/activate && python3 scenario_def.py 2>&1; echo "Exit code: $?" ✔ 
+💭 Thinking for 216 characters   
+The script handles all cases correctly. Let me mark the final todo ascomplete.   
+📋 Updating todo list (4 items) ✔ 
+🎉 Task Completed
+I've created `/home/user/myproject/scenario_def.py`, a Python script that configures a LangWatch multi-turn scenario with multiple specialized judges.
+
+## What was done
+
+1. **Installed `langwatch-scenario`** using `uv pip install` in a virtual environment at `/home/user/myproject/.venv`.
+
+2. **Created `scenario_def.py`** with the following components:
+
+   - **`SupportAgentAdapter`** — a custom class inheriting from `scenario.AgentAdapter` that implements the async `call` method and returns a simple string response acknowledging the customer's issue.
+
+   - **`UserSimulatorAgent`** — configured with a system prompt to act as a frustrated customer demanding a refund.
+
+   - **Two `JudgeAgent` instances:**
+     - A **politeness judge** with criteria evaluating whether the agent stays polite and professional.
+     - A **policy-adherence judge** with criteria evaluating whether the agent follows refund policy correctly.
+
+   - **Script flow** using `scenario.user()`, `scenario.agent()`, and `scenario.succeed()` to define: user message → agent response → success trigger.
+
+3. **Introspection logic** to extract the JSON representation:
+   - Agent class names via `type(agent).__name__`
+   - Judge criteria via the `criteria` attribute on `JudgeAgent` instances
+   - Script step types via inspecting each lambda's `__code__.co_names` (which contains the executor method name: `user`, `agent`, or `succeed`)
+
+4. **`argparse`** for the `--run-id` argument. The script constructs the configuration and prints JSON — it does **not** call `scenario.run`, so no OpenAI API key is needed.
+
+## Output verification
+
+Running `python3 scenario_def.py --run-id test-123` produces:
+
+```json
+{
+  "name": "Refund Scenario test-123",
+  "agents": ["SupportAgentAdapter", "UserSimulatorAgent", "JudgeAgent", "JudgeAgent"],
+  "judge_criteria": [
+    ["The agent remains polite and professional at all times...", "The agent uses respectful language..."],
+    ["The agent follows the company refund policy correctly...", "The agent does not promise a refund...", "The agent provides clear next steps..."]
+  ],
+  "script_types": ["user", "agent", "succeed"]
+}
+```
+
+This matches the required schema exactly: the correct name format, four agents in the right order, two lists of judge criteria, and the three script step types.   
+  

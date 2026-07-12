@@ -1,0 +1,101 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T16:17:18.952530+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 7,
+            "passed": 4,
+            "failed": 3,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783873038840,
+            "stop": 1783873038952
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_prompts_json_exists",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783873038870,
+                "stop": 1783873038870,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_lock_file_resolves_version_and_materialized_path",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873038870,
+                "stop": 1783873038871,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_materialized_prompt_is_valid",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873038871,
+                "stop": 1783873038872,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_offline_compile_happy_path",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 28,
+                "start": 1783873038872,
+                "stop": 1783873038900,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_offline_compile_happy_path():\n        if os.path.exists(OUT):\n            os.remove(OUT)\n        result = _run_cli(FULL_VARS, offline=True)\n>       assert result.returncode == 0, (\n            f\"Offline compile failed (exit {result.returncode}).\\n\"\n            f\"STDOUT:\\n{result.stdout}\\nSTDERR:\\n{result.stderr}\"\n        )\nE       AssertionError: Offline compile failed (exit 2).\nE         STDOUT:\nE         \nE         STDERR:\nE         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\nE         \nE       assert 2 == 0\nE        +  where 2 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', 'run.py', '--handle', 'customer-support-bot', '--vars'...user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\\n\").returncode\n\n/tests/test_final_state.py:111: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_loader_reads_local_materialized_cache",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 21,
+                "start": 1783873038900,
+                "stop": 1783873038921,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_loader_reads_local_materialized_cache():\n        with open(MATERIALIZED, \"rb\") as f:\n            original = f.read()\n        try:\n            prompt = yaml.safe_load(original.decode(\"utf-8\"))\n            for message in prompt.get(\"messages\", []):\n                if isinstance(message, dict) and message.get(\"role\") == \"system\":\n                    message[\"content\"] = f\"{message.get('content', '')} {SENTINEL}\"\n                    break\n            with open(MATERIALIZED, \"w\") as f:\n                yaml.safe_dump(prompt, f, allow_unicode=True, sort_keys=False)\n    \n            if os.path.exists(OUT):\n                os.remove(OUT)\n            result = _run_cli(FULL_VARS, offline=True)\n>           assert result.returncode == 0, (\n                f\"Offline compile failed after injecting sentinel.\\n\"\n                f\"STDOUT:\\n{result.stdout}\\nSTDERR:\\n{result.stderr}\"\n            )\nE           AssertionError: Offline compile failed after injecting sentinel.\nE             STDOUT:\nE             \nE             STDERR:\nE             /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\nE             \nE           assert 2 == 0\nE            +  where 2 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', 'run.py', '--handle', 'customer-support-bot', '--vars'...user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\\n\").returncode\n\n/tests/test_final_state.py:173: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_missing_required_variable_fails",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 18,
+                "start": 1783873038921,
+                "stop": 1783873038939,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_missing_required_variable_fails():\n        if os.path.exists(OUT):\n            os.remove(OUT)\n        result = _run_cli(MISSING_VARS, offline=True)\n        assert result.returncode != 0, (\n            \"Compiling with a missing required variable ('issue') must exit non-zero, \"\n            f\"but it succeeded.\\nSTDOUT:\\n{result.stdout}\\nSTDERR:\\n{result.stderr}\"\n        )\n        combined_err = (result.stdout + result.stderr).lower()\n>       assert \"issue\" in combined_err, (\n            \"Expected the error output to mention the missing variable 'issue'.\\n\"\n            f\"STDOUT:\\n{result.stdout}\\nSTDERR:\\n{result.stderr}\"\n        )\nE       AssertionError: Expected the error output to mention the missing variable 'issue'.\nE         STDOUT:\nE         \nE         STDERR:\nE         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\nE         \nE       assert 'issue' in \"/home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [errno 2] no such file or directory\\n\"\n\n/tests/test_final_state.py:204: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_missing_materialized_cache_offline_fails",
+                "status": "passed",
+                "duration": 13,
+                "start": 1783873038939,
+                "stop": 1783873038952,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            }
+        ]
+    }
+}

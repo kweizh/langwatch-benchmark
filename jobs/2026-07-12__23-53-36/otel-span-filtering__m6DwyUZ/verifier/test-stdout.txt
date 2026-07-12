@@ -1,0 +1,72 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2
+collected 5 items
+
+../tests/test_final_state.py EEEEF                                       [100%]
+
+==================================== ERRORS ====================================
+_________ ERROR at setup of test_run_pipeline_returns_non_empty_answer _________
+
+    @pytest.fixture(scope="session")
+    def pipeline_execution():
+>       from opentelemetry import trace
+E       ModuleNotFoundError: No module named 'opentelemetry'
+
+/tests/test_final_state.py:109: ModuleNotFoundError
+___________ ERROR at setup of test_all_spans_reach_existing_exporter ___________
+
+    @pytest.fixture(scope="session")
+    def pipeline_execution():
+>       from opentelemetry import trace
+E       ModuleNotFoundError: No module named 'opentelemetry'
+
+/tests/test_final_state.py:109: ModuleNotFoundError
+_______ ERROR at setup of test_excluded_spans_not_exported_to_langwatch ________
+
+    @pytest.fixture(scope="session")
+    def pipeline_execution():
+>       from opentelemetry import trace
+E       ModuleNotFoundError: No module named 'opentelemetry'
+
+/tests/test_final_state.py:109: ModuleNotFoundError
+_________ ERROR at setup of test_included_spans_exported_to_langwatch __________
+
+    @pytest.fixture(scope="session")
+    def pipeline_execution():
+>       from opentelemetry import trace
+E       ModuleNotFoundError: No module named 'opentelemetry'
+
+/tests/test_final_state.py:109: ModuleNotFoundError
+=================================== FAILURES ===================================
+________________________________ test_cli_smoke ________________________________
+
+    def test_cli_smoke():
+        """`python main.py \"<query>\"` should run the pipeline and print an answer."""
+>       httpd, _received, port = _make_collector()
+
+/tests/test_final_state.py:209: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def _make_collector():
+        """Start a real local OTLP/HTTP collector that stands in for LangWatch.
+    
+        It records the names of every span POSTed to /api/otel/v1/traces by decoding
+        the OTLP protobuf payload. This is a genuine HTTP endpoint, not a mock of any
+        LangWatch or OpenTelemetry dependency.
+        """
+>       from opentelemetry.proto.collector.trace.v1.trace_service_pb2 import (
+            ExportTraceServiceRequest,
+            ExportTraceServiceResponse,
+        )
+E       ModuleNotFoundError: No module named 'opentelemetry'
+
+/tests/test_final_state.py:41: ModuleNotFoundError
+=========================== short test summary info ============================
+ERROR ../tests/test_final_state.py::test_run_pipeline_returns_non_empty_answer
+ERROR ../tests/test_final_state.py::test_all_spans_reach_existing_exporter - ...
+ERROR ../tests/test_final_state.py::test_excluded_spans_not_exported_to_langwatch
+ERROR ../tests/test_final_state.py::test_included_spans_exported_to_langwatch
+FAILED ../tests/test_final_state.py::test_cli_smoke - ModuleNotFoundError: No...
+========================= 1 failed, 4 errors in 0.04s ==========================

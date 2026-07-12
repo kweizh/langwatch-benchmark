@@ -1,0 +1,345 @@
+- Initializing MCP connections...
+You
+# Versioned Prompt Compiler with LiteLLM Execution and Trace Linkage ## Background You are building the generation service for a customer-support platform that manages its prompts in https://langwatch.ai/docs/prompt-management/getting-started. At runtime the service must fetch a **specific pinned version** of a prompt with the LangWatch Python SDK (`langwatch.prompts.get`), compile it with several dynamic template variables, and execute it through the https://docs.litellm.ai/ `completion` API using the prompt's own model identifier and compiled messages. The whole generation must run inside an **active LangWatch trace** so the LLM call is linked to the prompt and is observable. The deployment target is a locked-down / CI environment: the prompt is already materialized locally (LangWatch *Guaranteed Availability*), and there are no live LLM credentials. Your service must therefore be deterministic and offline-capable while still exercising the real `langwatch` and `litellm` packages (no mocking of the SDK). A pre-provisioned LangWatch prompts project already exists in the project directory: `prompts.json`, `prompts-lock.json`, and a materialized, versioned prompt for the handle `support-triage-agent`. Your job is to implement the generation service `run.py` on top of it. ## Requirements * Load the prompt for a given handle through the LangWatch Python SDK (`langwatch.prompts.get`), honoring a caller-supplied version. * Compile the prompt with multiple runtime template variables and execute the compiled messages through LiteLLM's `completion`, routing to the model declared by the prompt (the provider-prefixed identifier such as `openai/...`). * Run the retrieval + compilation + completion inside an active LangWatch trace, and emit an inspectable local trace artifact proving the LLM execution span is nested under the trace root span (a single shared trace id). * Implement non-trivial validation: * **Version integrity:** because a locally materialized prompt is returned regardless of the version requested, the service must verify that the version actually resolved matches the caller's requested version and fail loudly on any mismatch. * **Template variables:** every `{{variable}}` placeholder referenced by the prompt must be supplied; a missing variable must fail loudly and must not produce a successful result. * Read all credentials/config strictly from environment variables. Do NOT mock LangWatch, LiteLLM, their HTTP clients, or any transitive dependency — the real packages must be installed and importable. ## Implementation Hints * Install Python packages with `uv` (`uv venv`, then `uv pip install ...`). The `langwatch` and `litellm` packages are required. * Run the service with the project root as the working directory so the SDK can auto-discover the materialized prompt under `./prompts/.materialized/`. See https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability and the https://langwatch.ai/docs/prompt-management/cli. * Compile the prompt with the SDK's compilation API; prefer the strict-compilation variant so missing template variables raise instead of silently passing through. * Pass the prompt's own model string unchanged to LiteLLM (do not strip the provider prefix). Since there are no live LLM credentials, drive `completion` deterministically with LiteLLM's mock-response mechanism so no network/API key is needed while still exercising the real `completion` code path. * Establish the LangWatch trace with `langwatch.setup()` plus a trace boundary. To make trace linkage inspectable offline, capture the emitted OpenTelemetry spans in-process (e.g. attach your own `TracerProvider`/span exporter to the LangWatch setup) and serialize the stable span fields (name, trace id, span id, parent span id) to the trace artifact. * Keep machine-readable output in files (not stdout), because LangWatch/LiteLLM emit their own log lines. ## Acceptance Criteria * Project path: /home/user/myproject * Command: `python run.py --handle <handle> --vars <json_object> [--version <int>] --out <path>` * `--handle`: the prompt handle to load. * `--vars`: a JSON object string mapping template-variable names to string values. * `--version`: optional integer version; when provided the service must confirm the resolved prompt is exactly that version, and when omitted the version recorded in the prompts lock file is used. * `--out`: path where the compiled result JSON is written. * On success (exit code 0) the `--out` file must contain a JSON object with this shape: ```json { "handle": string, "version": integer, "model": string, "trace_id": string, "messages": [ { "role": string, "content": string } ], "response": string } ``` * `model` is the provider-prefixed model string taken from the prompt and passed to LiteLLM (begins with `openai/`). * `version` is the resolved integer version. * `trace_id` is the non-empty lowercase 32-hex-character OpenTelemetry trace id of the active trace. * every message `content` has all placeholders substituted; no `{{` substring may remain. * `response` is the non-empty text returned by the LiteLLM `completion` call. * Trace artifact: on success the service also writes `/home/user/myproject/trace_spans.jsonl`, one JSON object per line describing a captured span with at least the fields `name`, `trace_id`, `span_id`, `parent_span_id`. It must contain a span named `llm_generation` (the LLM execution) whose `trace_id` equals the result `trace_id`, and whose `parent_span_id` refers to another captured span sharing that same `trace_id` (i.e. the LLM span is nested under the trace root span). * Error handling (must exit non-zero and must NOT write a successful `--out` result): * If `--version` is supplied but does not match the resolved prompt version, fail and report a version mismatch. * If any template variable required by the prompt is missing from `--vars`, fail and name the missing variable. * Required pre-existing artifacts at the project root (already provisioned): `prompts.json`, `prompts-lock.json`, and `prompts/.materialized/support-triage-agent.prompt.yaml`.   
+
+Pochi
+I'll start by exploring the project directory to understand the existing structure and pre-provisioned artifacts.   
+📂 Listing files in /home/user/myproject recursively ✔ 
+📖 Reading /home/user/myproject/prompts.json ✔ 
+📖 Reading /home/user/myproject/prompts-lock.json ✔ 
+📖 Reading /home/user/myproject/prompts/.materialized/support-triage-agent.prompt.yaml ✔ 
+Now I have a clear picture of the pre-provisioned artifacts. Let me create the todo list and implement the solution.   
+📋 Updating todo list (3 items) ✔ 
+📋 Updating todo list (3 items) ✔ 
+💫 Executing cd /home/user/myproject && uv venv 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && uv pip install langwatch litellm 2>&1 ✔ 
+📋 Updating todo list (3 items) ✔ 
+Now let me explore the LangWatch SDK to understand the APIs I need to use:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "import langwatch; print(dir(langwatch))" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "import langwatch.prompts; help(langwatch.prompts.get)" 2>&1 | head -40 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch.prompts
+p = langwatch.prompts.get('support-triage-agent')
+print('Type:', type(p))
+print('Dir:', [x for x in dir(p) if not x.startswith('_')])
+print('Model:', p.model)
+print('Messages:', p.messages)
+print('Version:', p.version)
+print('Compile:', dir(p.compile))
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch.prompts
+p = langwatch.prompts.get('support-triage-agent')
+# Test compile_strict
+result = p.compile_strict(account_tier='Enterprise', priority='P1', customer_name='Acme Corp', issue_summary='Login failure')
+print('Compiled messages:', result)
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch.prompts
+p = langwatch.prompts.get('support-triage-agent')
+# Test compile_strict with missing variable
+try:
+    result = p.compile_strict(account_tier='Enterprise', priority='P1')
+    print('Result:', result)
+except Exception as e:
+    print('Error type:', type(e).__name__)
+    print('Error:', e)
+" 2>&1 ✔ 
+`compile_strict` raises `PromptCompilationError` on missing variables. Now let me explore the LangWatch trace API and LiteLLM mock response:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+help(langwatch.setup)
+" 2>&1 | head -30 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+help(langwatch.trace)
+" 2>&1 | head -30 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+help(langwatch.span)
+" 2>&1 | head -30 ✔ 
+Now let me check how to capture OTel spans in-process and understand LiteLLM mock response:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+print('OTel SDK available')
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import litellm
+# Check mock response support
+print(hasattr(litellm, 'mock_response'))
+help(litellm.mock_response)
+" 2>&1 | head -20 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import litellm
+# Check if there's a global mock setting
+print('mock_test:', getattr(litellm, 'mock_test', 'NOT FOUND'))
+print('mock_completion:', getattr(litellm, 'mock_completion', 'NOT FOUND'))
+# Check completion signature
+import inspect
+sig = inspect.signature(litellm.completion)
+print('completion params:', list(sig.parameters.keys()))
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import litellm
+help(litellm.mock_completion)
+" 2>&1 | head -20 ✔ 
+Now let me check how to capture OTel spans. I'll use an in-memory span exporter:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+from opentelemetry.sdk.trace.export import SpanExportResult
+from opentelemetry.sdk.trace import ReadableSpan
+import opentelemetry.sdk.trace.export as export
+print(dir(export))
+" 2>&1 ✔ 
+Now let me check the LangWatch trace context to understand how to get the trace_id:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+# Check get_current_trace
+help(langwatch.get_current_trace)
+" 2>&1 | head -25 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+# Check get_current_span too
+help(langwatch.get_current_span)
+" 2>&1 | head -20 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+# Look at LangWatchTrace
+import inspect
+from langwatch.telemetry.tracing import LangWatchTrace
+print([m for m in dir(LangWatchTrace) if not m.startswith('_')])
+" 2>&1 ✔ 
+`LangWatchTrace` has a `trace_id` and `root_span`. Let me verify how to get the trace_id format:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+import os
+os.environ['LANGWATCH_API_KEY'] = 'test-key'
+langwatch.setup(api_key='test-key')
+
+with langwatch.trace(name='test-trace') as trace:
+    print('trace_id:', trace.trace_id)
+    print('type:', type(trace.trace_id))
+    print('root_span:', trace.root_span)
+    # Check root_span attributes
+    rs = trace.root_span
+    print('root_span dir:', [m for m in dir(rs) if not m.startswith('_')])
+" 2>&1 ✔ 
+The trace_id is already a 32-hex-char string. Now let me understand how to capture the OTel spans. I need to use a custom `TracerProvider` with an in-memory exporter:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+import os
+os.environ['LANGWATCH_API_KEY'] = 'test-key'
+
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor, SpanExporter, SpanExportResult
+
+class InMemoryExporter(SpanExporter):
+    def __init__(self):
+        self.spans = []
+    def export(self, spans):
+        self.spans.extend(spans)
+        return SpanExportResult.SUCCESS
+    def shutdown(self):
+        pass
+
+exporter = InMemoryExporter()
+provider = TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(exporter))
+
+langwatch.setup(api_key='test-key', tracer_provider=provider)
+
+with langwatch.trace(name='test-trace') as trace:
+    print('trace_id:', trace.trace_id)
+    with langwatch.span(name='llm_generation', trace=trace) as span:
+        pass
+
+# Check captured spans
+for s in exporter.spans:
+    print('span name:', s.name)
+    ctx = s.get_span_context()
+    print('  trace_id:', format(ctx.trace_id, '032x'))
+    print('  span_id:', format(ctx.span_id, '016x'))
+    if s.parent:
+        pctx = s.parent.span_context
+        print('  parent_span_id:', format(pctx.span_id, '016x'))
+    else:
+        print('  parent_span_id: None')
+" 2>&1 ✖ "Command exited with code 1"
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+import os
+os.environ['LANGWATCH_API_KEY'] = 'test-key'
+
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor, SpanExporter, SpanExportResult
+
+class InMemoryExporter(SpanExporter):
+    def __init__(self):
+        self.spans = []
+    def export(self, spans):
+        self.spans.extend(spans)
+        return SpanExportResult.SUCCESS
+    def shutdown(self):
+        pass
+
+exporter = InMemoryExporter()
+provider = TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(exporter))
+
+langwatch.setup(api_key='test-key', tracer_provider=provider)
+
+with langwatch.trace(name='test-trace') as trace:
+    print('trace_id:', trace.trace_id)
+    with langwatch.span(name='llm_generation', trace=trace) as span:
+        pass
+
+# Check captured spans
+for s in exporter.spans:
+    print('span name:', s.name)
+    ctx = s.get_span_context()
+    print('  trace_id:', format(ctx.trace_id, '032x'))
+    print('  span_id:', format(ctx.span_id, '016x'))
+    if s.parent:
+        print('  parent:', s.parent)
+        print('  parent type:', type(s.parent))
+        # parent is an OTel Span
+        pctx = s.parent.get_span_context()
+        print('  parent_span_id:', format(pctx.span_id, '016x'))
+    else:
+        print('  parent_span_id: None')
+" 2>&1 ✖ "Command exited with code 1"
+The parent is a `SpanContext` (not a Span). Let me fix that:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch
+import os
+os.environ['LANGWATCH_API_KEY'] = 'test-key'
+
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor, SpanExporter, SpanExportResult
+
+class InMemoryExporter(SpanExporter):
+    def __init__(self):
+        self.spans = []
+    def export(self, spans):
+        self.spans.extend(spans)
+        return SpanExportResult.SUCCESS
+    def shutdown(self):
+        pass
+
+exporter = InMemoryExporter()
+provider = TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(exporter))
+
+langwatch.setup(api_key='test-key', tracer_provider=provider)
+
+with langwatch.trace(name='test-trace') as trace:
+    print('trace_id:', trace.trace_id)
+    with langwatch.span(name='llm_generation', trace=trace) as span:
+        pass
+
+# Check captured spans
+for s in exporter.spans:
+    print('span name:', s.name)
+    ctx = s.get_span_context()
+    print('  trace_id:', format(ctx.trace_id, '032x'))
+    print('  span_id:', format(ctx.span_id, '016x'))
+    if s.parent:
+        print('  parent type:', type(s.parent))
+        if hasattr(s.parent, 'span_id'):
+            print('  parent_span_id:', format(s.parent.span_id, '016x'))
+        else:
+            print('  parent_span_id:', 'no span_id attr')
+    else:
+        print('  parent_span_id: None')
+" 2>&1 ✔ 
+Now I have a clear picture. The `parent` of a `ReadableSpan` is a `SpanContext` that has a `span_id` attribute. Now let me test the full flow with LiteLLM:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import litellm
+
+response = litellm.mock_completion(
+    model='openai/gpt-4o-mini',
+    messages=[{'role': 'user', 'content': 'Hello'}],
+    mock_response='Mock response text here'
+)
+print('Type:', type(response))
+print('Response:', response)
+print('Choices:', response.choices)
+print('Content:', response.choices[0].message.content)
+" 2>&1 ✔ 
+Now let me also check how the FetchPolicy works for materialized prompts:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch.prompts
+from langwatch import FetchPolicy
+print(list(FetchPolicy))
+" 2>&1 ✔ 
+Now I have everything I need. Let me also test the complete flow in one shot to verify the integration:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import os, json
+os.environ['LANGWATCH_API_KEY'] = 'test-key'
+
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor, SpanExporter, SpanExportResult
+import langwatch
+import litellm
+
+class InMemoryExporter(SpanExporter):
+    def __init__(self):
+        self.spans = []
+    def export(self, spans):
+        self.spans.extend(spans)
+        return SpanExportResult.SUCCESS
+    def shutdown(self):
+        pass
+
+exporter = InMemoryExporter()
+provider = TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(exporter))
+
+langwatch.setup(api_key='test-key', tracer_provider=provider)
+
+with langwatch.trace(name='prompt-execution') as trace:
+    prompt = langwatch.prompts.get('support-triage-agent')
+    compiled = prompt.compile_strict(
+        account_tier='Enterprise',
+        priority='P1',
+        customer_name='Acme Corp',
+        issue_summary='Login failure'
+    )
+    print('Compiled messages:', json.dumps(compiled.messages, indent=2))
+    
+    with langwatch.span(name='llm_generation', trace=trace, type='llm', model=prompt.model) as llm_span:
+        response = litellm.mock_completion(
+            model=prompt.model,
+            messages=compiled.messages,
+            mock_response='This is a mock triage response.'
+        )
+        content = response.choices[0].message.content
+        print('Response:', content)
+
+print()
+print('Trace ID:', trace.trace_id)
+print()
+for s in exporter.spans:
+    ctx = s.get_span_context()
+    parent_id = format(s.parent.span_id, '016x') if s.parent else 'None'
+    print(f'  name={s.name} trace_id={format(ctx.trace_id, \"032x\")} span_id={format(ctx.span_id, \"016x\")} parent_span_id={parent_id}')
+" 2>&1 ✔ 
+Everything works. The `llm_generation` span has a `parent_span_id` that matches the `prompt-execution` span's `span_id`. Now let me implement the full `run.py`:   
+✏️  Writing /home/user/myproject/run.py ✔ 
+📋 Updating todo list (3 items) ✔ 
+Now let me run comprehensive tests:   
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py --handle support-triage-agent --vars '{"account_tier":"Enterprise","priority":"P1","customer_name":"Acme Corp","issue_summary":"Login failure"}' --out /home/user/myproject/result.json 2>&1 ✖ "Command exited with code 1"
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch.prompts.errors
+print(dir(langwatch.prompts.errors))
+" 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "
+import langwatch.prompts
+p = langwatch.prompts.get('support-triage-agent')
+try:
+    p.compile_strict(account_tier='Enterprise')
+except Exception as e:
+    print('Module:', type(e).__module__)
+    print('Name:', type(e).__name__)
+" 2>&1 ✔ 
+🔧 Applying diff to /home/user/myproject/run.py ✔ 

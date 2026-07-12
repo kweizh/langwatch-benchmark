@@ -1,0 +1,87 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: xprocess-1.0.2, json-ctrf-0.5.2
+collected 2 items
+
+../tests/test_final_state.py FF                                          [100%]
+
+=================================== FAILURES ===================================
+_______________________________ test_safe_prompt _______________________________
+
+start_mock_server = None
+
+    def test_safe_prompt(start_mock_server):
+        if os.path.exists(LOG_FILE):
+            os.remove(LOG_FILE)
+    
+        result = run_script("Hello world")
+>       assert result.returncode == 0, f"Script failed with error: {result.stderr}"
+E       AssertionError: Script failed with error: node:internal/modules/esm/resolve:271
+E             throw new ERR_MODULE_NOT_FOUND(
+E                   ^
+E         
+E         Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/user/myproject/run.ts' imported from /home/user/myproject/
+E             at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+E             at moduleResolve (node:internal/modules/esm/resolve:865:10)
+E             at defaultResolve (node:internal/modules/esm/resolve:992:11)
+E             at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+E             at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+E             at nextStep (node:internal/modules/customization_hooks:189:26)
+E             at resolveBaseSync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:9115)
+E             at resolveDirectorySync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:10328)
+E             at resolveTsPathsSync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:11560)
+E             at resolve (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:13343) {
+E           code: 'ERR_MODULE_NOT_FOUND',
+E           url: 'file:///home/user/myproject/run.ts'
+E         }
+E         
+E         Node.js v24.18.0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['npx', 'tsx', 'run.ts', '--prompt', 'Hello world'], returncode=1, stdout='', stderr="node:inter...mjs:2:13343) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///home/user/myproject/run.ts'\n}\n\nNode.js v24.18.0\n").returncode
+
+/tests/test_final_state.py:77: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+/tests/.pytest_cache/d/.xprocess/mock_server$ python3 /tmp/mock_server.py
+process 'mock_server' started pid=1508
+mock_server process startup detected
+____________________________ test_sensitive_prompt _____________________________
+
+start_mock_server = None
+
+    def test_sensitive_prompt(start_mock_server):
+        if os.path.exists(LOG_FILE):
+            os.remove(LOG_FILE)
+    
+        result = run_script("My password is SECRET_TOKEN")
+>       assert result.returncode == 0, f"Script failed with error: {result.stderr}"
+E       AssertionError: Script failed with error: node:internal/modules/esm/resolve:271
+E             throw new ERR_MODULE_NOT_FOUND(
+E                   ^
+E         
+E         Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/user/myproject/run.ts' imported from /home/user/myproject/
+E             at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+E             at moduleResolve (node:internal/modules/esm/resolve:865:10)
+E             at defaultResolve (node:internal/modules/esm/resolve:992:11)
+E             at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+E             at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+E             at nextStep (node:internal/modules/customization_hooks:189:26)
+E             at resolveBaseSync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:9115)
+E             at resolveDirectorySync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:10328)
+E             at resolveTsPathsSync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:11560)
+E             at resolve (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:13343) {
+E           code: 'ERR_MODULE_NOT_FOUND',
+E           url: 'file:///home/user/myproject/run.ts'
+E         }
+E         
+E         Node.js v24.18.0
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['npx', 'tsx', 'run.ts', '--prompt', 'My password is SECRET_TOKEN'], returncode=1, stdout='', st...mjs:2:13343) {\n  code: 'ERR_MODULE_NOT_FOUND',\n  url: 'file:///home/user/myproject/run.ts'\n}\n\nNode.js v24.18.0\n").returncode
+
+/tests/test_final_state.py:93: AssertionError
+=========================== short test summary info ============================
+FAILED ../tests/test_final_state.py::test_safe_prompt - AssertionError: Scrip...
+FAILED ../tests/test_final_state.py::test_sensitive_prompt - AssertionError: ...
+============================== 2 failed in 2.08s ===============================

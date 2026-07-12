@@ -1,0 +1,11 @@
+[project]
+name = "myproject"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "coolname>=5.0.0",
+    "langwatch>=0.26.0",
+    "pandas>=3.0.3",
+    "tqdm>=4.68.4",
+]

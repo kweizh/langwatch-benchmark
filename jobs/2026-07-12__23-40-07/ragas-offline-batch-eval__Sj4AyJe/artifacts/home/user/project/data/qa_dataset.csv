@@ -1,0 +1,7 @@
+id,question
+q1,How do I initialize a batch evaluation run in the LangWatch Python SDK?
+q2,Which environment variable holds the LangWatch API key?
+q3,Which built-in evaluator measures how well an answer uses the retrieved contexts?
+q4,How does LangWatch export telemetry data?
+q5,Which package manager should be used to install LangWatch Python packages?
+q6,How can prompts be fetched and compiled with the LangWatch SDK?

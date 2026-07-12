@@ -1,0 +1,53 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T16:17:11.339113+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 2,
+            "passed": 0,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783873029259,
+            "stop": 1783873031338
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_safe_prompt",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 1691,
+                "start": 1783873029267,
+                "stop": 1783873030958,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "start_mock_server = None\n\n    def test_safe_prompt(start_mock_server):\n        if os.path.exists(LOG_FILE):\n            os.remove(LOG_FILE)\n    \n        result = run_script(\"Hello world\")\n>       assert result.returncode == 0, f\"Script failed with error: {result.stderr}\"\nE       AssertionError: Script failed with error: node:internal/modules/esm/resolve:271\nE             throw new ERR_MODULE_NOT_FOUND(\nE                   ^\nE         \nE         Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/user/myproject/run.ts' imported from /home/user/myproject/\nE             at finalizeResolution (node:internal/modules/esm/resolve:271:11)\nE             at moduleResolve (node:internal/modules/esm/resolve:865:10)\nE             at defaultResolve (node:internal/modules/esm/resolve:992:11)\nE             at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)\nE             at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)\nE             at nextStep (node:internal/modules/customization_hooks:189:26)\nE             at resolveBaseSync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:9115)\nE             at resolveDirectorySync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:10328)\nE             at resolveTsPathsSync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:11560)\nE             at resolve (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:13343) {\nE           code: 'ERR_MODULE_NOT_FOUND',\nE           url: 'file:///home/user/myproject/run.ts'\nE         }\nE         \nE         Node.js v24.18.0\nE         \nE       assert 1 == 0\nE        +  where 1 = CompletedProcess(args=['npx', 'tsx', 'run.ts', '--prompt', 'Hello world'], returncode=1, stdout='', stderr=\"node:inter...mjs:2:13343) {\\n  code: 'ERR_MODULE_NOT_FOUND',\\n  url: 'file:///home/user/myproject/run.ts'\\n}\\n\\nNode.js v24.18.0\\n\").returncode\n\n/tests/test_final_state.py:77: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_sensitive_prompt",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 380,
+                "start": 1783873030958,
+                "stop": 1783873031338,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "start_mock_server = None\n\n    def test_sensitive_prompt(start_mock_server):\n        if os.path.exists(LOG_FILE):\n            os.remove(LOG_FILE)\n    \n        result = run_script(\"My password is SECRET_TOKEN\")\n>       assert result.returncode == 0, f\"Script failed with error: {result.stderr}\"\nE       AssertionError: Script failed with error: node:internal/modules/esm/resolve:271\nE             throw new ERR_MODULE_NOT_FOUND(\nE                   ^\nE         \nE         Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/user/myproject/run.ts' imported from /home/user/myproject/\nE             at finalizeResolution (node:internal/modules/esm/resolve:271:11)\nE             at moduleResolve (node:internal/modules/esm/resolve:865:10)\nE             at defaultResolve (node:internal/modules/esm/resolve:992:11)\nE             at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)\nE             at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)\nE             at nextStep (node:internal/modules/customization_hooks:189:26)\nE             at resolveBaseSync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:9115)\nE             at resolveDirectorySync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:10328)\nE             at resolveTsPathsSync (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:11560)\nE             at resolve (file:///home/user/myproject/node_modules/tsx/dist/register-D5KIhaFJ.mjs:2:13343) {\nE           code: 'ERR_MODULE_NOT_FOUND',\nE           url: 'file:///home/user/myproject/run.ts'\nE         }\nE         \nE         Node.js v24.18.0\nE         \nE       assert 1 == 0\nE        +  where 1 = CompletedProcess(args=['npx', 'tsx', 'run.ts', '--prompt', 'My password is SECRET_TOKEN'], returncode=1, stdout='', st...mjs:2:13343) {\\n  code: 'ERR_MODULE_NOT_FOUND',\\n  url: 'file:///home/user/myproject/run.ts'\\n}\\n\\nNode.js v24.18.0\\n\").returncode\n\n/tests/test_final_state.py:93: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

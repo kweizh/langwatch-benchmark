@@ -1,0 +1,171 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2, anyio-4.14.1
+collected 8 items
+
+../tests/test_final_state.py F.FFFFFF                                    [100%]
+
+=================================== FAILURES ===================================
+________________________ test_script_runs_successfully _________________________
+
+evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}
+
+    def test_script_runs_successfully(evaluation_run):
+>       assert evaluation_run["returncode"] == 0, (
+            "`python run_evaluation.py` exited with "
+            f"{evaluation_run['returncode']}.\nstdout:\n{evaluation_run['stdout']}\n"
+            f"stderr:\n{evaluation_run['stderr']}"
+        )
+E       AssertionError: `python run_evaluation.py` exited with 1.
+E         stdout:
+E         Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr899jz8pj?runId=zr899jz8pj
+E         
+E         stderr:
+E         
+E         Evaluating:   0%|          | 0/6 [00:00<?, ?it/s]
+E         Evaluating:   0%|          | 0/6 [00:00<?, ?it/s]
+E         Traceback (most recent call last):
+E           File "/home/user/project/run_evaluation.py", line 185, in <module>
+E             main()
+E           File "/home/user/project/run_evaluation.py", line 151, in main
+E             question = row["question"]
+E                        ~~~^^^^^^^^^^^^
+E         TypeError: string indices must be integers, not 'str'
+E         
+E       assert 1 == 0
+
+/tests/test_final_state.py:176: AssertionError
+______________________ test_evaluator_called_once_per_row ______________________
+
+evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}
+
+    def test_evaluator_called_once_per_row(evaluation_run):
+        questions = _read_questions()
+        n = len(questions)
+        ragas_calls = [
+            body for (slug, body) in evaluation_run["evaluate_calls"]
+            if slug == EVALUATOR_SLUG
+        ]
+>       assert len(ragas_calls) == n, (
+            f"Expected exactly {n} calls to the built-in evaluator '{EVALUATOR_SLUG}' "
+            f"(one per dataset row), got {len(ragas_calls)}. "
+            f"All evaluator slugs seen: {[s for s, _ in evaluation_run['evaluate_calls']]}"
+        )
+E       AssertionError: Expected exactly 6 calls to the built-in evaluator 'legacy/ragas_context_utilization' (one per dataset row), got 0. All evaluator slugs seen: []
+E       assert 0 == 6
+E        +  where 0 = len([])
+
+/tests/test_final_state.py:207: AssertionError
+_________________________ test_evaluator_payload_shape _________________________
+
+evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}
+
+    def test_evaluator_payload_shape(evaluation_run):
+        ragas_calls = [
+            body for (slug, body) in evaluation_run["evaluate_calls"]
+            if slug == EVALUATOR_SLUG
+        ]
+>       assert ragas_calls, f"No calls to evaluator '{EVALUATOR_SLUG}' were captured."
+E       AssertionError: No calls to evaluator 'legacy/ragas_context_utilization' were captured.
+E       assert []
+
+/tests/test_final_state.py:219: AssertionError
+___________________ test_all_questions_covered_exactly_once ____________________
+
+evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}
+
+    def test_all_questions_covered_exactly_once(evaluation_run):
+        questions = sorted(_read_questions())
+        inputs = sorted(
+            str((body.get("data") or {}).get("input", "")).strip()
+            for (slug, body) in evaluation_run["evaluate_calls"]
+            if slug == EVALUATOR_SLUG
+        )
+>       assert inputs == questions, (
+            "The set of evaluator 'input' values must equal the exact set of dataset "
+            f"questions.\nExpected: {questions}\nGot:      {inputs}"
+        )
+E       AssertionError: The set of evaluator 'input' values must equal the exact set of dataset questions.
+E         Expected: ['How can prompts be fetched and compiled with the LangWatch SDK?', 'How do I initialize a batch evaluation run in the LangWatch Python SDK?', 'How does LangWatch export telemetry data?', 'Which built-in evaluator measures how well an answer uses the retrieved contexts?', 'Which environment variable holds the LangWatch API key?', 'Which package manager should be used to install LangWatch Python packages?']
+E         Got:      []
+E       assert [] == ['How can pro...on packages?']
+E         
+E         Right contains 6 more items, first extra item: 'How can prompts be fetched and compiled with the LangWatch SDK?'
+E         Use -v to get more diff
+
+/tests/test_final_state.py:246: AssertionError
+___________________ test_contexts_grounded_in_knowledge_base ___________________
+
+evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}
+
+    def test_contexts_grounded_in_knowledge_base(evaluation_run):
+        kb_contents = _read_kb_contents()
+        ragas_calls = [
+            body for (slug, body) in evaluation_run["evaluate_calls"]
+            if slug == EVALUATOR_SLUG
+        ]
+        grounded = False
+        for body in ragas_calls:
+            contexts = (body.get("data") or {}).get("contexts") or []
+            for ctx in contexts:
+                ctx_s = str(ctx).strip()
+                if not ctx_s:
+                    continue
+                for content in kb_contents:
+                    if ctx_s in content or content.strip() in ctx_s:
+                        grounded = True
+                        break
+                if grounded:
+                    break
+            if grounded:
+                break
+>       assert grounded, (
+            "None of the evaluator 'contexts' matched any knowledge-base document "
+            "content; contexts must be really retrieved from data/knowledge_base.json."
+        )
+E       AssertionError: None of the evaluator 'contexts' matched any knowledge-base document content; contexts must be really retrieved from data/knowledge_base.json.
+E       assert False
+
+/tests/test_final_state.py:273: AssertionError
+____________________________ test_summary_artifact _____________________________
+
+evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}
+
+    def test_summary_artifact(evaluation_run):
+>       assert os.path.isfile(SUMMARY_PATH), f"Summary artifact {SUMMARY_PATH} was not created."
+E       AssertionError: Summary artifact /home/user/project/eval_summary.json was not created.
+E       assert False
+E        +  where False = <function isfile at 0x728efba74220>('/home/user/project/eval_summary.json')
+E        +    where <function isfile at 0x728efba74220> = <module 'posixpath' (frozen)>.isfile
+E        +      where <module 'posixpath' (frozen)> = os.path
+
+/tests/test_final_state.py:280: AssertionError
+________________________ test_stdout_reports_row_count _________________________
+
+evaluation_run = {'returncode': 1, 'stdout': 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr8...valuation-zr899jz8pj', 'experiment_slug': 'rag-evaluation-zr899jz8pj', 'experiment_type': 'BATCH_EVALUATION_V2'}], ...}
+
+    def test_stdout_reports_row_count(evaluation_run):
+        n = len(_read_questions())
+>       assert re.search(rf"Rows evaluated:\s*{n}\b", evaluation_run["stdout"]), (
+            f"Expected a line matching 'Rows evaluated: {n}' in stdout, got:\n{evaluation_run['stdout']}"
+        )
+E       AssertionError: Expected a line matching 'Rows evaluated: 6' in stdout, got:
+E         Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr899jz8pj?runId=zr899jz8pj
+E         
+E       assert None
+E        +  where None = <function search at 0x728efba0f9c0>('Rows evaluated:\\s*6\\b', 'Follow the results at: http://127.0.0.1:38511/test-project/experiments/rag-evaluation-zr899jz8pj?runId=zr899jz8pj\n')
+E        +    where <function search at 0x728efba0f9c0> = re.search
+
+/tests/test_final_state.py:299: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_single_batch_evaluation_run_initialized
+FAILED ../tests/test_final_state.py::test_script_runs_successfully - Assertio...
+FAILED ../tests/test_final_state.py::test_evaluator_called_once_per_row - Ass...
+FAILED ../tests/test_final_state.py::test_evaluator_payload_shape - Assertion...
+FAILED ../tests/test_final_state.py::test_all_questions_covered_exactly_once
+FAILED ../tests/test_final_state.py::test_contexts_grounded_in_knowledge_base
+FAILED ../tests/test_final_state.py::test_summary_artifact - AssertionError: ...
+FAILED ../tests/test_final_state.py::test_stdout_reports_row_count - Assertio...
+========================= 7 failed, 1 passed in 1.80s ==========================

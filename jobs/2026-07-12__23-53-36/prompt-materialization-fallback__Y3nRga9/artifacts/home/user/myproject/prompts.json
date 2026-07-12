@@ -1,0 +1,5 @@
+{
+  "prompts": {
+    "customer-support-bot": "file:prompts/customer-support-bot.prompt.yaml"
+  }
+}

@@ -1,0 +1,16 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2, anyio-4.14.1
+collected 5 items
+
+../tests/test_final_state.py .....                                       [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_run_pipeline_returns_non_empty_answer
+PASSED ../tests/test_final_state.py::test_all_spans_reach_existing_exporter
+PASSED ../tests/test_final_state.py::test_excluded_spans_not_exported_to_langwatch
+PASSED ../tests/test_final_state.py::test_included_spans_exported_to_langwatch
+PASSED ../tests/test_final_state.py::test_cli_smoke
+============================== 5 passed in 3.80s ===============================

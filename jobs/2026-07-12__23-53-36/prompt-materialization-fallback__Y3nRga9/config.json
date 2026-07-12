@@ -1,0 +1,30 @@
+{
+    "task": {
+        "path": "/home/kw/code/zealt/langwatch-benchmark/tasks/prompt-materialization-fallback",
+        "source": "tasks"
+    },
+    "trial_name": "prompt-materialization-fallback__Y3nRga9",
+    "trials_dir": "jobs/2026-07-12__23-53-36",
+    "agent": {
+        "import_path": "agents.pochi:Pochi",
+        "model_name": "zai/glm-5.2",
+        "env": {
+            "POCHI_API_KEY": "${POCHI_API_KEY}"
+        }
+    },
+    "environment": {
+        "type": "daytona",
+        "override_memory_mb": 1024,
+        "mounts": [
+            {
+                "type": "bind",
+                "source": "test_initial_state.py",
+                "target": "/bootstrap/test_initial_state.py"
+            }
+        ]
+    },
+    "artifacts": [
+        "/home/user"
+    ],
+    "job_id": "57a05174-832c-4b89-8b7d-f5c3710bab0e"
+}

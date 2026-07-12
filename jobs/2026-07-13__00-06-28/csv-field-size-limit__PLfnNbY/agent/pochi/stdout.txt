@@ -1,0 +1,226 @@
+- Initializing MCP connections...
+You
+# LangWatch Evaluation Dataset CSV Round-Trip Pipeline ## Background LangWatch offline experiments load their evaluation datasets from CSV files and export experiment results back to CSV (e.g. via `pandas.read_csv(...)` and the "Export to CSV" workflow). A LangWatch evaluation dataset row typically contains an `input`/`question`, an `expected_output`, plus nested columns such as `contexts` (the list of retrieved RAG documents) and `conversation_history` (a multi-turn chat transcript). These nested columns are serialized into a single CSV cell. When a single retrieved-context blob or a long conversation history is serialized, one CSV cell can easily exceed 131072 characters. Python's standard `csv` module enforces a default per-field size limit of 131072 characters, so a naive reader will crash while parsing such an export with: ``` _csv.Error: field larger than field limit (131072) ``` You must build a robust import/export pipeline that survives these oversized fields and round-trips the dataset without any truncation or corruption. ## Requirements Build a Python command-line pipeline named `pipeline.py` that provides two subcommands, `export` and `import`, operating on LangWatch-style evaluation dataset records. The canonical in-memory/JSON record shape is a JSON array of objects, each with exactly these fields: * `index`: integer row number (0-based) * `question`: string * `expected_output`: string * `contexts`: array of strings (retrieved RAG documents) * `conversation_history`: array of objects, each `{"role": string, "content": string}` * `export`: read the records from an input JSON file and write them to a CSV file. The CSV must have a header row with exactly these columns in this order: `index,question,expected_output,contexts,conversation_history`. The two nested columns (`contexts`, `conversation_history`) must be stored as compact JSON (`json.dumps(value, ensure_ascii=False, separators=(",", ":"))`) inside a single CSV cell. The pipeline must correctly quote/escape cells that contain commas, double quotes, and embedded newlines. * `import`: read the CSV file produced by `export` (which may contain individual fields far larger than 131072 characters) and reconstruct the exact original records into an output JSON file. The two nested columns must be JSON-decoded back into their native list/object form, and `index` must be restored as an integer. Parsing must not fail on oversized fields and must not truncate or corrupt any content. Both subcommands must also emit a machine-readable report. ## Implementation Hints * The LangWatch/Python `csv` module reader raises `_csv.Error: field larger than field limit (131072)` on oversized cells. You need to raise `csv.field_size_limit(...)` high enough before parsing. Note that passing an excessively large value (e.g. `sys.maxsize`) can raise `OverflowError: Python int too large to convert to C long` on some platforms, so handle that gracefully. * Keep the write/read symmetric: whatever quoting dialect you use for `export` must be readable by `import`. Use a consistent, standard CSV dialect. * Preserve nested structures losslessly by encoding them as JSON in the cell, then decoding on the way back. Do not depend on `str()`/`repr()` of Python objects. * Install the `langwatch` SDK with `uv` (LangWatch datasets are pandas-backed; `pandas` is available for reading/writing frames if you choose to use it). Never mock any dependency; read any secrets you need from environment variables. * The report is printed to stdout, but stdout may also contain SDK/log noise. Emit the report on its own final line prefixed with a stable marker so it can be reliably extracted. ## Acceptance Criteria * Project path: /home/user/langwatch-csv-pipeline * Command (export): `python pipeline.py export --input <records.json> --output <dataset.csv>` * Command (import): `python pipeline.py import --input <dataset.csv> --output <records.json>` * `export` writes a CSV whose first line is exactly the header `index,question,expected_output,contexts,conversation_history` and whose `contexts`/`conversation_history` cells contain compact JSON of the corresponding list values. * `import` writes an output JSON file that is a JSON array of record objects with the fields `index` (integer), `question` (string), `expected_output` (string), `contexts` (array of strings), and `conversation_history` (array of `{role, content}` objects). * Round-trip integrity: for any input dataset, running `export` and then `import` on the resulting CSV MUST reproduce the original records exactly (same order, same field values, no truncation), including records whose serialized `contexts` or `conversation_history` cell exceeds 131072 characters and cells containing commas, double quotes, and newlines. * Both subcommands print, as the final stdout line, a report prefixed with the exact marker `LANGWATCH_CSV_REPORT ` followed by a single compact JSON object with the fields: * `operation`: either `"export"` or `"import"` * `record_count`: integer number of records processed * `max_field_chars`: integer character length of the longest individual CSV field value in the dataset * `field_size_limit`: integer CSV field size limit the pipeline set (must be greater than `max_field_chars`) * `checksums`: object mapping each record's `index` (as a string) to an object `{"contexts": <sha256hex>, "conversation_history": <sha256hex>}`, where each hash is the SHA-256 hex digest of the UTF-8 bytes of the compact JSON (`json.dumps(value, ensure_ascii=False, separators=(",", ":"))`) of that field's value. * The pipeline must exit with status code 0 on success.   
+
+Pochi
+I'll start by exploring the project directory and understanding the structure before implementing the pipeline.   
+📂 Listing files in /home/user/langwatch-csv-pipeline recursively ✔ 
+📋 Updating todo list (5 items) ✔ 
+✏️  Writing /home/user/langwatch-csv-pipeline/pipeline.py ✔ 
+📋 Updating todo list (5 items) ✔ 
+Now let me create a test data generator that produces records with fields exceeding 131072 characters, as well as special characters (commas, double quotes, newlines):   
+✏️  Writing /home/user/langwatch-csv-pipeline/generate_test_data.py ✔ 
+💫 Executing cd /home/user/langwatch-csv-pipeline && python generate_test_data.py > test_records.json 2>&1 && echo "Generated test_records.json ($(wc -c < test_records.json) bytes)" ✔ 
+Good, the test data is ~2.4MB. Now let's test the export:   
+📋 Updating todo list (5 items) ✔ 
+💫 Executing cd /home/user/langwatch-csv-pipeline && python pipeline.py export --input test_records.json --output test_export.csv 2>&1; echo "EXIT CODE: $?" ✔ 
+Export succeeded. Let me verify the CSV header and structure:   
+💫 Executing cd /home/user/langwatch-csv-pipeline && head -c 200 test_export.csv ✔ 
+The header looks correct. Now let's test the import:   
+📋 Updating todo list (5 items) ✔ 
+💫 Executing cd /home/user/langwatch-csv-pipeline && python pipeline.py import --input test_export.csv --output test_roundtrip.json 2>&1; echo "EXIT CODE: $?" ✔ 
+Import succeeded and checksums match exactly. Now let's verify the round-trip integrity programmatically:   
+📋 Updating todo list (5 items) ✔ 
+✏️  Writing /home/user/langwatch-csv-pipeline/verify_roundtrip.py ✔ 
+💫 Executing cd /home/user/langwatch-csv-pipeline && python verify_roundtrip.py 2>&1 ✔ 
+All 5 records round-trip perfectly. Let me also verify that the import handles the case where a naive `csv.reader` would fail by confirming our oversized fields really exceed the default limit:   
+💫 Executing cd /home/user/langwatch-csv-pipeline && python3 -c "
+import csv
+# Default limit is 131072
+print('Default field_size_limit:', csv.field_size_limit())
+# Try reading with default limit — should fail
+try:
+    with open('test_export.csv', 'r', newline='') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            pass
+    print('UNEXPECTED: default csv.reader succeeded')
+except Exception as e:
+    print(f'Expected error with default limit: {type(e).__name__}: {e}')
+" ✔ 
+Confirmed: the default `csv.reader` fails on our data, but our pipeline handles it correctly. Let me also verify the `index` is restored as an integer (not a string) in the round-tripped output:   
+💫 Executing cd /home/user/langwatch-csv-pipeline && python3 -c "
+import json
+with open('test_roundtrip.json') as f:
+    data = json.load(f)
+for rec in data:
+    assert isinstance(rec['index'], int), f'index {rec[\"index\"]} is {type(rec[\"index\"])}'
+    print(f'  Record {rec[\"index\"]}: index type={type(rec[\"index\"]).__name__}')
+print('All index values are integers.')
+" ✔ 
+Let me also verify the CSV header is exactly as specified:   
+💫 Executing cd /home/user/langwatch-csv-pipeline && head -1 test_export.csv ✔ 
+Now let me clean up the test artifacts and do a final check with the report marker extraction:   
+💫 Executing cd /home/user/langwatch-csv-pipeline && python pipeline.py export --input test_records.json --output test_export.csv 2>/dev/null | grep '^LANGWATCH_CSV_REPORT ' | python3 -c "
+import sys, json
+line = sys.stdin.read().strip()
+marker = 'LANGWATCH_CSV_REPORT '
+assert line.startswith(marker), f'Missing marker: {line[:50]}'
+report = json.loads(line[len(marker):])
+print('Report fields:', list(report.keys()))
+print('operation:', report['operation'])
+print('record_count:', report['record_count'])
+print('max_field_chars:', report['max_field_chars'])
+print('field_size_limit:', report['field_size_limit'])
+print('field_size_limit > max_field_chars:', report['field_size_limit'] > report['max_field_chars'])
+print('checksums keys:', list(report['checksums'].keys()))
+for k, v in report['checksums'].items():
+    assert 'contexts' in v and 'conversation_history' in v
+    assert len(v['contexts']) == 64
+    assert len(v['conversation_history']) == 64
+print('All checksums are valid SHA-256 hex digests.')
+" ✔ 
+💫 Executing cd /home/user/langwatch-csv-pipeline && python pipeline.py import --input test_export.csv --output test_roundtrip.json 2>/dev/null | grep '^LANGWATCH_CSV_REPORT ' ✔ 
+Let me also verify that the export and import checksums match (indicating full round-trip integrity):   
+💫 Executing cd /home/user/langwatch-csv-pipeline && python3 -c "
+import json, subprocess, sys
+
+# Get export report
+result = subprocess.run(['python', 'pipeline.py', 'export', '--input', 'test_records.json', '--output', '/tmp/test_export.csv'], capture_output=True, text=True)
+for line in result.stdout.strip().split('\n'):
+    if line.startswith('LANGWATCH_CSV_REPORT '):
+        export_report = json.loads(line[len('LANGWATCH_CSV_REPORT '):])
+        break
+
+# Get import report
+result = subprocess.run(['python', 'pipeline.py', 'import', '--input', '/tmp/test_export.csv', '--output', '/tmp/test_roundtrip.json'], capture_output=True, text=True)
+for line in result.stdout.strip().split('\n'):
+    if line.startswith('LANGWATCH_CSV_REPORT '):
+        import_report = json.loads(line[len('LANGWATCH_CSV_REPORT '):])
+        break
+
+# Compare checksums
+assert export_report['checksums'] == import_report['checksums'], 'CHECKSUM MISMATCH!'
+print('✓ Export and import checksums are identical — round-trip integrity confirmed.')
+
+# Also compare the actual JSON files
+with open('test_records.json') as f:
+    orig = json.load(f)
+with open('/tmp/test_roundtrip.json') as f:
+    rt = json.load(f)
+assert orig == rt, 'JSON CONTENT MISMATCH!'
+print('✓ Original and round-tripped JSON files are byte-identical in content.')
+" ✔ 
+📋 Updating todo list (5 items) ✔ 
+All tests pass. Let me clean up the test artifacts:   
+💫 Executing cd /home/user/langwatch-csv-pipeline && rm -f test_records.json test_export.csv test_roundtrip.json generate_test_data.py verify_roundtrip.py /tmp/test_export.csv /tmp/test_roundtrip.json ✔ 
+Let me do a final review of the pipeline code to make sure everything is clean and correct:   
+📖 Reading /home/user/langwatch-csv-pipeline/pipeline.py ✔ 
+I notice the import function has a redundant double-parse (reads the raw content twice with csv.reader). Let me simplify it to a single clean pass:   
+🔧 Applying diff to /home/user/langwatch-csv-pipeline/pipeline.py ✔ 
+Now let me run the full round-trip test again with the simplified import to make sure everything still works:   
+💫 Executing cd /home/user/langwatch-csv-pipeline && python generate_test_data.py > test_records.json && python pipeline.py export --input test_records.json --output test_export.csv 2>/dev/null && python pipeline.py import --input test_export.csv --output test_roundtrip.json 2>/dev/null && python3 -c "
+import json
+with open('test_records.json') as f: orig = json.load(f)
+with open('test_roundtrip.json') as f: rt = json.load(f)
+assert orig == rt, 'MISMATCH!'
+print('✓ Round-trip integrity confirmed.')
+print(f'  Records: {len(orig)}')
+print(f'  Max context size: {max(len(c) for r in orig for c in r[\"contexts\"])}')
+print(f'  Max conversation content size: {max(len(m[\"content\"]) for r in orig for m in r[\"conversation_history\"])}')
+" && rm -f test_records.json test_export.csv test_roundtrip.json generate_test_data.py ✖ "Command exited with code 2"
+The test data generator was cleaned up earlier. Let me recreate it and run the final test:   
+✏️  Writing /home/user/langwatch-csv-pipeline/generate_test_data.py ✖ "File has been modified since it was last read (expected mtime 1783872558346, got missing). Please read the file again before writing."
+💫 Executing cd /home/user/langwatch-csv-pipeline && cat > generate_test_data.py << 'PYEOF'
+#!/usr/bin/env python3
+"""Generate test records for the LangWatch CSV pipeline, including oversized fields."""
+import json
+import sys
+
+BIG_SIZE = 200_000  # well above 131072
+
+
+def make_big_contexts(n: int) -> list[str]:
+    contexts = []
+    for i in range(n):
+        chunk = "CONTEXT_" + str(i) + "_"
+        base = "The quick brown fox jumps over the lazy dog. " * 50
+        repeats = (BIG_SIZE // len(base)) + 1
+        big_text = chunk + (base * repeats)[:BIG_SIZE]
+        big_text = big_text[:100] + ',"\n' + big_text[100:200] + ',"\n' + big_text[200:]
+        contexts.append(big_text)
+    return contexts
+
+
+def make_big_conversation_history(n: int) -> list[dict]:
+    history = []
+    roles = ["user", "assistant"]
+    for i in range(n):
+        role = roles[i % 2]
+        chunk = "MSG_" + str(i) + "_"
+        base = "All work and no play makes Jack a dull boy. " * 50
+        repeats = (BIG_SIZE // len(base)) + 1
+        big_text = chunk + (base * repeats)[:BIG_SIZE]
+        big_text = big_text[:50] + ',"\n' + big_text[50:150] + ',"\n' + big_text[150:]
+        history.append({"role": role, "content": big_text})
+    return history
+
+
+def main():
+    records = [
+        {
+            "index": 0,
+            "question": "What is the capital of France?",
+            "expected_output": "Paris",
+            "contexts": ["France is a country in Europe.", "Paris is the capital of France."],
+            "conversation_history": [
+                {"role": "user", "content": "Tell me about France."},
+                {"role": "assistant", "content": "France is in Europe."},
+                {"role": "user", "content": "What is its capital?"},
+            ],
+        },
+        {
+            "index": 1,
+            "question": 'What about "special" chars, commas, and\nnewlines?',
+            "expected_output": 'Answer with "quotes", commas, and\nnewlines.',
+            "contexts": [
+                'Doc 1: has "quotes", commas, and\nnewlines.',
+                "Doc 2: normal text.",
+            ],
+            "conversation_history": [
+                {"role": "user", "content": 'Message with "quotes", commas,\nand newlines.'},
+                {"role": "assistant", "content": "Response with\nmultiple\nlines."},
+            ],
+        },
+        {
+            "index": 2,
+            "question": "What is RAG?",
+            "expected_output": "RAG stands for Retrieval-Augmented Generation.",
+            "contexts": make_big_contexts(3),
+            "conversation_history": [
+                {"role": "user", "content": "Hello"},
+                {"role": "assistant", "content": "Hi there!"},
+            ],
+        },
+        {
+            "index": 3,
+            "question": "Tell me a very long story.",
+            "expected_output": "Once upon a time...",
+            "contexts": ["Short context."],
+            "conversation_history": make_big_conversation_history(4),
+        },
+        {
+            "index": 4,
+            "question": "Complex multi-turn RAG query with large contexts.",
+            "expected_output": "Detailed answer spanning many topics.",
+            "contexts": make_big_contexts(2),
+            "conversation_history": make_big_conversation_history(3),
+        },
+    ]
+    json.dump(records, sys.stdout, ensure_ascii=False, indent=2)
+
+
+if __name__ == "__main__":
+    main()
+PYEOF
+echo "Created generate_test_data.py" ✔ 
+💫 Executing cd /home/user/langwatch-csv-pipeline && python generate_test_data.py > test_records.json && python pipeline.py export --input test_records.json --output test_export.csv 2>/dev/null && python pipeline.py import --input test_export.csv --output test_roundtrip.json 2>/dev/null && python3 -c "
+import json
+with open('test_records.json') as f: orig = json.load(f)
+with open('test_roundtrip.json') as f: rt = json.load(f)
+assert orig == rt, 'MISMATCH!'
+print('✓ Round-trip integrity confirmed.')
+print(f'  Records: {len(orig)}')
+print(f'  Max context size: {max(len(c) for r in orig for c in r[\"contexts\"])}')
+print(f'  Max conversation content size: {max(len(m[\"content\"]) for r in orig for m in r[\"conversation_history\"])}')
+" && rm -f test_records.json test_export.csv test_roundtrip.json generate_test_data.py ✔ 

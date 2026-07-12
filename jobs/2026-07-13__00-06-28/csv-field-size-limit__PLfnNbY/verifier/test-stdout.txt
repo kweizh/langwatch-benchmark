@@ -1,0 +1,37 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2
+collected 8 items
+
+../tests/test_final_state.py ..F.....                                    [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_csv_header_is_exact ___________________________
+
+pipeline_run = {'export': CompletedProcess(args=['/home/user/langwatch-csv-pipeline/.venv/bin/python', '/home/user/langwatch-csv-pipe...QD5b2v uPK.v,YIdy7NbyWPmJT', 'role': 'assistant'}], 'expected_output': 'line1\nline2,"still going"', 'index': 3, ...}]}
+
+    def test_csv_header_is_exact(pipeline_run):
+        with open(DATASET_CSV, "r", encoding="utf-8") as f:
+            first_line = f.readline().rstrip("\r\n")
+>       assert first_line == "index,question,expected_output,contexts,conversation_history", (
+            f"Unexpected CSV header line: {first_line!r}"
+        )
+E       AssertionError: Unexpected CSV header line: '"index","question","expected_output","contexts","conversation_history"'
+E       assert '"index","que...tion_history"' == 'index,questi...ation_history'
+E         - index,question,expected_output,contexts,conversation_history
+E         + "index","question","expected_output","contexts","conversation_history"
+E         ? +     + +        + +               + +        + +                    +
+
+/tests/test_final_state.py:206: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_pipeline_file_exists
+PASSED ../tests/test_final_state.py::test_export_succeeds_and_writes_csv
+PASSED ../tests/test_final_state.py::test_csv_exceeds_default_field_limit
+PASSED ../tests/test_final_state.py::test_import_succeeds_and_writes_json
+PASSED ../tests/test_final_state.py::test_round_trip_is_lossless
+PASSED ../tests/test_final_state.py::test_export_report_contents
+PASSED ../tests/test_final_state.py::test_import_report_contents
+FAILED ../tests/test_final_state.py::test_csv_header_is_exact - AssertionErro...
+========================= 1 failed, 7 passed in 0.36s ==========================

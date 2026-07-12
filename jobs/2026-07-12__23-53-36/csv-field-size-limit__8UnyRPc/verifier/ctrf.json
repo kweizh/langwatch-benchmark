@@ -1,0 +1,101 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T15:59:01.984184+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 8,
+            "passed": 8,
+            "failed": 0,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783871941633,
+            "stop": 1783871941984
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_pipeline_file_exists",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783871941663,
+                "stop": 1783871941664,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_export_succeeds_and_writes_csv",
+                "status": "passed",
+                "duration": 294,
+                "start": 1783871941664,
+                "stop": 1783871941958,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_csv_header_is_exact",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783871941958,
+                "stop": 1783871941959,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_csv_exceeds_default_field_limit",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783871941959,
+                "stop": 1783871941960,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_import_succeeds_and_writes_json",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783871941961,
+                "stop": 1783871941961,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_round_trip_is_lossless",
+                "status": "passed",
+                "duration": 3,
+                "start": 1783871941961,
+                "stop": 1783871941964,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_export_report_contents",
+                "status": "passed",
+                "duration": 13,
+                "start": 1783871941964,
+                "stop": 1783871941977,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_import_report_contents",
+                "status": "passed",
+                "duration": 6,
+                "start": 1783871941977,
+                "stop": 1783871941983,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            }
+        ]
+    }
+}

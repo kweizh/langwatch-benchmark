@@ -1,0 +1,198 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2, anyio-4.14.1
+collected 6 items
+
+../tests/test_final_state.py FFFFFF                                      [100%]
+
+=================================== FAILURES ===================================
+____________________________ test_run_script_exists ____________________________
+
+    def test_run_script_exists():
+>       assert os.path.isfile(
+            RUN_SCRIPT
+        ), f"Expected the generation service at {RUN_SCRIPT}."
+E       AssertionError: Expected the generation service at /home/user/myproject/run.py.
+E       assert False
+E        +  where False = <function isfile at 0x7b15619ac220>('/home/user/myproject/run.py')
+E        +    where <function isfile at 0x7b15619ac220> = <module 'posixpath' (frozen)>.isfile
+E        +      where <module 'posixpath' (frozen)> = os.path
+
+/tests/test_final_state.py:60: AssertionError
+_______________________ test_happy_path_explicit_version _______________________
+
+    def test_happy_path_explicit_version():
+        _cleanup("result.json", "trace_spans.jsonl")
+        out_path = os.path.join(PROJECT_DIR, "result.json")
+        proc = _run(
+            [
+                "--handle",
+                HANDLE,
+                "--version",
+                "2",
+                "--vars",
+                json.dumps(FULL_VARS),
+                "--out",
+                out_path,
+            ]
+        )
+>       assert proc.returncode == 0, (
+            f"Expected exit code 0 for the happy path.\n"
+            f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+        )
+E       AssertionError: Expected exit code 0 for the happy path.
+E         stdout:
+E         
+E         stderr:
+E         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\n").returncode
+
+/tests/test_final_state.py:80: AssertionError
+_________________________ test_trace_linkage_artifact __________________________
+
+    def test_trace_linkage_artifact():
+        # Depends on the happy-path run having produced the trace artifact.
+        _cleanup("result.json", "trace_spans.jsonl")
+        out_path = os.path.join(PROJECT_DIR, "result.json")
+        proc = _run(
+            [
+                "--handle",
+                HANDLE,
+                "--version",
+                "2",
+                "--vars",
+                json.dumps(FULL_VARS),
+                "--out",
+                out_path,
+            ]
+        )
+>       assert proc.returncode == 0, (
+            f"Expected exit code 0 before checking the trace artifact.\n"
+            f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+        )
+E       AssertionError: Expected exit code 0 before checking the trace artifact.
+E         stdout:
+E         
+E         stderr:
+E         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\n").returncode
+
+/tests/test_final_state.py:144: AssertionError
+_______________________ test_default_version_resolution ________________________
+
+    def test_default_version_resolution():
+        _cleanup("result_default.json")
+        out_path = os.path.join(PROJECT_DIR, "result_default.json")
+        default_vars = {
+            "customer_name": "Bob Diaz",
+            "account_tier": "Free",
+            "issue_summary": "App crashes on login",
+            "priority": "P3",
+        }
+        proc = _run(
+            [
+                "--handle",
+                HANDLE,
+                "--vars",
+                json.dumps(default_vars),
+                "--out",
+                out_path,
+            ]
+        )
+>       assert proc.returncode == 0, (
+            f"Expected exit code 0 when --version is omitted.\n"
+            f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+        )
+E       AssertionError: Expected exit code 0 when --version is omitted.
+E         stdout:
+E         
+E         stderr:
+E         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory
+E         
+E       assert 2 == 0
+E        +  where 2 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\n").returncode
+
+/tests/test_final_state.py:216: AssertionError
+_________________________ test_version_mismatch_fails __________________________
+
+    def test_version_mismatch_fails():
+        _cleanup("result_bad.json")
+        out_path = os.path.join(PROJECT_DIR, "result_bad.json")
+        proc = _run(
+            [
+                "--handle",
+                HANDLE,
+                "--version",
+                "5",
+                "--vars",
+                json.dumps(FULL_VARS),
+                "--out",
+                out_path,
+            ]
+        )
+        assert proc.returncode != 0, (
+            "Requesting a version that does not match the resolved prompt version "
+            "must fail with a non-zero exit code."
+        )
+        combined_output = (proc.stdout + proc.stderr).lower()
+>       assert "version" in combined_output, (
+            "The error output must mention a version mismatch. "
+            f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+        )
+E       AssertionError: The error output must mention a version mismatch. stdout:
+E         
+E         stderr:
+E         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory
+E         
+E       assert 'version' in "/home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [errno 2] no such file or directory\n"
+
+/tests/test_final_state.py:252: AssertionError
+_________________________ test_missing_variable_fails __________________________
+
+    def test_missing_variable_fails():
+        _cleanup("result_missing.json")
+        out_path = os.path.join(PROJECT_DIR, "result_missing.json")
+        proc = _run(
+            [
+                "--handle",
+                HANDLE,
+                "--version",
+                "2",
+                "--vars",
+                json.dumps({"customer_name": "Alice Chen"}),
+                "--out",
+                out_path,
+            ]
+        )
+        assert proc.returncode != 0, (
+            "Omitting required template variables must fail with a non-zero exit code."
+        )
+        combined_output = (proc.stdout + proc.stderr).lower()
+>       assert any(
+            var in combined_output for var in ("account_tier", "issue_summary", "priority")
+        ), (
+            "The error output must name at least one missing variable. "
+            f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+        )
+E       AssertionError: The error output must name at least one missing variable. stdout:
+E         
+E         stderr:
+E         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = any(<generator object test_missing_variable_fails.<locals>.<genexpr> at 0x7b1560e7e330>)
+
+/tests/test_final_state.py:283: AssertionError
+=========================== short test summary info ============================
+FAILED ../tests/test_final_state.py::test_run_script_exists - AssertionError:...
+FAILED ../tests/test_final_state.py::test_happy_path_explicit_version - Asser...
+FAILED ../tests/test_final_state.py::test_trace_linkage_artifact - AssertionE...
+FAILED ../tests/test_final_state.py::test_default_version_resolution - Assert...
+FAILED ../tests/test_final_state.py::test_version_mismatch_fails - AssertionE...
+FAILED ../tests/test_final_state.py::test_missing_variable_fails - AssertionE...
+============================== 6 failed in 0.13s ===============================

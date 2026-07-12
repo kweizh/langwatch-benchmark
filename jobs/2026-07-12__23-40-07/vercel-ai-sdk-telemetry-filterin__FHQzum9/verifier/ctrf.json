@@ -1,0 +1,53 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T15:53:10.835641+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 2,
+            "passed": 0,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783871585719,
+            "stop": 1783871590835
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_safe_prompt",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 3232,
+                "start": 1783871585728,
+                "stop": 1783871588960,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "start_mock_server = None\n\n    def test_safe_prompt(start_mock_server):\n        if os.path.exists(LOG_FILE):\n            os.remove(LOG_FILE)\n    \n        result = run_script(\"Hello world\")\n        assert result.returncode == 0, f\"Script failed with error: {result.stderr}\"\n    \n        # Wait for telemetry to be written\n        time.sleep(1)\n    \n>       assert os.path.exists(LOG_FILE), \"Telemetry log file was not created by the mock server.\"\nE       AssertionError: Telemetry log file was not created by the mock server.\nE       assert False\nE        +  where False = <function exists at 0x7ef6fdc3f560>('/home/user/myproject/telemetry.log')\nE        +    where <function exists at 0x7ef6fdc3f560> = <module 'posixpath' (frozen)>.exists\nE        +      where <module 'posixpath' (frozen)> = os.path\n\n/tests/test_final_state.py:82: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_sensitive_prompt",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 1875,
+                "start": 1783871588960,
+                "stop": 1783871590835,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "start_mock_server = None\n\n    def test_sensitive_prompt(start_mock_server):\n        if os.path.exists(LOG_FILE):\n            os.remove(LOG_FILE)\n    \n        result = run_script(\"My password is SECRET_TOKEN\")\n        assert result.returncode == 0, f\"Script failed with error: {result.stderr}\"\n    \n        # Wait for telemetry to be written\n        time.sleep(1)\n    \n>       assert os.path.exists(LOG_FILE), \"Telemetry log file was not created by the mock server.\"\nE       AssertionError: Telemetry log file was not created by the mock server.\nE       assert False\nE        +  where False = <function exists at 0x7ef6fdc3f560>('/home/user/myproject/telemetry.log')\nE        +    where <function exists at 0x7ef6fdc3f560> = <module 'posixpath' (frozen)>.exists\nE        +      where <module 'posixpath' (frozen)> = os.path\n\n/tests/test_final_state.py:98: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

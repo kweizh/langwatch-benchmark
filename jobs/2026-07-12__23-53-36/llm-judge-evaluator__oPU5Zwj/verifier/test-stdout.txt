@@ -1,0 +1,82 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2, anyio-4.14.1
+collected 7 items
+
+../tests/test_final_state.py .....FF                                     [100%]
+
+=================================== FAILURES ===================================
+_________________________ test_judge_result_persisted __________________________
+
+runs = {'run_a': {'result': {'answer': 'Based on the retrieved context: To attach an evaluation to a LangWatch trace, call `l...n represents a single operation within a trace, such as a retrieval step, an LLM call, or an answer-generation step.']}
+
+    def test_judge_result_persisted(runs):
+        payload = runs["run_a"]["judge_json"]
+        assert payload is not None, (
+            f"Expected {JUDGE_RESULT_PATH} to be written by run_pipeline()."
+        )
+>       assert bool(payload.get("passed")) is VERDICT_A["passed"], (
+            f"judge_result.json 'passed' must equal the evaluator verdict "
+            f"{VERDICT_A['passed']}, got {payload.get('passed')!r}"
+        )
+E       AssertionError: judge_result.json 'passed' must equal the evaluator verdict True, got None
+E       assert False is True
+E        +  where False = bool(None)
+E        +    where None = <built-in method get of dict object at 0x74c8a1d38f80>('passed')
+E        +      where <built-in method get of dict object at 0x74c8a1d38f80> = {'judgement': {'passed': True, 'score': 0.86, 'label': 'pass', 'details': 'Answer is faithful to the retrieved context and addresses the question.'}}.get
+
+/tests/test_final_state.py:471: AssertionError
+____________________ test_verdict_tracks_evaluator_response ____________________
+
+runs = {'run_a': {'result': {'answer': 'Based on the retrieved context: To attach an evaluation to a LangWatch trace, call `l...n represents a single operation within a trace, such as a retrieval step, an LLM call, or an answer-generation step.']}
+
+    def test_verdict_tracks_evaluator_response(runs):
+        result_b = runs["run_b"]["result"]
+        judgement_b = result_b.get("judgement", {})
+        json_b = runs["run_b"]["judge_json"]
+    
+        assert bool(judgement_b.get("passed")) is VERDICT_B["passed"], (
+            "When the evaluator returns a different verdict, the returned judgement must "
+            f"change accordingly. Expected passed={VERDICT_B['passed']}, "
+            f"got {judgement_b.get('passed')!r}"
+        )
+        assert abs(float(judgement_b.get("score")) - VERDICT_B["score"]) < 1e-6, (
+            f"Returned judgement 'score' must equal {VERDICT_B['score']} for the second run, "
+            f"got {judgement_b.get('score')!r}"
+        )
+        assert judgement_b.get("label") == VERDICT_B["label"], (
+            f"Returned judgement 'label' must equal {VERDICT_B['label']!r} for the second run, "
+            f"got {judgement_b.get('label')!r}"
+        )
+    
+        assert json_b is not None, (
+            f"Expected {JUDGE_RESULT_PATH} to be rewritten on the second run."
+        )
+        assert bool(json_b.get("passed")) is VERDICT_B["passed"], (
+            "judge_result.json must be rewritten with the evaluator's new verdict; "
+            f"expected passed={VERDICT_B['passed']}, got {json_b.get('passed')!r}"
+        )
+>       assert abs(float(json_b.get("score")) - VERDICT_B["score"]) < 1e-6, (
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+            f"judge_result.json 'score' must equal {VERDICT_B['score']} on the second run, "
+            f"got {json_b.get('score')!r}"
+        )
+E       TypeError: float() argument must be a string or a real number, not 'NoneType'
+
+/tests/test_final_state.py:517: TypeError
+==================================== PASSES ====================================
+_________________ test_retrieve_is_deterministic_and_non_empty _________________
+---------------------------- Captured stdout setup -----------------------------
+2026-07-12 16:06:19,610 - langwatch.client - WARNING - An existing global tracer provider was found. Attaching LangWatch exporter to the existing provider. Set `ignore_global_tracer_provider_override_warning=True` to suppress this warning.
+------------------------------ Captured log setup ------------------------------
+WARNING  langwatch.client:client.py:649 An existing global tracer provider was found. Attaching LangWatch exporter to the existing provider. Set `ignore_global_tracer_provider_override_warning=True` to suppress this warning.
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_cli_smoke
+PASSED ../tests/test_final_state.py::test_retrieve_is_deterministic_and_non_empty
+PASSED ../tests/test_final_state.py::test_run_pipeline_returns_answer_and_verdict
+PASSED ../tests/test_final_state.py::test_llm_judge_evaluator_invoked
+PASSED ../tests/test_final_state.py::test_spans_emitted_and_evaluation_bound_to_answer_span
+FAILED ../tests/test_final_state.py::test_judge_result_persisted - AssertionE...
+FAILED ../tests/test_final_state.py::test_verdict_tracks_evaluator_response
+========================= 2 failed, 5 passed in 6.61s ==========================

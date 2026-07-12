@@ -1,0 +1,101 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T15:48:24.559343+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 6,
+            "passed": 0,
+            "failed": 6,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783871304423,
+            "stop": 1783871304559
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_run_script_exists",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 13,
+                "start": 1783871304454,
+                "stop": 1783871304467,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_run_script_exists():\n>       assert os.path.isfile(\n            RUN_SCRIPT\n        ), f\"Expected the generation service at {RUN_SCRIPT}.\"\nE       AssertionError: Expected the generation service at /home/user/myproject/run.py.\nE       assert False\nE        +  where False = <function isfile at 0x74047c48c220>('/home/user/myproject/run.py')\nE        +    where <function isfile at 0x74047c48c220> = <module 'posixpath' (frozen)>.isfile\nE        +      where <module 'posixpath' (frozen)> = os.path\n\n/tests/test_final_state.py:60: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_happy_path_explicit_version",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 17,
+                "start": 1783871304468,
+                "stop": 1783871304485,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_happy_path_explicit_version():\n        _cleanup(\"result.json\", \"trace_spans.jsonl\")\n        out_path = os.path.join(PROJECT_DIR, \"result.json\")\n        proc = _run(\n            [\n                \"--handle\",\n                HANDLE,\n                \"--version\",\n                \"2\",\n                \"--vars\",\n                json.dumps(FULL_VARS),\n                \"--out\",\n                out_path,\n            ]\n        )\n>       assert proc.returncode == 0, (\n            f\"Expected exit code 0 for the happy path.\\n\"\n            f\"stdout:\\n{proc.stdout}\\nstderr:\\n{proc.stderr}\"\n        )\nE       AssertionError: Expected exit code 0 for the happy path.\nE         stdout:\nE         \nE         stderr:\nE         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\nE         \nE       assert 2 == 0\nE        +  where 2 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\\n\").returncode\n\n/tests/test_final_state.py:80: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_trace_linkage_artifact",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 16,
+                "start": 1783871304486,
+                "stop": 1783871304502,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_trace_linkage_artifact():\n        # Depends on the happy-path run having produced the trace artifact.\n        _cleanup(\"result.json\", \"trace_spans.jsonl\")\n        out_path = os.path.join(PROJECT_DIR, \"result.json\")\n        proc = _run(\n            [\n                \"--handle\",\n                HANDLE,\n                \"--version\",\n                \"2\",\n                \"--vars\",\n                json.dumps(FULL_VARS),\n                \"--out\",\n                out_path,\n            ]\n        )\n>       assert proc.returncode == 0, (\n            f\"Expected exit code 0 before checking the trace artifact.\\n\"\n            f\"stdout:\\n{proc.stdout}\\nstderr:\\n{proc.stderr}\"\n        )\nE       AssertionError: Expected exit code 0 before checking the trace artifact.\nE         stdout:\nE         \nE         stderr:\nE         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\nE         \nE       assert 2 == 0\nE        +  where 2 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\\n\").returncode\n\n/tests/test_final_state.py:144: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_default_version_resolution",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 24,
+                "start": 1783871304502,
+                "stop": 1783871304526,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_default_version_resolution():\n        _cleanup(\"result_default.json\")\n        out_path = os.path.join(PROJECT_DIR, \"result_default.json\")\n        default_vars = {\n            \"customer_name\": \"Bob Diaz\",\n            \"account_tier\": \"Free\",\n            \"issue_summary\": \"App crashes on login\",\n            \"priority\": \"P3\",\n        }\n        proc = _run(\n            [\n                \"--handle\",\n                HANDLE,\n                \"--vars\",\n                json.dumps(default_vars),\n                \"--out\",\n                out_path,\n            ]\n        )\n>       assert proc.returncode == 0, (\n            f\"Expected exit code 0 when --version is omitted.\\n\"\n            f\"stdout:\\n{proc.stdout}\\nstderr:\\n{proc.stderr}\"\n        )\nE       AssertionError: Expected exit code 0 when --version is omitted.\nE         stdout:\nE         \nE         stderr:\nE         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\nE         \nE       assert 2 == 0\nE        +  where 2 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\\n\").returncode\n\n/tests/test_final_state.py:216: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_version_mismatch_fails",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 16,
+                "start": 1783871304526,
+                "stop": 1783871304542,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_version_mismatch_fails():\n        _cleanup(\"result_bad.json\")\n        out_path = os.path.join(PROJECT_DIR, \"result_bad.json\")\n        proc = _run(\n            [\n                \"--handle\",\n                HANDLE,\n                \"--version\",\n                \"5\",\n                \"--vars\",\n                json.dumps(FULL_VARS),\n                \"--out\",\n                out_path,\n            ]\n        )\n        assert proc.returncode != 0, (\n            \"Requesting a version that does not match the resolved prompt version \"\n            \"must fail with a non-zero exit code.\"\n        )\n        combined_output = (proc.stdout + proc.stderr).lower()\n>       assert \"version\" in combined_output, (\n            \"The error output must mention a version mismatch. \"\n            f\"stdout:\\n{proc.stdout}\\nstderr:\\n{proc.stderr}\"\n        )\nE       AssertionError: The error output must mention a version mismatch. stdout:\nE         \nE         stderr:\nE         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\nE         \nE       assert 'version' in \"/home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [errno 2] no such file or directory\\n\"\n\n/tests/test_final_state.py:252: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_missing_variable_fails",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 17,
+                "start": 1783871304542,
+                "stop": 1783871304559,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "def test_missing_variable_fails():\n        _cleanup(\"result_missing.json\")\n        out_path = os.path.join(PROJECT_DIR, \"result_missing.json\")\n        proc = _run(\n            [\n                \"--handle\",\n                HANDLE,\n                \"--version\",\n                \"2\",\n                \"--vars\",\n                json.dumps({\"customer_name\": \"Alice Chen\"}),\n                \"--out\",\n                out_path,\n            ]\n        )\n        assert proc.returncode != 0, (\n            \"Omitting required template variables must fail with a non-zero exit code.\"\n        )\n        combined_output = (proc.stdout + proc.stderr).lower()\n>       assert any(\n            var in combined_output for var in (\"account_tier\", \"issue_summary\", \"priority\")\n        ), (\n            \"The error output must name at least one missing variable. \"\n            f\"stdout:\\n{proc.stdout}\\nstderr:\\n{proc.stderr}\"\n        )\nE       AssertionError: The error output must name at least one missing variable. stdout:\nE         \nE         stderr:\nE         /home/user/myproject/.venv/bin/python: can't open file '/home/user/myproject/run.py': [Errno 2] No such file or directory\nE         \nE       assert False\nE        +  where False = any(<generator object test_missing_variable_fails.<locals>.<genexpr> at 0x74047b95e330>)\n\n/tests/test_final_state.py:283: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            }
+        ]
+    }
+}

@@ -1,0 +1,1944 @@
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Selected strategy: _DaytonaDirect
+Creating new AsyncDaytona client
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/batch-process-rag-history/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/client-groundedness-eval/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/client-side-payload-filtering/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/csv-field-size-limit/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/dspy-pydantic-serialization-fix/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/fix-dspy-visualizer-crash/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/litellm-prompt-compiler/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/llm-judge-evaluator/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/multi-turn-scenario-configuration/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/otel-span-filtering/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/payload-size-truncation/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/prompt-materialization-fallback/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/ragas-offline-batch-eval/environment/Dockerfile
+Building environment from /home/kw/code/zealt/langwatch-benchmark/tasks/vercel-ai-sdk-telemetry-filtering/environment/Dockerfile
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Command outputs captured
+Command outputs captured
+Command outputs captured
+Command outputs captured
+Command outputs captured
+Command outputs captured
+Command outputs captured
+Command outputs captured
+Command outputs captured
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Command outputs captured
+Command outputs captured
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# LangWatch Evaluation Dataset CSV Round-Trip Pipeline
+
+## Background
+LangWatch offline experiments load their evaluation datasets from CSV files and export experiment results back to CSV (e.g. via `pandas.read_csv(...)` and the "Export to CSV" workflow). A LangWatch evaluation dataset row typically contains an `input`/`question`, an `expected_output`, plus nested columns such as `contexts` (the list of retrieved RAG documents) and `conversation_history` (a multi-turn chat transcript). These nested columns are serialized into a single CSV cell.
+
+When a single retrieved-context blob or a long conversation history is serialized, one CSV cell can easily exceed 131072 characters. Python's standard `csv` module enforces a default per-field size limit of 131072 characters, so a naive reader will crash while parsing such an export with:
+
+```
+_csv.Error: field larger than field limit (131072)
+```
+
+You must build a robust import/export pipeline that survives these oversized fields and round-trips the dataset without any truncation or corruption.
+
+## Requirements
+Build a Python command-line pipeline named `pipeline.py` that provides two subcommands, `export` and `import`, operating on LangWatch-style evaluation dataset records.
+
+The canonical in-memory/JSON record shape is a JSON array of objects, each with exactly these fields:
+- `index`: integer row number (0-based)
+- `question`: string
+- `expected_output`: string
+- `contexts`: array of strings (retrieved RAG documents)
+- `conversation_history`: array of objects, each `{"role": string, "content": string}`
+
+- `export`: read the records from an input JSON file and write them to a CSV file. The CSV must have a header row with exactly these columns in this order: `index,question,expected_output,contexts,conversation_history`. The two nested columns (`contexts`, `conversation_history`) must be stored as compact JSON (`json.dumps(value, ensure_ascii=False, separators=(",", ":"))`) inside a single CSV cell. The pipeline must correctly quote/escape cells that contain commas, double quotes, and embedded newlines.
+- `import`: read the CSV file produced by `export` (which may contain individual fields far larger than 131072 characters) and reconstruct the exact original records into an output JSON file. The two nested columns must be JSON-decoded back into their native list/object form, and `index` must be restored as an integer. Parsing must not fail on oversized fields and must not truncate or corrupt any content.
+
+Both subcommands must also emit a machine-readable report.
+
+## Implementation Hints
+- The LangWatch/Python `csv` module reader raises `_csv.Error: field larger than field limit (131072)` on oversized cells. You need to raise `csv.field_size_limit(...)` high enough before parsing. Note that passing an excessively large value (e.g. `sys.maxsize`) can raise `OverflowError: Python int too large to convert to C long` on some platforms, so handle that gracefully.
+- Keep the write/read symmetric: whatever quoting dialect you use for `export` must be readable by `import`. Use a consistent, standard CSV dialect.
+- Preserve nested structures losslessly by encoding them as JSON in the cell, then decoding on the way back. Do not depend on `str()`/`repr()` of Python objects.
+- Install the `langwatch` SDK with `uv` (LangWatch datasets are pandas-backed; `pandas` is available for reading/writing frames if you choose to use it). Never mock any dependency; read any secrets you need from environment variables.
+- The report is printed to stdout, but stdout may also contain SDK/log noise. Emit the report on its own final line prefixed with a stable marker so it can be reliably extracted.
+
+## Acceptance Criteria
+- Project path: /home/user/langwatch-csv-pipeline
+- Command (export): `python pipeline.py export --input <records.json> --output <dataset.csv>`
+- Command (import): `python pipeline.py import --input <dataset.csv> --output <records.json>`
+- `export` writes a CSV whose first line is exactly the header `index,question,expected_output,contexts,conversation_history` and whose `contexts`/`conversation_history` cells contain compact JSON of the corresponding list values.
+- `import` writes an output JSON file that is a JSON array of record objects with the fields `index` (integer), `question` (string), `expected_output` (string), `contexts` (array of strings), and `conversation_history` (array of `{role, content}` objects).
+- Round-trip integrity: for any input dataset, running `export` and then `import` on the resulting CSV MUST reproduce the original records exactly (same order, same field values, no truncation), including records whose serialized `contexts` or `conversation_history` cell exceeds 131072 characters and cells containing commas, double quotes, and newlines.
+- Both subcommands print, as the final stdout line, a report prefixed with the exact marker `LANGWATCH_CSV_REPORT ` followed by a single compact JSON object with the fields:
+  - `operation`: either `"export"` or `"import"`
+  - `record_count`: integer number of records processed
+  - `max_field_chars`: integer character length of the longest individual CSV field value in the dataset
+  - `field_size_limit`: integer CSV field size limit the pipeline set (must be greater than `max_field_chars`)
+  - `checksums`: object mapping each record's `index` (as a string) to an object `{"contexts": <sha256hex>, "conversation_history": <sha256hex>}`, where each hash is the SHA-256 hex digest of the UTF-8 bytes of the compact JSON (`json.dumps(value, ensure_ascii=False, separators=(",", ":"))`) of that field's value.
+- The pipeline must exit with status code 0 on success.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# LangWatch: Server-Side Offline Batch RAG Evaluation with a Built-in RAGAS Evaluator
+
+## Background
+Your team ships a Retrieval-Augmented Generation (RAG) assistant and wants an offline, dataset-driven quality gate before every release. LangWatch provides an **SDK-driven batch evaluation** ("experiment") API: you initialize an evaluation run, loop over a dataset, run your production pipeline for each row, and hand the row's `input`, generated `output`, and retrieved `contexts` to a **built-in evaluator that runs on the LangWatch backend** (no need to host the metric yourself). LangWatch records the run and every evaluator result so the whole team can inspect scores over time.
+
+You must wire up such a batch evaluation loop that drives a real RAG pipeline over a seeded dataset and invokes the built-in RAGAS **context-utilization** evaluator (`legacy/ragas_context_utilization`) on the backend for every row.
+
+## Requirements
+- Work inside the project at `/home/user/project`.
+- Build a runnable script (`run_evaluation.py`) that performs the full offline batch evaluation end-to-end when executed.
+- Read all credentials/endpoint configuration from the environment (`LANGWATCH_API_KEY`, `LANGWATCH_ENDPOINT`, `LANGWATCH_PROJECT_ID`). Never hardcode secrets.
+- Load the seeded evaluation dataset from `data/qa_dataset.csv` (each row is one question to evaluate) and the retrieval corpus from `data/knowledge_base.json`.
+- Implement a real, deterministic RAG pipeline (`retrieve` then `generate`): for each question, retrieve one or more relevant documents from the knowledge base to use as the `contexts`, then produce a non-empty answer `output` grounded in those contexts. A live LLM/network call is NOT required — the generation step may be deterministic/extractive — but the retrieved contexts must actually come from the knowledge base.
+- Initialize a LangWatch **batch evaluation run** and iterate over **every** dataset row using the SDK's evaluation loop primitive.
+- For each row, invoke the built-in evaluator `legacy/ragas_context_utilization` on the LangWatch backend, passing a data object that contains the row's `input` (the question), the pipeline's `output` (the answer), and the `contexts` (the retrieved documents as a list).
+- Make the run name traceable and safe for concurrent runs: read the `run-id` from `/logs/artifacts/run-id` and include it in the evaluation run name.
+- After the loop completes, write a machine-readable summary and print a human-readable completion line.
+
+## Implementation Hints
+- Install everything with `uv` inside a virtual environment (`uv venv` + `uv pip install ...`); some LangWatch dependencies misbehave under the system `pip`.
+- The batch evaluation API is exposed under `langwatch.evaluation` (initialize a run, then wrap your dataset iterator with the loop helper so each row is tracked). Built-in evaluators are invoked per-row by slug and receive a `data` dict; some SDK versions also expect an evaluator `settings` dict, so check the signature.
+- `contexts` must be a JSON list (e.g. a list of strings), not a single concatenated blob — the context-utilization metric compares the answer against the individual retrieved chunks.
+- The pipeline can be traced for full visibility, but correctness here is about the evaluation run being created and every row being scored, not about a specific span layout.
+- Log output from the SDK (progress bars, run URL) is mixed with your own output on stdout; if you emit structured results, write them to a file so they are not interleaved with SDK logs.
+- Because credentials and endpoint come from the environment, the same script must work unchanged against LangWatch Cloud or any self-hosted/compatible endpoint.
+
+## Acceptance Criteria
+- Project path: /home/user/project
+- Command: `python run_evaluation.py`
+  - Reads `LANGWATCH_ENDPOINT`, `LANGWATCH_API_KEY`, and `LANGWATCH_PROJECT_ID` from the environment.
+  - Reads the `run-id` from `/logs/artifacts/run-id` and includes it in the evaluation run name.
+  - Exits with code 0 on success.
+- Observable backend behavior (checked against the configured `LANGWATCH_ENDPOINT`):
+  - Exactly one batch evaluation run is initialized (experiment type `BATCH_EVALUATION_V2`) whose name contains the `run-id`.
+  - The built-in evaluator `legacy/ragas_context_utilization` is invoked once per dataset row (one evaluator call for every row in `data/qa_dataset.csv`).
+  - Each evaluator call sends a `data` object containing: `input` (a non-empty string equal to that row's question), `output` (a non-empty string), and `contexts` (a non-empty JSON list of strings).
+  - The set of `input` values across all evaluator calls equals the exact set of questions in the dataset (all rows evaluated, none skipped or duplicated).
+- Output artifact: `/home/user/project/eval_summary.json`
+  - A JSON object with fields: `experiment_name` (string, contains the `run-id`), `rows_evaluated` (integer, equal to the number of dataset rows), and `evaluator` (string, equal to `legacy/ragas_context_utilization`).
+- Stdout must contain a line matching `Rows evaluated: <N>` where `<N>` is the number of dataset rows.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# Multi-turn Scenario Configuration with Multiple Judges
+
+## Background
+LangWatch provides an open-source `scenario` framework to test AI agents. It uses AI agents (User Simulators and Judges) to perform dynamic, multi-turn conversation testing. You need to configure a multi-turn simulation test using this framework, utilizing multiple specialized judges.
+
+## Requirements
+- Create a Python script `scenario_def.py` that configures a LangWatch scenario.
+- Define a custom `SupportAgentAdapter` that inherits from `scenario.AgentAdapter` and implements the `call` method to return a simple string response.
+- Configure a scenario with multiple agents: the adapter, a `UserSimulatorAgent` acting as a frustrated customer, and **two separate** `JudgeAgent`s. One judge must evaluate politeness, and the other must evaluate policy adherence.
+- Configure the scenario script to simulate a multi-turn flow: a user message, an agent response, and a success trigger.
+- To avoid requiring OpenAI API keys, **do not** execute `scenario.run`. Instead, the script should accept a `--run-id` argument, construct the configuration, and print a JSON representation of the configured scenario.
+
+## Implementation Hints
+- Install `langwatch-scenario` using `uv pip install`.
+- Use the `scenario` module from `langwatch-scenario`.
+- Instantiate `scenario.UserSimulatorAgent` and `scenario.JudgeAgent` with appropriate system prompts and criteria. Note that `JudgeAgent` accepts a `criteria` list.
+- Use `scenario.user()`, `scenario.agent()`, and `scenario.succeed()` to define the script flow.
+- Use `argparse` to parse the `--run-id` argument.
+- Since LangWatch agents and script steps are complex objects, you will need to iterate over them and extract their class names. For `JudgeAgent`s, extract their `criteria` attribute to include in the output.
+
+## Acceptance Criteria
+- Project path: `/home/user/myproject`
+- Command: `python3 scenario_def.py --run-id <run-id>`
+- The stdout must print a valid JSON object representing the scenario configuration.
+- The JSON output must match the following schema exactly (criteria strings can be your own, but there must be two lists of criteria for the two judges):
+  ```json
+  {
+    "name": "Refund Scenario <run-id>",
+    "agents": ["SupportAgentAdapter", "UserSimulatorAgent", "JudgeAgent", "JudgeAgent"],
+    "judge_criteria": [
+      ["Criteria for politeness"],
+      ["Criteria for policy adherence"]
+    ],
+    "script_types": ["user", "agent", "succeed"]
+  }
+  ```
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# Implement Client-Side Payload Filtering for Large Traces
+
+## Background
+LangWatch's collector endpoint enforces a strict 1MB body size limit on incoming JSON trace payloads. When tracing a RAG pipeline, retrieving large contexts (e.g., massive documents) can easily cause the trace payload to exceed this limit, resulting in a 413 Payload Too Large error and dropped traces. You have a Python script that traces a RAG pipeline, but it currently attempts to log a 2MB document into the span, which would fail in production.
+
+## Requirements
+- Modify the existing Python script `run.py` to implement client-side payload filtering.
+- Manually truncate the retrieved document string to a maximum of 1000 characters before logging it to the active LangWatch span.
+- Do not remove the tracing decorators or context managers.
+- The script must not make any real OpenAI API calls or require an OpenAI API key.
+
+## Implementation Hints
+- Intercept the large document string before it is passed to `span.update()`.
+- Use Python string slicing to truncate the text to 1000 characters.
+- Ensure the LangWatch SDK is configured to send data to the local mock collector (this is already set up in the environment variables).
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Ensure the script is executed and the trace artifacts exist.
+- Log file: /home/user/myproject/payload.json
+- The script must run successfully via the command `python3 run.py`.
+- The mock collector will intercept the LangWatch trace and write the incoming JSON payload to `/home/user/myproject/payload.json`.
+- The JSON payload must contain the span data, and the retrieved document string in the span's output must be exactly 1000 characters long (or less if the original was smaller, but the test uses a 2MB string).
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# Vercel AI SDK Telemetry Filtering with LangWatch
+
+## Background
+When integrating Vercel AI SDK with LangWatch observability, you may encounter situations where traces contain sensitive information or exceed payload size limits. You need to implement client-side telemetry filtering to redact sensitive data before it is sent to the LangWatch collector.
+
+## Requirements
+- Create a TypeScript script `run.ts` that accepts a `--prompt` argument.
+- Use the Vercel AI SDK (`generateText`) to generate a response based on the prompt.
+- To avoid needing a real LLM API key, implement and use a simple mock Vercel AI SDK provider (e.g., a custom `LanguageModelV1` implementation) that simply echoes the prompt or returns a dummy string.
+- Initialize LangWatch observability for Node.js.
+- Configure client-side payload filtering using the `dataCapture` callback (or equivalent filtering mechanism in the LangWatch SDK) to redact any occurrence of the exact string `SECRET_TOKEN`, replacing it with `[REDACTED]` in the outgoing telemetry payloads.
+- Ensure that the telemetry is flushed and sent to the LangWatch endpoint before the script exits.
+
+## Implementation Hints
+- Use `setupObservability` from `langwatch/observability/node`.
+- Look into the LangWatch SDK configuration options to find the `dataCapture` callback or OpenTelemetry span processor filtering to modify span attributes before they are exported.
+- Vercel AI SDK allows creating custom providers by implementing the `LanguageModelV1` interface. You can create a minimal mock provider to satisfy the `generateText` call without making real HTTP requests.
+- Use `npx tsx run.ts` to execute the script.
+- Make sure to properly await the completion of the LLM call and any telemetry flushing.
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Command: `npx tsx run.ts --prompt <text>`
+- The command must execute without errors and output the generated text.
+- The command must not require or use a real OpenAI API key.
+- The script must send OpenTelemetry traces to the configured `LANGWATCH_ENDPOINT`.
+- The outgoing telemetry payload must not contain the string `SECRET_TOKEN`; it must be replaced with `[REDACTED]`.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# Fix the LangWatch DSPy Pydantic Serialization Crash (`MockValSer` TypeError)
+
+## Background
+You are working on the observability layer of a DSPy question-answering pipeline that is instrumented with [LangWatch](https://langwatch.ai/). LangWatch's DSPy integration serializes optimizer/predictor state to JSON before shipping it to the tracing backend. This serialization is performed by `langwatch.dspy.SerializableAndPydanticEncoder`, a `json.JSONEncoder` subclass.
+
+When the program is traced, serialization crashes with:
+
+```
+TypeError: 'MockValSer' object cannot be converted to 'SchemaSerializer'
+```
+
+This is the bug reported in [LangWatch GitHub Issue #468](https://github.com/langwatch/langwatch/issues/468). The root cause: `SerializableAndPydanticEncoder` serializes every `pydantic.BaseModel` by calling `o.model_dump(exclude_unset=True)`. When a Pydantic model nests a non-Pydantic framework object (such as a `dspy.Predict`) whose annotation leaves the model's serializer un-built (a `MockValSer`), delegating to Pydantic's internal high-performance serializer blows up. The encoder must instead serialize such models itself so that nested non-Pydantic objects flow back through the custom encoder's own logic.
+
+A reproduction project already exists in the environment. The DSPy program under trace lives in `qa_program.py` and MUST NOT be weakened or altered — treat it as the production code being observed. Your job is to repair the serialization layer so the optimizer step serializes cleanly.
+
+## Requirements
+- Diagnose why serializing the optimizer step raises the `MockValSer` `TypeError`.
+- Repair the LangWatch DSPy serialization so a full optimizer step (predictor + training demos + Pydantic answer records that nest a `dspy.Predict`) serializes to valid JSON.
+- Provide an executable entrypoint `run.py` that builds the optimizer step from `qa_program.build_optimizer_step()`, serializes it, and prints the resulting JSON.
+- The serialized JSON must faithfully preserve the nested structure (the predictor, the demos, and every answer record) rather than collapsing objects into opaque strings.
+
+## Implementation Hints
+- Reproduce the failure first by serializing the step with LangWatch's existing `SerializableAndPydanticEncoder`; read the traceback to see which branch of the encoder fails.
+- The fault is in how the encoder handles `pydantic.BaseModel` instances. Study Issue #468 for the intended resolution: intercept `BaseModel` in the encoder and build the dict manually from the model's declared fields instead of calling `model_dump()`, so nested non-Pydantic objects (e.g. `dspy.Predict`) are re-encoded by the custom encoder.
+- `dspy` objects like `Predict`, `Example`, and `Signature` are already handled by dedicated branches of the encoder — your fix must let control flow reach those branches for nested objects instead of failing inside Pydantic's serializer.
+- Keep dependency installation on `uv` (real `langwatch`, `dspy`, and `pydantic` are installed in the environment). Never mock any of these libraries.
+- DSPy and LangWatch may emit their own log lines; make sure the JSON document is the final line printed to stdout so it can be parsed reliably.
+
+## Acceptance Criteria
+- Project path: /home/user/dspy-serialization
+- Command: `cd /home/user/dspy-serialization && python run.py`
+- The command exits with status code 0 and does NOT raise `TypeError: 'MockValSer' object cannot be converted to 'SchemaSerializer'`.
+- The final non-empty line printed to stdout is a single valid JSON object.
+- The JSON object exposes the top-level keys `name`, `predictor`, `demos`, and `records`.
+  - `predictor` is a JSON object that identifies the DSPy predictor (it carries a class marker whose value contains `Predict`) and includes a `signature` describing the `question -> answer` fields.
+  - `demos` is a JSON array of objects; each object preserves the example's `question` and `answer` content.
+  - `records` is a JSON array of objects; each object has a string field `answer` and an object field `source_predictor` (the serialized nested `dspy.Predict`, carrying a class marker whose value contains `Predict`).
+- `qa_program.py` must remain functionally unchanged (the DSPy program being traced is fixed; only the serialization layer may be repaired).
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# LangWatch: Client-Side RAG Payload Truncation to Survive the 1MB Collector Limit
+
+## Background
+The LangWatch ingestion gateway (the `/api/collector` and OTLP `/api/otel/v1/traces` endpoints) enforces a strict **~1MB body size limit** on incoming trace payloads. A Retrieval-Augmented-Generation (RAG) service retrieves several large documents per query and logs them as span context. When the retrieved documents are large, the exported trace exceeds the limit and the backend rejects it with `HTTP 413 Payload Too Large` (or the SDK silently drops the trace).
+
+Your job is to build a RAG pipeline instrumented with the **LangWatch Python SDK** that performs **client-side truncation** of the retrieved documents *before* they are logged to the active span, so that the exported trace stays safely under the collector limit while still preserving the trace structure and the essential identifying fields of every retrieved document.
+
+## Provided Environment
+- A corpus file already exists at `/home/user/project/data/documents.json`.
+- It is a JSON array of retrieved documents. Each element is an object with the string fields `document_id`, `chunk_id`, and `content`.
+- The combined size of the raw `content` fields is deliberately **larger than 1MB**, so logging them verbatim would exceed the collector limit.
+
+## Requirements
+Implement a Python module named `rag_payload.py` at the project root that exposes the following importable contract:
+
+1. `truncate_contexts(documents, max_total_bytes, max_document_bytes)` -> `list[dict]`
+   - Input `documents` is a list of dicts each having `document_id`, `chunk_id`, and `content`.
+   - Return a new list, **one entry per input document (never drop a document)**, where each entry keeps the original `document_id` and `chunk_id` unchanged, exposes a (possibly shortened) `content`, and additionally records the original content size in bytes under the key `original_bytes`.
+   - Any `content` whose UTF-8 byte length exceeds `max_document_bytes` MUST be shortened so its UTF-8 byte length is `<= max_document_bytes`, keeping the **beginning** of the original text and ending the shortened value with the marker substring `[truncated]`.
+   - Content already within `max_document_bytes` MUST be returned unchanged (no marker added).
+   - The whole returned list, when JSON-serialized, MUST have a UTF-8 byte length `<= max_total_bytes` (shorten further if the per-document cap alone is not enough to fit the total budget).
+
+2. `run_pipeline(query)` -> `str`
+   - Emit, through the LangWatch SDK, a trace whose root span is named `rag_pipeline`, containing a nested retrieval span named `rag.retrieve` (span type `rag`) and a nested generation span named `llm.generate` (span type `llm`).
+   - The `rag.retrieve` span must load the documents from the corpus file, truncate them with `truncate_contexts`, and log the **truncated** documents as the span's RAG context. It MUST NOT log the raw, untruncated documents to the span.
+   - The `llm.generate` span must produce and record a non-empty answer derived from `query` (no real network or LLM call is required — the span merely represents that step).
+   - Return the non-empty answer string.
+   - Ensure the trace is flushed/exported before the function's effect is relied upon.
+
+3. A CLI entrypoint `main.py` that initializes LangWatch (reading credentials/endpoint from the environment), runs the pipeline for the query passed as the first CLI argument, and prints the answer.
+
+## Implementation Hints
+- Install dependencies with `uv` inside a virtual environment (the LangWatch SDK misbehaves under the system `pip`). LangWatch pulls in the OpenTelemetry SDK and OTLP/HTTP exporter transitively.
+- Read `LANGWATCH_API_KEY` and `LANGWATCH_ENDPOINT` from environment variables; never hardcode credentials or the endpoint.
+- Look at `langwatch.setup(...)`, `langwatch.trace(...)`, and `langwatch.span(...)`. RAG context can be attached to a span via its `contexts` argument (see `RAGChunk` in `langwatch.domain`) or `span.update(...)`.
+- Byte length matters, not character count: size limits are on the UTF-8 encoded payload. Truncate on encoded bytes and take care not to split a multi-byte character in a way that corrupts the value.
+- Because LangWatch exports spans through a batching processor, force-flush the tracer provider before the process exits so nothing is lost (e.g. flush the global OpenTelemetry tracer provider).
+- Pick internal budgets (per-document and total) that leave clear headroom below the 1MB collector limit.
+
+## Acceptance Criteria
+- Project path: /home/user/project
+- Command: `python main.py "<query>"`
+  - Input argument: a single free-text `<query>` string.
+  - The stdout MUST contain a line in the format `Answer: <text>` where `<text>` is a non-empty string.
+- Importable contract (used by the verifier):
+  - `rag_payload.truncate_contexts(documents, max_total_bytes, max_document_bytes)` returns one entry per input document, preserves each `document_id` and `chunk_id`, records `original_bytes`, enforces the per-document UTF-8 byte cap, appends the `[truncated]` marker only to shortened content, keeps content already within the cap unchanged, and keeps the JSON-serialized total within `max_total_bytes`.
+  - `rag_payload.run_pipeline(query: str) -> str` returns a non-empty string and exports a LangWatch trace containing spans named `rag_pipeline`, `rag.retrieve`, and `llm.generate`.
+- Exported trace behavior (observed on LangWatch's OTLP export endpoint `POST {LANGWATCH_ENDPOINT}/api/otel/v1/traces`):
+  - The exported (decoded) OTLP trace payload for a single pipeline run is well under the 1MB collector limit.
+  - Every retrieved document's `document_id` from the corpus still appears in the exported span data (essential identifiers are retained).
+  - The truncation marker `[truncated]` appears in the exported span data.
+  - The beginning of each document is retained, while the tail (end) of the oversized documents does not appear in the exported span data.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# LangWatch: Run a Built-in LLM-as-a-Judge Evaluator and Attach the Verdict to the Trace
+
+## Background
+You are building a Python question-answering pipeline and want an automated quality gate that does not rely on a golden answer. LangWatch ships a library of **server-side built-in evaluators**, including an **LLM-as-a-Judge** family that scores a produced answer against a **custom rubric/criteria** you supply. Unlike a client-side heuristic, this evaluator runs on the LangWatch backend: your code sends the question, the generated answer, and the retrieved contexts to the evaluators API, the judge returns a `passed`/`score`/`label`/`details` verdict, and LangWatch records that verdict as an evaluation on the active trace.
+
+Your job is to build the pipeline, invoke the built-in **LLM-as-a-Judge Boolean** evaluator against your produced answer with a custom rubric, and make sure the returned verdict is both captured by your code and attached to the answer-generation span of the trace.
+
+## Requirements
+Work inside the Python project at `/home/user/project`. Implement a module named `qa_pipeline.py` at the project root exposing these callables:
+
+- `retrieve(question: str) -> list[str]`: Deterministically retrieve context passages for `question` from a fixed in-code corpus. Retrieval MUST be a pure function of the question and corpus (no randomness, no network).
+- `run_pipeline(question: str) -> dict`: Run the end-to-end pipeline under a LangWatch trace, emit the spans described below, generate an answer grounded in the retrieved contexts, run the built-in LLM-as-a-Judge evaluator on that answer while the answer-generation span is active, capture the returned verdict, persist it, and return a dict.
+
+Also provide a CLI entrypoint `main.py`.
+
+### Span layout
+- The trace root span must be named `qa_pipeline`.
+- Context retrieval happens in a child span named `retrieve_context`.
+- Answer generation happens in a child span named `generate_answer`. No live LLM/network call is required to produce the answer — a deterministic answer derived from the retrieved contexts is acceptable (this task is about wiring the built-in evaluator, not answer quality).
+
+### Evaluator invocation
+- While the `generate_answer` span is the currently active span, invoke LangWatch's **built-in LLM-as-a-Judge Boolean** evaluator (evaluator slug `langevals/llm_boolean`) through the LangWatch evaluations API so the evaluation runs on the backend and is bound to the active trace.
+- The evaluator must receive a data object containing the `input` (the question), the `output` (your produced answer), and the `contexts` (the retrieved passages as a list).
+- The evaluator must be configured with a **custom rubric** passed through the evaluator `settings` (the judge prompt/criteria). The rubric must encode the pass criteria: the answer should be faithful to the provided context AND directly address the user's question.
+- Use the evaluation name `answer-quality-judge`.
+- Capture the verdict returned by the evaluator (`passed`, `score`, `label`, `details`) and use exactly those returned values — do not recompute or hardcode them locally.
+
+### Recording the verdict
+- `run_pipeline` must return a dict of the form `{"answer": <str>, "judgement": {"passed": <bool>, "score": <number>, "label": <str>, "details": <str>}}`, where the `judgement` fields are exactly the values returned by the evaluator.
+- `run_pipeline` must also write those same fields to `/home/user/project/judge_result.json`.
+- Read the LangWatch API key and endpoint from the environment (`LANGWATCH_API_KEY`, `LANGWATCH_ENDPOINT`). Do not hardcode credentials.
+
+## Implementation Hints
+- Install all Python dependencies with `uv` inside a virtual environment (some LangWatch-related packages misbehave with the system pip). LangWatch pulls in the OpenTelemetry SDK and OTLP/HTTP exporter transitively.
+- Initialize the SDK with `langwatch.setup(...)`, reading the API key and endpoint from the environment.
+- The evaluations API creates an evaluation span attached to the current trace context, POSTs to the LangWatch backend, and returns a result object exposing `status`, `passed`, `score`, `label`, and `details`. Invoking it from inside the `generate_answer` span is what binds the verdict to the correct span.
+- Built-in evaluators are addressed by slug; the LLM-as-a-Judge Boolean evaluator's slug is `langevals/llm_boolean`. Evaluator-specific configuration (such as the judge rubric/prompt) is passed via the `settings` argument, while the message data (`input`, `output`, `contexts`) is passed via the `data` argument.
+- LangWatch exports spans over a batching processor; ensure spans are flushed before the process exits so nothing is lost.
+- Keep `retrieve` pure and deterministic so the same question always yields the same contexts.
+- SDK progress/log output may be interleaved on stdout; since the verdict is persisted to a JSON artifact, keep that file strictly machine-readable.
+
+## Acceptance Criteria
+- Project path: /home/user/project
+- Command: `python main.py "<question>"`
+  - Input argument: a single free-text `<question>` string.
+  - The stdout MUST contain a line in the format `Answer: <text>` where `<text>` is a non-empty string.
+  - The stdout MUST contain a line in the format `Judgement: <passed> <score> <label>` reflecting the evaluator's returned verdict.
+- Importable contract (used by the verifier), all in `qa_pipeline.py`:
+  - `retrieve(question: str) -> list[str]` returns a non-empty, deterministic list of context strings.
+  - `run_pipeline(question: str) -> dict` returns `{"answer": str, "judgement": {"passed": bool, "score": number, "label": str, "details": str}}`, emits spans `qa_pipeline`, `retrieve_context`, and `generate_answer`, and runs the built-in evaluator while `generate_answer` is active.
+- Observable evaluator behavior (checked against requests the SDK sends to `POST {LANGWATCH_ENDPOINT}/api/evaluations/{slug}/evaluate`):
+  - Exactly one call to the built-in LLM-as-a-Judge Boolean evaluator (the evaluator slug path contains `langevals/llm_boolean`).
+  - The call's `data` object contains `input` equal to the question, `output` equal to the produced non-empty answer, and `contexts` as a non-empty JSON list.
+  - The call carries a non-empty custom rubric in the evaluator `settings` that encodes the pass criteria (references both the provided context/faithfulness and directly answering the question).
+  - The call is associated with the active trace (it carries a non-empty `trace_id`).
+  - The evaluation `name` is `answer-quality-judge`.
+- Observable recording behavior:
+  - The verdict is exported as an evaluation-type span nested under the `generate_answer` span (checked on the spans LangWatch exports to `POST {LANGWATCH_ENDPOINT}/api/otel/v1/traces`).
+  - `/home/user/project/judge_result.json` exists and its `passed`, `score`, `label`, and `details` equal exactly the values the evaluator returned (proven by the verdict tracking the evaluator's response rather than a fixed local value).
+- Credentials and endpoint are read from `LANGWATCH_API_KEY` and `LANGWATCH_ENDPOINT`; no secrets are hardcoded. Python dependencies are installed with `uv`.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# Batch Process RAG History with Client-Side Evaluations
+
+## Background
+You need to backfill observability and evaluation data for historical RAG (Retrieval-Augmented Generation) interactions into LangWatch. You have a large CSV file containing past queries, retrieved contexts, and generated answers. Your task is to process this file, trace each interaction in LangWatch, and apply a custom client-side evaluation.
+
+## Requirements
+- Create a Python script `process_rag.py` that reads a CSV file containing `query`, `retrieved_context`, and `generated_answer` columns.
+- For each row, create a LangWatch trace named `Batch_RAG_${run-id}`.
+- Inside the trace, create a nested span named `Retrieval` of type `rag_retrieval`.
+- Log the `query` and `retrieved_context` to the `Retrieval` span's inputs/outputs.
+- Add a client-side custom evaluation to the `Retrieval` span named `exact_match_eval`.
+  - The evaluation should pass (score 1.0) if the `generated_answer` is exactly found as a substring within the `retrieved_context`. Otherwise, it should fail (score 0.0).
+- The script must successfully process the entire CSV file without crashing and output a summary JSON file with the total count of passed and failed evaluations.
+
+## Implementation Hints
+- Read the `run-id` from `/logs/artifacts/run-id` to use in your trace names and output files.
+- The input CSV file may contain extremely large fields. Ensure your CSV parsing logic can handle fields larger than the default system limits.
+- LangWatch's collector endpoint enforces a strict 1MB body size limit. To prevent payload rejection, you must manually truncate the `retrieved_context` string to a maximum of 10,000 characters before logging it to the LangWatch span.
+- Use the `langwatch` Python SDK's `@langwatch.trace()`, `langwatch.span()`, and `add_evaluation()` primitives.
+- Ensure you use `uv` to install `langwatch` and any other required Python packages.
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Command: `python3 process_rag.py --input rag_history.csv --output summary_${run-id}.json`
+- The output JSON file must match the following format:
+  ```json
+  {
+    "total_processed": number,
+    "total_passed": number,
+    "total_failed": number
+  }
+  ```
+- The script must successfully execute without any CSV field size limit errors or HTTP 413 Payload Too Large errors from LangWatch.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# LangWatch: Client-Side Groundedness Evaluation on a RAG Span
+
+## Background
+You are building a Retrieval-Augmented Generation (RAG) pipeline in Python and want to attach a **custom, client-side groundedness evaluation** to the LangWatch span that produced the answer. Groundedness measures how much of the generated answer is actually supported by the retrieved context (a faithfulness / anti-hallucination proxy). LangWatch lets you log such custom evaluations directly onto the active span with `langwatch.get_current_span().add_evaluation(...)`, so the score, pass/fail decision, and a human-readable label all show up on the exact span that generated the answer.
+
+Your job is to implement the pipeline, a **non-trivial, deterministic groundedness scorer**, and wire the computed evaluation onto the answer-generation span.
+
+## Requirements
+Work inside a Python project at `/home/user/project`. Implement a module named `pipeline.py` at the project root exposing these callables:
+
+- `retrieve(query: str) -> list[str]`: Deterministically retrieve context passages for `query` from a fixed in-code document corpus (see the corpus described in Implementation Hints). Retrieval MUST be a pure function of the query and corpus (no randomness, no network).
+- `compute_groundedness(answer: str, contexts: list[str]) -> dict`: Compute the groundedness of `answer` against the retrieved `contexts` and return a dict with keys `score` (float), `passed` (bool), `label` (str), and `details` (str). The metric and thresholds are specified precisely below and MUST be implemented exactly so the score is reproducible.
+- `run_pipeline(query: str) -> str`: Run the end-to-end pipeline under a LangWatch trace, emit the spans described below, compute groundedness on the produced answer, log it as a custom evaluation on the **answer-generation span** via `langwatch.get_current_span().add_evaluation(...)`, and return the answer string.
+
+Also provide a CLI entrypoint `main.py`.
+
+### Groundedness metric specification (must be implemented exactly)
+1. **Tokenize** a string by lowercasing it and extracting every maximal run matching the regular expression `[a-z0-9]+`.
+2. **Drop stopwords** — remove any token contained in this exact stopword set:
+   `{"a","an","the","is","are","was","were","of","to","in","on","and","or","for","with","as","at","by","it","its","this","that","these","those","be","from"}`.
+3. Let `A` be the **set** of remaining tokens of `answer`, and `C` be the **set** of remaining tokens of the concatenation of all strings in `contexts` (joined with a single space).
+4. If `A` is empty, `score = 0.0`. Otherwise `score = |A ∩ C| / |A|`, then round to 4 decimal places using Python's built-in `round(value, 4)`.
+5. Map `score` to `passed` / `label`:
+   - `score >= 0.75` → `passed = True`,  `label = "grounded"`
+   - `0.4 <= score < 0.75` → `passed = False`, `label = "weakly_grounded"`
+   - `score < 0.4` → `passed = False`, `label = "hallucinated"`
+6. `details` must be a non-empty human-readable string that includes the numeric score.
+
+### Span & evaluation wiring
+- The trace root span must be named `rag_pipeline`.
+- Retrieval happens in a child span named `retrieve_context`.
+- Answer generation happens in a child span named `generate_answer`. No real LLM/network call is required — a deterministic answer derived from the retrieved context is acceptable (this task is about the evaluation wiring, not answer quality).
+- The groundedness evaluation MUST be added while the `generate_answer` span is the current span, using `langwatch.get_current_span().add_evaluation(...)`, and the evaluation `name` MUST be exactly `groundedness`. The `passed`, `score`, `label`, and `details` passed to `add_evaluation` MUST equal the values returned by `compute_groundedness` for the produced answer and retrieved contexts.
+- Read the LangWatch API key and endpoint from the environment (`LANGWATCH_API_KEY`, `LANGWATCH_ENDPOINT`). Do not hardcode credentials.
+
+## Implementation Hints
+- Install all Python dependencies with `uv` inside a virtual environment (some LangWatch-related packages misbehave with the system pip). LangWatch pulls in the OpenTelemetry SDK and OTLP/HTTP exporter transitively.
+- Initialize the SDK with `langwatch.setup(...)`, reading the API key and endpoint from the environment.
+- Use `langwatch.get_current_span().add_evaluation(name=..., passed=..., score=..., label=..., details=...)` — this attaches the evaluation to the active span. Calling it from inside the `generate_answer` span context is what binds it to the correct span.
+- LangWatch exports over a batching processor; ensure spans are flushed before the process exits so nothing is lost.
+- Keep `retrieve` and `compute_groundedness` pure and deterministic so the same query always yields the same score.
+- Suggested fixed corpus (you may format it as you like, but retrieval must be deterministic): a small list of short factual passages about a handful of topics (e.g. LangWatch observability, OpenTelemetry tracing, RAG retrieval). A simple deterministic retrieval rule is to score each passage by token overlap with the query and return the top passages.
+
+## Acceptance Criteria
+- Project path: /home/user/project
+- Command: `python main.py "<query>"`
+  - Input argument: a single free-text `<query>` string.
+  - The stdout MUST contain a line in the format `Answer: <text>` where `<text>` is a non-empty string.
+  - The stdout MUST contain a line in the format `Groundedness: <score> <label>` where `<score>` is the numeric groundedness score and `<label>` is the computed label.
+- Importable contract (used by the verifier), all in `pipeline.py`:
+  - `retrieve(query: str) -> list[str]` returns a non-empty, deterministic list of context strings.
+  - `compute_groundedness(answer: str, contexts: list[str]) -> dict` returns `{"score": float, "passed": bool, "label": str, "details": str}` computed exactly per the metric specification above.
+  - `run_pipeline(query: str) -> str` returns a non-empty answer string, emits spans `rag_pipeline`, `retrieve_context`, and `generate_answer`, and internally retrieves context via the same logic as `retrieve`.
+- Observable evaluation behavior (checked on the spans LangWatch exports to `POST {LANGWATCH_ENDPOINT}/api/otel/v1/traces`):
+  - A custom evaluation named `groundedness` is attached to the `generate_answer` span (not to the root or retrieval span).
+  - The attached evaluation's `passed`, `score`, and `label` equal the values returned by `compute_groundedness(answer, retrieve(query))` for the same query, and `details` is a non-empty string.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# LangWatch: OpenTelemetry Integration with Selective Span Export Filtering
+
+## Background
+A Python service already has its own **global OpenTelemetry `TracerProvider`** wired up for internal observability (spans are exported to the team's existing tracing backend). The team now wants to add **LangWatch** for LLM observability, but they must NOT send noisy internal spans (health checks and low-level database queries) to LangWatch, while still sending the meaningful LLM and RAG spans.
+
+LangWatch is OpenTelemetry-native: when `langwatch.setup()` attaches its exporter to a `TracerProvider`, **every** span managed by that provider is exported to LangWatch by default — including spans created directly with the OpenTelemetry API. LangWatch supports server-side selective filtering of its own export path via `span_exclude_rules`, which drop spans **before** they reach LangWatch **without** affecting any other exporter/processor attached to the same provider.
+
+Your job is to integrate LangWatch alongside the pre-existing global provider and apply span exclusion rules so that internal health-check and database spans never reach LangWatch, while LLM and RAG spans do.
+
+## Requirements
+- Work inside a Python module named `observability.py` at the project root.
+- Implement `configure_langwatch(tracer_provider)`:
+  - Attach LangWatch to the **already-existing** `tracer_provider` that is passed in (this provider is the current global provider; do NOT create a brand-new provider and do NOT replace the global one).
+  - It must NOT remove, replace, or disturb any span processors/exporters already attached to that provider.
+  - Configure LangWatch's export filtering so the following spans are **excluded** from being exported to LangWatch:
+    - Any span whose name is exactly `GET /health_check`.
+    - Any span whose name **starts with** `db.` (internal database operations).
+  - All other spans must still be exported to LangWatch.
+  - Read the LangWatch API key and endpoint from the environment (`LANGWATCH_API_KEY`, `LANGWATCH_ENDPOINT`). Do not hardcode credentials.
+- Implement `run_pipeline(query)`:
+  - Using the **global** OpenTelemetry tracer (i.e. spans created through the shared global provider), execute a small RAG-style pipeline that produces the following spans, nested under a single root span:
+    - Root span named `rag_pipeline`.
+    - A span named `GET /health_check` (an internal health probe).
+    - A span named `db.query.documents` (a database lookup).
+    - A span named `rag.retrieve` (document retrieval).
+    - A span named `llm.generate` (the LLM generation step).
+  - Return a non-empty answer string derived from `query`. (No real LLM/network call is required — the `llm.generate` span merely represents that step.)
+- Provide a CLI entrypoint `main.py` that: builds/sets the application's global OpenTelemetry provider, calls `configure_langwatch(...)` with it, runs `run_pipeline(<query>)`, and prints the result.
+
+## Implementation Hints
+- Install all Python dependencies with `uv` inside a virtual environment (some LangWatch-related packages misbehave with the system pip). LangWatch pulls in the OpenTelemetry SDK and the OTLP/HTTP exporter transitively.
+- Look at `langwatch.setup(...)`: it accepts an existing `tracer_provider` and a `span_exclude_rules` list. Passing the existing provider makes LangWatch attach its own filtered export processor to it rather than creating a new one.
+- Exclusion rules are expressed with `SpanProcessingExcludeRule` from `langwatch.domain`, matching on `span_name` with operations such as `exact_match` and `starts_with`.
+- Because LangWatch exports via a batching processor, make sure spans are flushed (e.g. force-flush the provider) before the process ends so nothing is lost.
+- Emit the pipeline spans with the plain OpenTelemetry API (`opentelemetry.trace.get_tracer(...).start_as_current_span(...)`) so they flow through whatever provider is currently global. Nest the child spans inside the `rag_pipeline` root span.
+
+## Acceptance Criteria
+- Project path: /home/user/project
+- Command: `python main.py "<query>"`
+  - Input argument: a single free-text `<query>` string.
+  - The stdout must contain a line in the format: `Answer: <text>` where `<text>` is a non-empty string.
+- Importable module contract (used by the verifier):
+  - `observability.configure_langwatch(tracer_provider)` attaches LangWatch, with span exclusion, to the provider passed in, and preserves any pre-existing span processors on that provider.
+  - `observability.run_pipeline(query: str) -> str` emits, through the current global OpenTelemetry provider, spans named `rag_pipeline`, `GET /health_check`, `db.query.documents`, `rag.retrieve`, and `llm.generate`, and returns a non-empty answer string.
+- Export filtering behavior (observed on LangWatch's OTLP export endpoint `POST {LANGWATCH_ENDPOINT}/api/otel/v1/traces`):
+  - Spans named `rag_pipeline`, `rag.retrieve`, and `llm.generate` ARE exported to LangWatch.
+  - Spans named `GET /health_check` and `db.query.documents` are NOT exported to LangWatch.
+  - All five spans still reach other (non-LangWatch) exporters attached to the same global provider.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Command outputs captured
+Command outputs captured
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# Fix DSPy Visualizer Crash
+
+## Background
+You have a DSPy optimization script that integrates with LangWatch for tracing and visualization. However, the script currently crashes during the optimizer setup with a `ValueError` because the chosen optimizer (`SIMBA`) is not supported by the LangWatch DSPy visualizer.
+
+## Requirements
+- Modify the provided `/home/user/myproject/optimize.py` script to use a DSPy optimizer that is supported by LangWatch (e.g., `BootstrapFewShotWithRandomSearch`).
+- Ensure the script runs successfully without throwing the `ValueError`.
+- The script must output the string `Optimization completed successfully` to standard output when finished.
+
+## Implementation Hints
+- Review the error message from LangWatch to identify which optimizers are supported.
+- Change the optimizer instantiation in the script to one of the supported optimizers.
+- You may need to adjust the optimizer arguments if the new optimizer requires different parameters than `SIMBA`.
+- Do not remove the LangWatch tracking integration.
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Command: python3 optimize.py
+- The command must execute successfully (exit code 0).
+- The command stdout must include: `Optimization completed successfully`.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# Versioned Prompt Compiler with LiteLLM Execution and Trace Linkage
+
+## Background
+You are building the generation service for a customer-support platform that manages its prompts in [LangWatch Prompt Management](https://langwatch.ai/docs/prompt-management/getting-started). At runtime the service must fetch a **specific pinned version** of a prompt with the LangWatch Python SDK (`langwatch.prompts.get`), compile it with several dynamic template variables, and execute it through the [LiteLLM](https://docs.litellm.ai/) `completion` API using the prompt's own model identifier and compiled messages. The whole generation must run inside an **active LangWatch trace** so the LLM call is linked to the prompt and is observable.
+
+The deployment target is a locked-down / CI environment: the prompt is already materialized locally (LangWatch *Guaranteed Availability*), and there are no live LLM credentials. Your service must therefore be deterministic and offline-capable while still exercising the real `langwatch` and `litellm` packages (no mocking of the SDK).
+
+A pre-provisioned LangWatch prompts project already exists in the project directory: `prompts.json`, `prompts-lock.json`, and a materialized, versioned prompt for the handle `support-triage-agent`. Your job is to implement the generation service `run.py` on top of it.
+
+## Requirements
+- Load the prompt for a given handle through the LangWatch Python SDK (`langwatch.prompts.get`), honoring a caller-supplied version.
+- Compile the prompt with multiple runtime template variables and execute the compiled messages through LiteLLM's `completion`, routing to the model declared by the prompt (the provider-prefixed identifier such as `openai/...`).
+- Run the retrieval + compilation + completion inside an active LangWatch trace, and emit an inspectable local trace artifact proving the LLM execution span is nested under the trace root span (a single shared trace id).
+- Implement non-trivial validation:
+  - **Version integrity:** because a locally materialized prompt is returned regardless of the version requested, the service must verify that the version actually resolved matches the caller's requested version and fail loudly on any mismatch.
+  - **Template variables:** every `{{variable}}` placeholder referenced by the prompt must be supplied; a missing variable must fail loudly and must not produce a successful result.
+- Read all credentials/config strictly from environment variables. Do NOT mock LangWatch, LiteLLM, their HTTP clients, or any transitive dependency — the real packages must be installed and importable.
+
+## Implementation Hints
+- Install Python packages with `uv` (`uv venv`, then `uv pip install ...`). The `langwatch` and `litellm` packages are required.
+- Run the service with the project root as the working directory so the SDK can auto-discover the materialized prompt under `./prompts/.materialized/`. See [Guaranteed Availability](https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability) and the [Prompts CLI](https://langwatch.ai/docs/prompt-management/cli).
+- Compile the prompt with the SDK's compilation API; prefer the strict-compilation variant so missing template variables raise instead of silently passing through.
+- Pass the prompt's own model string unchanged to LiteLLM (do not strip the provider prefix). Since there are no live LLM credentials, drive `completion` deterministically with LiteLLM's mock-response mechanism so no network/API key is needed while still exercising the real `completion` code path.
+- Establish the LangWatch trace with `langwatch.setup()` plus a trace boundary. To make trace linkage inspectable offline, capture the emitted OpenTelemetry spans in-process (e.g. attach your own `TracerProvider`/span exporter to the LangWatch setup) and serialize the stable span fields (name, trace id, span id, parent span id) to the trace artifact.
+- Keep machine-readable output in files (not stdout), because LangWatch/LiteLLM emit their own log lines.
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Command: `python run.py --handle <handle> --vars <json_object> [--version <int>] --out <path>`
+  - `--handle`: the prompt handle to load.
+  - `--vars`: a JSON object string mapping template-variable names to string values.
+  - `--version`: optional integer version; when provided the service must confirm the resolved prompt is exactly that version, and when omitted the version recorded in the prompts lock file is used.
+  - `--out`: path where the compiled result JSON is written.
+- On success (exit code 0) the `--out` file must contain a JSON object with this shape:
+  ```json
+  {
+    "handle": string,
+    "version": integer,
+    "model": string,
+    "trace_id": string,
+    "messages": [ { "role": string, "content": string } ],
+    "response": string
+  }
+  ```
+  - `model` is the provider-prefixed model string taken from the prompt and passed to LiteLLM (begins with `openai/`).
+  - `version` is the resolved integer version.
+  - `trace_id` is the non-empty lowercase 32-hex-character OpenTelemetry trace id of the active trace.
+  - every message `content` has all placeholders substituted; no `{{` substring may remain.
+  - `response` is the non-empty text returned by the LiteLLM `completion` call.
+- Trace artifact: on success the service also writes `/home/user/myproject/trace_spans.jsonl`, one JSON object per line describing a captured span with at least the fields `name`, `trace_id`, `span_id`, `parent_span_id`. It must contain a span named `llm_generation` (the LLM execution) whose `trace_id` equals the result `trace_id`, and whose `parent_span_id` refers to another captured span sharing that same `trace_id` (i.e. the LLM span is nested under the trace root span).
+- Error handling (must exit non-zero and must NOT write a successful `--out` result):
+  - If `--version` is supplied but does not match the resolved prompt version, fail and report a version mismatch.
+  - If any template variable required by the prompt is missing from `--vars`, fail and name the missing variable.
+- Required pre-existing artifacts at the project root (already provisioned): `prompts.json`, `prompts-lock.json`, and `prompts/.materialized/support-triage-agent.prompt.yaml`.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Running command: set -euo pipefail; mkdir -p /logs/agent/pochi && pochi --version
+Command outputs captured
+Running command: mkdir -p ~/.pochi && cat << 'EOF' | sed -e "s/OPENAI_API_KEY/${OPENAI_API_KEY}/g" -e "s/DEEPINFRA_API_KEY/${DEEPINFRA_API_KEY}/g" -e "s/MINIMAX_API_KEY/${MINIMAX_API_KEY}/g" > ~/.pochi/config.jsonc
+{
+  "providers": {
+    "deepinfra": {
+      "kind": "openai",
+      "baseURL": "https://api.deepinfra.com/v1/openai",
+      "apiKey": "DEEPINFRA_API_KEY",
+      "models": {
+        "zai-org/GLM-4.7-Flash": {
+          "name": "glm-4.7-flash"
+        },
+        "moonshotai/Kimi-K2.6": {
+          "name": "kimi-K2.6"
+        },
+        "deepseek-ai/DeepSeek-V4-Pro": {
+          "name": "DeepSeek-V4-Pro"
+        }
+      }
+    },
+    "openai": {
+      "kind": "openai",
+      "baseURL": "https://api.openai.com/v1",
+      "apiKey": "OPENAI_API_KEY",
+      "models": {
+        "gpt-5.4": {
+          "name": "gpt-5.4"
+        }
+      }
+    },
+    "minimax": {
+      "kind": "openai",
+      "baseURL": "https://api.minimax.io/v1",
+      "apiKey": "MINIMAX_API_KEY",
+      "models": {
+        "MiniMax-M3": {
+          "name": "m3"
+        }
+      }
+    }
+  }
+}
+EOF
+Command outputs captured
+Running command: if [ -f /bootstrap/test_initial_state.py ]; then pytest -s --log-cli-level=DEBUG /bootstrap/test_initial_state.py > >(tee /logs/agent/pochi/initial-test-stdout.txt) 2> >(tee /logs/agent/pochi/initial-test-stderr.txt >&2); fi
+Command outputs captured
+Running command: cat > /tmp/pochi_cmd.sh << 'CMD_EOF'
+set -o pipefail
+pochi --model google/gemini-3.5-flash --max-steps 200 --max-retries 10 --blobs-dir /logs/agent/pochi/blobs --experimental-stream-trajectory /logs/agent/pochi/trajectory.jsonl --experimental-stream-trajectory-strip-duplicates > >(tee /logs/agent/pochi/stdout.txt) 2> >(tee /logs/agent/pochi/stderr.txt >&2) <<'EOF'
+# LangWatch Prompt Materialization with Offline Fallback Loader
+
+## Background
+You are hardening the prompt-delivery path of a Python service that uses [LangWatch Prompt Management](https://langwatch.ai/docs/prompt-management/getting-started). In production the service fetches versioned prompts from the LangWatch API, but the deployment target is an air-gapped / CI environment where the LangWatch API can be unreachable. To keep the service running under LangWatch's *Guaranteed Availability* model, prompts are materialized to local YAML files with the Prompts CLI and the application must transparently fall back to that local cache.
+
+Your job is to (1) scaffold and materialize a versioned prompt locally as YAML, and (2) implement a robust, deterministic fallback loader plus a small CLI that compiles the prompt with dynamic variables — working correctly even when the LangWatch API is not reachable.
+
+## Requirements
+- Scaffold a LangWatch prompts project so that the following tracking files exist at the project root: `prompts.json` and `prompts-lock.json`.
+- Provide a locally materialized, versioned prompt for the handle `customer-support-bot` at `prompts/.materialized/customer-support-bot.prompt.yaml`. The prompt must:
+  - Use a model identifier of the form `openai/<model>` (e.g. `openai/gpt-4o-mini`).
+  - Contain at least a `system` message and a `user` message.
+  - Reference the two template variables `{{user_name}}` and `{{issue}}` (the `{{...}}` mustache syntax used by LangWatch prompts) across its messages.
+- `prompts-lock.json` must resolve the `customer-support-bot` dependency to a concrete integer version (use version `3`) and record the path to the materialized YAML file.
+- Implement a Python CLI application `run.py` that loads the prompt through a fallback loader and compiles it with runtime variables.
+- The fallback loader must be **deterministic and offline-capable**: when the application runs in offline mode it must load the prompt strictly from the local materialized cache (never depending on a network call), and report where the prompt was sourced from.
+- Variable compilation must substitute every `{{variable}}` placeholder with the provided value and must fail loudly (non-zero exit) if a required variable is missing. No `{{` / `}}` placeholders may remain in the compiled output.
+- Do NOT mock LangWatch, its HTTP client, or any transitive dependency. The real `langwatch` package must be installed and importable.
+
+## Implementation Hints
+- Use the LangWatch Prompts CLI (`langwatch prompt init`, `langwatch prompt create`) to scaffold the project layout and the prompt YAML. The CLI is available in the environment. Creating/initializing prompts is a local operation and does not require network access.
+- Materialized prompts live under `prompts/.materialized/` and follow the `.prompt.yaml` format (`model`, optional `modelParameters`, and a `messages` list of `{role, content}`). See the [Prompts CLI](https://langwatch.ai/docs/prompt-management/cli) and [Guaranteed Availability](https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability) docs.
+- For the offline path, resolve the materialized file location from `prompts-lock.json` and parse the YAML yourself rather than assuming a network fetch. Note: pointing `LANGWATCH_ENDPOINT` at a bad address does not reliably raise a network error, so drive the fallback with an explicit offline execution path instead.
+- Implement mustache-style `{{variable}}` substitution deterministically. Collect the set of variables referenced by the template to decide which ones are required.
+- Use `uv` to create the virtualenv and install Python packages (`uv venv`, then `uv pip install ...`).
+
+## Acceptance Criteria
+- Project path: /home/user/myproject
+- Command: `python run.py --handle <handle> --vars <json_object> [--version <int>] [--offline] --out <path>`
+  - `--handle`: the prompt handle to load (e.g. `customer-support-bot`).
+  - `--vars`: a JSON object string mapping variable names to string values.
+  - `--version`: optional integer version; when omitted, the version recorded in `prompts-lock.json` is used.
+  - `--offline`: when present, the loader must load only from the local materialized cache.
+  - `--out`: path to write the compiled result JSON.
+- The command writes a JSON object to the `--out` path with this shape:
+  ```json
+  {
+    "handle": string,
+    "version": integer,
+    "model": string,
+    "source": string,
+    "messages": [ { "role": string, "content": string } ]
+  }
+  ```
+  - `source` is `"local_materialized"` when the prompt was loaded from the local cache and `"remote_api"` when loaded from the LangWatch API.
+  - When `--offline` is passed, `source` must be `"local_materialized"`.
+  - `model` must be the model string from the materialized prompt (begins with `openai/`).
+  - `version` must be the resolved integer version.
+  - Every message `content` must have all `{{...}}` placeholders replaced; no `{{` substring may remain.
+- Required artifacts at the project root: `prompts.json`, `prompts-lock.json`, and `prompts/.materialized/customer-support-bot.prompt.yaml`.
+- Error handling: if a required template variable is not supplied in `--vars`, the command must exit with a non-zero status and must not write a successful compiled output. If `--offline` is set and the materialized file cannot be found, the command must also exit non-zero.
+
+
+EOF
+CMD_EOF
+setsid --wait bash /tmp/pochi_cmd.sh &
+SETSID_PID=$!
+echo $SETSID_PID > /tmp/setsid_bash_pochi_cmd.pid
+wait $SETSID_PID 2>/dev/null
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Collecting main service artifacts
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Collecting main service artifacts
+Collecting main service artifacts
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './dspy-serialization/.venv/bin/python' is a link to an absolute path
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './project/.venv/bin/python' is a link to an absolute path
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './langwatch-csv-pipeline/.venv/bin/python' is a link to an absolute path
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Collecting main service artifacts
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './project/.venv/bin/python' is a link to an absolute path
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Command outputs captured
+Command outputs captured
+Collecting main service artifacts
+Collecting main service artifacts
+Collecting main service artifacts
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Collecting main service artifacts
+Command outputs captured
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './project/.venv/bin/python' is a link to an absolute path
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './myproject/.venv/bin/python' is a link to an absolute path
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './myproject/.venv/bin/python' is a link to an absolute path
+The verifier.env contains an API key (often the case for LLM-based verifiers). You will incur costs associated with the API calls.
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Collecting main service artifacts
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './project/.venv/bin/python' is a link to an absolute path
+Command outputs captured
+Command outputs captured
+Collecting main service artifacts
+Collecting main service artifacts
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './myproject/.venv/bin/python' is a link to an absolute path
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './project/.venv/bin/python' is a link to an absolute path
+Command failed
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './myproject/.venv/bin/python' is a link to an absolute path
+Command outputs captured
+Collecting main service artifacts
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Command outputs captured
+Running command: if [ -f /tmp/setsid_bash_pochi_cmd.pid ]; then
+SETSID_PID=$(cat /tmp/setsid_bash_pochi_cmd.pid)
+kill -TERM -- -$SETSID_PID 2>/dev/null || true
+sleep 2
+kill -9 -- -$SETSID_PID 2>/dev/null || true
+fi
+rm -f ~/.pochi/config.jsonc /tmp/pochi_cmd.sh /tmp/setsid_bash_pochi_cmd.pid
+Not retrying trial because the maximum number of retries has been reached
+Command outputs captured
+Command outputs captured
+Collecting main service artifacts
+Collecting main service artifacts
+Failed to download artifact '/home/user' from service 'main' (best-effort)
+Traceback (most recent call last):
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/trial/artifact_handler.py", line 322, in _download_artifact
+    await source_env.service_download_dir(
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/compose_service_ops.py", line 140, in service_download_dir
+    await self.download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1938, in download_dir
+    return await self._strategy.download_dir(source_dir, target_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 393, in download_dir
+    await self._env._sdk_download_dir(source_dir, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/daytona/environment.py", line 1890, in _sdk_download_dir
+    extract_dir_from_file(archive_path, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 78, in extract_dir_from_file
+    extract_dir(fileobj, target_dir)
+  File "/home/kw/.local/share/uv/tools/harbor/lib/python3.12/site-packages/harbor/environments/tar_transfer.py", line 72, in extract_dir
+    tar.extractall(target_path, filter="data")
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2294, in extractall
+    tarinfo = self._get_extract_tarinfo(member, filter_function, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2348, in _get_extract_tarinfo
+    self._handle_fatal_error(e)
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 2346, in _get_extract_tarinfo
+    tarinfo = filter_function(tarinfo, path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 828, in data_filter
+    new_attrs = _get_filtered_attrs(member, dest_path, True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/lib/python3.12/tarfile.py", line 805, in _get_filtered_attrs
+    raise AbsoluteLinkError(member)
+tarfile.AbsoluteLinkError: './myproject/.venv/bin/python' is a link to an absolute path
+The verifier.env contains an API key (often the case for LLM-based verifiers). You will incur costs associated with the API calls.

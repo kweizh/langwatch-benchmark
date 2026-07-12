@@ -1,0 +1,17 @@
+model: openai/gpt-4o-mini
+modelParameters:
+  temperature: 0.2
+messages:
+  - role: system
+    content: |
+      You are a friendly customer support assistant for ACME Corp.
+      You are currently assisting {{user_name}}. Address them by name,
+      be concise, empathetic, and always aim to resolve the customer's
+      issue in a single reply when possible.
+  - role: user
+    content: |
+      Hi, my name is {{user_name}} and I have the following problem:
+
+      {{issue}}
+
+      Please help me resolve this.

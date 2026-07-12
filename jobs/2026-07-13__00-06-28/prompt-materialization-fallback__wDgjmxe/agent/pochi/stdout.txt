@@ -1,0 +1,67 @@
+- Initializing MCP connections...
+You
+# LangWatch Prompt Materialization with Offline Fallback Loader ## Background You are hardening the prompt-delivery path of a Python service that uses https://langwatch.ai/docs/prompt-management/getting-started. In production the service fetches versioned prompts from the LangWatch API, but the deployment target is an air-gapped / CI environment where the LangWatch API can be unreachable. To keep the service running under LangWatch's *Guaranteed Availability* model, prompts are materialized to local YAML files with the Prompts CLI and the application must transparently fall back to that local cache. Your job is to (1) scaffold and materialize a versioned prompt locally as YAML, and (2) implement a robust, deterministic fallback loader plus a small CLI that compiles the prompt with dynamic variables — working correctly even when the LangWatch API is not reachable. ## Requirements * Scaffold a LangWatch prompts project so that the following tracking files exist at the project root: `prompts.json` and `prompts-lock.json`. * Provide a locally materialized, versioned prompt for the handle `customer-support-bot` at `prompts/.materialized/customer-support-bot.prompt.yaml`. The prompt must: * Use a model identifier of the form `openai/<model>` (e.g. `openai/gpt-4o-mini`). * Contain at least a `system` message and a `user` message. * Reference the two template variables `{{user_name}}` and `{{issue}}` (the `{{...}}` mustache syntax used by LangWatch prompts) across its messages. * `prompts-lock.json` must resolve the `customer-support-bot` dependency to a concrete integer version (use version `3`) and record the path to the materialized YAML file. * Implement a Python CLI application `run.py` that loads the prompt through a fallback loader and compiles it with runtime variables. * The fallback loader must be **deterministic and offline-capable**: when the application runs in offline mode it must load the prompt strictly from the local materialized cache (never depending on a network call), and report where the prompt was sourced from. * Variable compilation must substitute every `{{variable}}` placeholder with the provided value and must fail loudly (non-zero exit) if a required variable is missing. No `{{` / `}}` placeholders may remain in the compiled output. * Do NOT mock LangWatch, its HTTP client, or any transitive dependency. The real `langwatch` package must be installed and importable. ## Implementation Hints * Use the LangWatch Prompts CLI (`langwatch prompt init`, `langwatch prompt create`) to scaffold the project layout and the prompt YAML. The CLI is available in the environment. Creating/initializing prompts is a local operation and does not require network access. * Materialized prompts live under `prompts/.materialized/` and follow the `.prompt.yaml` format (`model`, optional `modelParameters`, and a `messages` list of `{role, content}`). See the https://langwatch.ai/docs/prompt-management/cli and https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability docs. * For the offline path, resolve the materialized file location from `prompts-lock.json` and parse the YAML yourself rather than assuming a network fetch. Note: pointing `LANGWATCH_ENDPOINT` at a bad address does not reliably raise a network error, so drive the fallback with an explicit offline execution path instead. * Implement mustache-style `{{variable}}` substitution deterministically. Collect the set of variables referenced by the template to decide which ones are required. * Use `uv` to create the virtualenv and install Python packages (`uv venv`, then `uv pip install ...`). ## Acceptance Criteria * Project path: /home/user/myproject * Command: `python run.py --handle <handle> --vars <json_object> [--version <int>] [--offline] --out <path>` * `--handle`: the prompt handle to load (e.g. `customer-support-bot`). * `--vars`: a JSON object string mapping variable names to string values. * `--version`: optional integer version; when omitted, the version recorded in `prompts-lock.json` is used. * `--offline`: when present, the loader must load only from the local materialized cache. * `--out`: path to write the compiled result JSON. * The command writes a JSON object to the `--out` path with this shape: ```json { "handle": string, "version": integer, "model": string, "source": string, "messages": [ { "role": string, "content": string } ] } ``` * `source` is `"local_materialized"` when the prompt was loaded from the local cache and `"remote_api"` when loaded from the LangWatch API. * When `--offline` is passed, `source` must be `"local_materialized"`. * `model` must be the model string from the materialized prompt (begins with `openai/`). * `version` must be the resolved integer version. * Every message `content` must have all `{{...}}` placeholders replaced; no `{{` substring may remain. * Required artifacts at the project root: `prompts.json`, `prompts-lock.json`, and `prompts/.materialized/customer-support-bot.prompt.yaml`. * Error handling: if a required template variable is not supplied in `--vars`, the command must exit with a non-zero status and must not write a successful compiled output. If `--offline` is set and the materialized file cannot be found, the command must also exit non-zero.   
+
+Pochi
+Let me start by understanding the project structure and then implement everything step by step.   
+📋 Updating todo list (5 items) ✔ 
+📋 Updating todo list (5 items) ✔ 
+💫 Executing mkdir -p /home/user/myproject ✔ 
+💫 Executing cd /home/user/myproject && uv venv 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && uv pip install langwatch 2>&1 ✔ 
+📋 Updating todo list (5 items) ✔ 
+Now let me explore the LangWatch CLI to understand the scaffolding commands:   
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && langwatch prompt --help 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && langwatch prompt init --help 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && langwatch prompt create --help 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && langwatch prompt add --help 2>&1 ✔ 
+Let me initialize the prompts project:   
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && langwatch prompt init 2>&1 ✔ 
+📂 Listing files in /home/user/myproject recursively ✔ 
+Good, the scaffolding created `prompts.json`, `prompts-lock.json`, and the `prompts/.materialized/` directory. Let me look at the generated files:   
+📖 Reading /home/user/myproject/prompts.json ✔ 
+📖 Reading /home/user/myproject/prompts-lock.json ✔ 
+Now let me create the prompt using the CLI. Let me first create it:   
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && langwatch prompt create customer-support-bot 2>&1 ✖ "Command exited with code 1"
+The `create` command requires an API key. Let me instead create the materialized YAML file manually, since the requirements say we need a locally materialized prompt. Let me also check the LangWatch documentation about the materialized format:   
+🌐 Fetching https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability ✔ 
+🌐 Fetching https://langwatch.ai/docs/prompt-management/cli ✔ 
+Now I have a clear picture. Let me create the materialized YAML file and update the lock file. The format is: - `model`: the model identifier - `modelParameters` (optional) - `messages`: list of `{role, content}` Let me create the materialized prompt YAML:   
+📋 Updating todo list (5 items) ✔ 
+✏️  Writing /home/user/myproject/prompts/.materialized/customer-support-bot.prompt.yaml ✔ 
+Now update `prompts-lock.json` to resolve `customer-support-bot` to version 3:   
+✏️  Writing /home/user/myproject/prompts-lock.json ✔ 
+Now update `prompts.json` to declare the dependency:   
+✏️  Writing /home/user/myproject/prompts.json ✔ 
+📋 Updating todo list (5 items) ✔ 
+Now let me look at how the langwatch SDK handles prompts to understand the interface:   
+❯ Explore langwatch SDK prompt handling (explore)
+| 📂 Listing files in .
+| 📂 Listing files in /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch recursively
+| 🔍 Searching for * in .
+| 🔍 Searching for **/*prompt* in /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/__init__.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/prompt.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/prompt_facade.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/local_loader.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/prompt_api_service.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/types/__init__.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/types/prompt_data.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/types/fetch_policy.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/types/structures.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/errors.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/decorators/prompt_tracing.py
+| 📖 Reading unknown
+| 📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/decorators/prompt_service_tracing.py
+✔ Explore langwatch SDK prompt handling (explore)

@@ -1,0 +1,226 @@
+- Initializing MCP connections...
+You
+# Versioned Prompt Compiler with LiteLLM Execution and Trace Linkage ## Background You are building the generation service for a customer-support platform that manages its prompts in https://langwatch.ai/docs/prompt-management/getting-started. At runtime the service must fetch a **specific pinned version** of a prompt with the LangWatch Python SDK (`langwatch.prompts.get`), compile it with several dynamic template variables, and execute it through the https://docs.litellm.ai/ `completion` API using the prompt's own model identifier and compiled messages. The whole generation must run inside an **active LangWatch trace** so the LLM call is linked to the prompt and is observable. The deployment target is a locked-down / CI environment: the prompt is already materialized locally (LangWatch *Guaranteed Availability*), and there are no live LLM credentials. Your service must therefore be deterministic and offline-capable while still exercising the real `langwatch` and `litellm` packages (no mocking of the SDK). A pre-provisioned LangWatch prompts project already exists in the project directory: `prompts.json`, `prompts-lock.json`, and a materialized, versioned prompt for the handle `support-triage-agent`. Your job is to implement the generation service `run.py` on top of it. ## Requirements * Load the prompt for a given handle through the LangWatch Python SDK (`langwatch.prompts.get`), honoring a caller-supplied version. * Compile the prompt with multiple runtime template variables and execute the compiled messages through LiteLLM's `completion`, routing to the model declared by the prompt (the provider-prefixed identifier such as `openai/...`). * Run the retrieval + compilation + completion inside an active LangWatch trace, and emit an inspectable local trace artifact proving the LLM execution span is nested under the trace root span (a single shared trace id). * Implement non-trivial validation: * **Version integrity:** because a locally materialized prompt is returned regardless of the version requested, the service must verify that the version actually resolved matches the caller's requested version and fail loudly on any mismatch. * **Template variables:** every `{{variable}}` placeholder referenced by the prompt must be supplied; a missing variable must fail loudly and must not produce a successful result. * Read all credentials/config strictly from environment variables. Do NOT mock LangWatch, LiteLLM, their HTTP clients, or any transitive dependency — the real packages must be installed and importable. ## Implementation Hints * Install Python packages with `uv` (`uv venv`, then `uv pip install ...`). The `langwatch` and `litellm` packages are required. * Run the service with the project root as the working directory so the SDK can auto-discover the materialized prompt under `./prompts/.materialized/`. See https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability and the https://langwatch.ai/docs/prompt-management/cli. * Compile the prompt with the SDK's compilation API; prefer the strict-compilation variant so missing template variables raise instead of silently passing through. * Pass the prompt's own model string unchanged to LiteLLM (do not strip the provider prefix). Since there are no live LLM credentials, drive `completion` deterministically with LiteLLM's mock-response mechanism so no network/API key is needed while still exercising the real `completion` code path. * Establish the LangWatch trace with `langwatch.setup()` plus a trace boundary. To make trace linkage inspectable offline, capture the emitted OpenTelemetry spans in-process (e.g. attach your own `TracerProvider`/span exporter to the LangWatch setup) and serialize the stable span fields (name, trace id, span id, parent span id) to the trace artifact. * Keep machine-readable output in files (not stdout), because LangWatch/LiteLLM emit their own log lines. ## Acceptance Criteria * Project path: /home/user/myproject * Command: `python run.py --handle <handle> --vars <json_object> [--version <int>] --out <path>` * `--handle`: the prompt handle to load. * `--vars`: a JSON object string mapping template-variable names to string values. * `--version`: optional integer version; when provided the service must confirm the resolved prompt is exactly that version, and when omitted the version recorded in the prompts lock file is used. * `--out`: path where the compiled result JSON is written. * On success (exit code 0) the `--out` file must contain a JSON object with this shape: ```json { "handle": string, "version": integer, "model": string, "trace_id": string, "messages": [ { "role": string, "content": string } ], "response": string } ``` * `model` is the provider-prefixed model string taken from the prompt and passed to LiteLLM (begins with `openai/`). * `version` is the resolved integer version. * `trace_id` is the non-empty lowercase 32-hex-character OpenTelemetry trace id of the active trace. * every message `content` has all placeholders substituted; no `{{` substring may remain. * `response` is the non-empty text returned by the LiteLLM `completion` call. * Trace artifact: on success the service also writes `/home/user/myproject/trace_spans.jsonl`, one JSON object per line describing a captured span with at least the fields `name`, `trace_id`, `span_id`, `parent_span_id`. It must contain a span named `llm_generation` (the LLM execution) whose `trace_id` equals the result `trace_id`, and whose `parent_span_id` refers to another captured span sharing that same `trace_id` (i.e. the LLM span is nested under the trace root span). * Error handling (must exit non-zero and must NOT write a successful `--out` result): * If `--version` is supplied but does not match the resolved prompt version, fail and report a version mismatch. * If any template variable required by the prompt is missing from `--vars`, fail and name the missing variable. * Required pre-existing artifacts at the project root (already provisioned): `prompts.json`, `prompts-lock.json`, and `prompts/.materialized/support-triage-agent.prompt.yaml`.   
+
+Pochi
+💭 Thinking for 122 characters   
+📂 Listing files in /home/user/myproject recursively ✔ 
+📖 Reading /home/user/myproject/prompts.json ✔ 
+📖 Reading /home/user/myproject/prompts-lock.json ✔ 
+📖 Reading /home/user/myproject/prompts/.materialized/support-triage-agent.prompt.yaml ✔ 
+🌐 Fetching https://langwatch.ai/docs/prompt-management/getting-started ✔ 
+🌐 Fetching https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability ✔ 
+Now let me fetch the LiteLLM mock documentation and the LangWatch CLI docs:   
+🌐 Fetching https://langwatch.ai/docs/prompt-management/cli ✔ 
+🌐 Fetching https://docs.litellm.ai/docs/completion/mock_requests ✔ 
+Now I have a solid understanding of the system. Let me set up the todo list and implement everything:   
+📋 Updating todo list (6 items) ✔ 
+📋 Updating todo list (6 items) ✔ 
+💫 Executing cd /home/user/myproject && uv venv .venv 2>&1 | tail -5 ✔ 
+💫 Executing cd /home/user/myproject && uv pip install --quiet langwatch litellm opentelemetry-sdk opentelemetry-api 2>&1 | tail -10 ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "import langwatch; import litellm; import opentelemetry; print('all imports ok')" ✔ 
+📋 Updating todo list (6 items) ✔ 
+Now let me explore the langwatch SDK to understand the API properly:   
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "import langwatch; print(langwatch.__file__)" ✔ 
+📂 Listing files in /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch ✔ 
+📂 Listing files in /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/__init__.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/prompt_facade.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/prompt.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/local_loader.py ✔ 
+Now let me examine the langwatch state and setup to understand initialization:   
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/__init__.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/state.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/utils/initialization.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/tracer.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/telemetry/tracing.py ✔ 
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/client.py ✔ 
+Now I have a thorough understanding of the SDK. Let me look at one more crucial piece — how `setup` accepts a custom `tracer_provider` — and then I can implement `run.py`:   
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py ✔ 
+Now I have enough understanding. Let me implement the `run.py` service:   
+📋 Updating todo list (6 items) ✔ 
+✏️  Writing /home/user/myproject/run.py ✔ 
+📋 Updating todo list (6 items) ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py \
+  --handle support-triage-agent \
+  --vars '{"account_tier":"gold","priority":"high","customer_name":"Alice","issue_summary":"Login fails on mobile app"}' \
+  --version 2 \
+  --out /tmp/out_happy.json 2>&1 ✖ "Command exited with code 1"
+💫 Executing cd /home/user/myproject && .venv/bin/python -c "import inspect, langwatch; print(inspect.signature(langwatch.setup))" ✔ 
+`disable_sending` is not a `setup()` parameter — it's set on the client instance afterwards. Let me fix:   
+🔧 Applying diff to /home/user/myproject/run.py ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py \
+  --handle support-triage-agent \
+  --vars '{"account_tier":"gold","priority":"high","customer_name":"Alice","issue_summary":"Login fails on mobile app"}' \
+  --version 2 \
+  --out /tmp/out_happy.json 2>&1 ✔ 
+💫 Executing cat /tmp/out_happy.json && echo "---SPANS---" && cat /home/user/myproject/trace_spans.jsonl ✔ 
+The happy path works perfectly. The `llm_generation` span shares the same `trace_id` as the root `support_generation` span, and the `parent_span_id` of `llm_generation` correctly points to `ba810d26e61cf9ba` (the root span's `span_id`). Now let's test the error paths:   
+📋 Updating todo list (6 items) ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py \
+  --handle support-triage-agent \
+  --vars '{"account_tier":"gold","priority":"high","customer_name":"Alice","issue_summary":"Login fails"}' \
+  --version 99 \
+  --out /tmp/out_version_mismatch.json 2>&1; echo "Exit: $?" ✔ 
+💫 Executing ls /tmp/out_version_mismatch.json 2>&1; echo "Exit: $?" ✔ 
+Version mismatch correctly exits with code 1 and does NOT write the output file. Now the missing vars test:   
+📋 Updating todo list (6 items) ✔ 
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py \
+  --handle support-triage-agent \
+  --vars '{"account_tier":"gold","priority":"high"}' \
+  --version 2 \
+  --out /tmp/out_missing_vars.json 2>&1; echo "Exit: $?" ✔ 
+💫 Executing ls /tmp/out_missing_vars.json 2>&1; echo "Exit: $?" ✔ 
+All three tests pass. Let me also verify the omitted-version path (uses lock file version):   
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py \
+  --handle support-triage-agent \
+  --vars '{"account_tier":"silver","priority":"medium","customer_name":"Bob","issue_summary":"Payment page error"}' \
+  --out /tmp/out_no_version.json 2>&1; echo "Exit: $?" ✔ 
+💫 Executing cat /tmp/out_no_version.json ✔ 
+💫 Executing cat /home/user/myproject/trace_spans.jsonl ✔ 
+All acceptance criteria are verified. Let me do a final comprehensive check:   
+💫 Executing cd /home/user/myproject && echo "=== 1. Happy path (with --version) ===" && \
+  .venv/bin/python run.py \
+    --handle support-triage-agent \
+    --vars '{"account_tier":"enterprise","priority":"critical","customer_name":"Corp Inc","issue_summary":"Full outage"}' \
+    --version 2 \
+    --out /tmp/final_happy.json 2>/dev/null && \
+  echo "Exit: $?" && \
+  echo "--- Output JSON ---" && \
+  cat /tmp/final_happy.json && \
+  echo "" && \
+  echo "--- Trace spans ---" && \
+  cat trace_spans.jsonl && \
+  echo "" && \
+  echo "=== Validation: trace_id match ===" && \
+  TRACE=$(python3 -c "import json; d=json.load(open('/tmp/final_happy.json')); print(d['trace_id'])") && \
+  SPAN_TRACE=$(python3 -c "import json; lines=[json.loads(l) for l in open('trace_spans.jsonl')]; llm=[s for s in lines if s['name']=='llm_generation'][0]; print(llm['trace_id'])") && \
+  [ "$TRACE" = "$SPAN_TRACE" ] && echo "PASS: trace_ids match ($TRACE)" || echo "FAIL: mismatch" ✔ 
+💫 Executing cd /home/user/myproject && \
+  echo "=== Acceptance criteria checks ===" && \
+  python3 -c "
+import json, re
+
+out = json.load(open('/tmp/final_happy.json'))
+spans = [json.loads(l) for l in open('trace_spans.jsonl') if l.strip()]
+
+# 1. Output shape
+assert 'handle' in out
+assert 'version' in out
+assert 'model' in out
+assert 'trace_id' in out
+assert 'messages' in out
+assert 'response' in out
+print('PASS shape')
+
+# 2. model starts with openai/
+assert out['model'].startswith('openai/'), f\"model={out['model']!r}\"
+print('PASS model prefix')
+
+# 3. trace_id is 32-char lowercase hex
+assert re.fullmatch(r'[0-9a-f]{32}', out['trace_id']), f\"trace_id={out['trace_id']!r}\"
+print('PASS trace_id format')
+
+# 4. no {{ in messages
+for m in out['messages']:
+    assert '{{' not in m['content'], f\"unresolved placeholder in: {m['content']!r}\"
+print('PASS no unresolved placeholders')
+
+# 5. response non-empty
+assert out['response'], 'empty response'
+print('PASS response non-empty')
+
+# 6. llm_generation span exists
+llm_spans = [s for s in spans if s['name'] == 'llm_generation']
+assert llm_spans, 'no llm_generation span'
+llm_span = llm_spans[0]
+print('PASS llm_generation span found')
+
+# 7. llm span trace_id matches output
+assert llm_span['trace_id'] == out['trace_id'], f\"trace mismatch {llm_span['trace_id']} vs {out['trace_id']}\"
+print('PASS llm_generation trace_id matches result')
+
+# 8. parent span is in same trace
+parent_sid = llm_span['parent_span_id']
+assert parent_sid, 'no parent_span_id'
+parent_spans = [s for s in spans if s['span_id'] == parent_sid]
+assert parent_spans and parent_spans[0]['trace_id'] == out['trace_id'], 'parent not in same trace'
+print('PASS llm_generation is nested under root span in same trace')
+
+print()
+print('ALL CHECKS PASSED')
+" ✔ 
+📋 Updating todo list (6 items) ✔ 
+🎉 Task Completed
+The generation service `run.py` is fully implemented at `/home/user/myproject/run.py` and passes all acceptance criteria.
+
+---
+
+## What was built
+
+### Architecture overview
+
+```
+run.py
+├── [1] In-process OTel span collector
+│     _InMemoryExporter  ← SimpleSpanProcessor → _custom_provider (TracerProvider)
+├── [2] langwatch.setup(tracer_provider=_custom_provider, api_key=...)
+│     disable_sending = True  (no network I/O, spans still flow to collector)
+├── [3] CLI: --handle / --vars / --version / --out
+└── generate()
+      ├── Load locked version from prompts-lock.json (used when --version omitted)
+      ├── langwatch.trace("support_generation")   ← root OTel span, captures trace_id
+      │     ├── langwatch.prompts.get(handle, MATERIALIZED_ONLY)  ← offline, no API call
+      │     ├── Version integrity check  → sys.exit(1) on mismatch
+      │     ├── Template variable check  → sys.exit(1) + names missing vars
+      │     ├── prompt.compile_strict()  → Liquid strict-undefined raises on unknown vars
+      │     └── langwatch span("llm_generation", type="llm")  ← child span
+      │           litellm.completion(model=..., messages=..., mock_response=...)
+      ├── _custom_provider.force_flush()  ← drain spans into _collector
+      ├── Write trace_spans.jsonl         ← name/trace_id/span_id/parent_span_id per line
+      ├── Validate: llm_generation.trace_id == active trace_id and parent exists
+      └── Write --out JSON
+```
+
+### Test results
+
+| Scenario | Exit | Out file written? |
+|---|---|---|
+| Happy path (all 4 vars, `--version 2`) | 0 ✅ | Yes ✅ |
+| Happy path (`--version` omitted, uses lock) | 0 ✅ | Yes ✅ |
+| `--version 99` (lock has v2) | 1 ✅ | No ✅ |
+| Missing `customer_name`, `issue_summary` | 1 ✅ | Names both missing vars ✅ |
+
+### Sample happy-path output
+
+**`--out` file:**
+```json
+{
+  "handle": "support-triage-agent",
+  "version": 2,
+  "model": "openai/gpt-4o-mini",
+  "trace_id": "1127c36a2f742704ace88cac93302a51",
+  "messages": [
+    { "role": "system", "content": "You are a support triage agent handling a enterprise tier customer.\nAssign an internal priority of critical and keep your tone professional.\n" },
+    { "role": "user",   "content": "Customer Corp Inc has reported the following issue:\nFull outage\n" }
+  ],
+  "response": "This is a deterministic mock response from the support triage agent."
+}
+```
+
+**`trace_spans.jsonl`:**
+```jsonl
+{"name": "llm_generation",   "trace_id": "1127c36a2f742704ace88cac93302a51", "span_id": "ff38a7ab543dad2a", "parent_span_id": "c0c30040c4799e44"}
+{"name": "support_generation","trace_id": "1127c36a2f742704ace88cac93302a51", "span_id": "c0c30040c4799e44", "parent_span_id": null}
+```
+
+`llm_generation` is nested under `support_generation` — both share the same 32-hex trace_id.
+
+### Key design decisions
+
+- **`MATERIALIZED_ONLY` fetch policy** — guarantees zero network calls; the SDK reads directly from `prompts/.materialized/support-triage-agent.prompt.yaml`.
+- **Custom `TracerProvider` + `_InMemoryExporter`** — passed to `langwatch.setup()` so every span (including LangWatch's own root span) flows through the in-process collector, making trace linkage inspectable without a running backend.
+- **`disable_sending = True`** — set on the client post-setup so the OTLP HTTP exporter is silenced while the SDK still creates and finishes spans normally.
+- **`compile_strict()`** — uses Liquid `StrictUndefined`; combined with the pre-flight regex scan, it names every missing variable before raising.
+- **LiteLLM `mock_response`** — exercises the real `completion()` code path (provider routing, message formatting, response model) with a deterministic fixed string; no API key or network required.   
+  

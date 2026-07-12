@@ -1,0 +1,104 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T16:17:12.185116+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 8,
+            "passed": 7,
+            "failed": 1,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783873031825,
+            "stop": 1783873032185
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_pipeline_file_exists",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873031855,
+                "stop": 1783873031856,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_export_succeeds_and_writes_csv",
+                "status": "passed",
+                "duration": 291,
+                "start": 1783873031856,
+                "stop": 1783873032147,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_csv_header_is_exact",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 11,
+                "start": 1783873032148,
+                "stop": 1783873032159,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "pipeline_run = {'export': CompletedProcess(args=['/home/user/langwatch-csv-pipeline/.venv/bin/python', '/home/user/langwatch-csv-pipe...QD5b2v uPK.v,YIdy7NbyWPmJT', 'role': 'assistant'}], 'expected_output': 'line1\\nline2,\"still going\"', 'index': 3, ...}]}\n\n    def test_csv_header_is_exact(pipeline_run):\n        with open(DATASET_CSV, \"r\", encoding=\"utf-8\") as f:\n            first_line = f.readline().rstrip(\"\\r\\n\")\n>       assert first_line == \"index,question,expected_output,contexts,conversation_history\", (\n            f\"Unexpected CSV header line: {first_line!r}\"\n        )\nE       AssertionError: Unexpected CSV header line: '\"index\",\"question\",\"expected_output\",\"contexts\",\"conversation_history\"'\nE       assert '\"index\",\"que...tion_history\"' == 'index,questi...ation_history'\nE         - index,question,expected_output,contexts,conversation_history\nE         + \"index\",\"question\",\"expected_output\",\"contexts\",\"conversation_history\"\nE         ? +     + +        + +               + +        + +                    +\n\n/tests/test_final_state.py:206: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_csv_exceeds_default_field_limit",
+                "status": "passed",
+                "duration": 2,
+                "start": 1783873032159,
+                "stop": 1783873032161,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_import_succeeds_and_writes_json",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783873032161,
+                "stop": 1783873032161,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_round_trip_is_lossless",
+                "status": "passed",
+                "duration": 4,
+                "start": 1783873032161,
+                "stop": 1783873032165,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_export_report_contents",
+                "status": "passed",
+                "duration": 13,
+                "start": 1783873032165,
+                "stop": 1783873032178,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_import_report_contents",
+                "status": "passed",
+                "duration": 6,
+                "start": 1783873032178,
+                "stop": 1783873032184,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            }
+        ]
+    }
+}

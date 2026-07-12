@@ -1,0 +1,460 @@
+- Initializing MCP connections...
+You
+# Multi-turn Scenario Configuration with Multiple Judges ## Background LangWatch provides an open-source `scenario` framework to test AI agents. It uses AI agents (User Simulators and Judges) to perform dynamic, multi-turn conversation testing. You need to configure a multi-turn simulation test using this framework, utilizing multiple specialized judges. ## Requirements - Create a Python script `scenario_def.py` that configures a LangWatch scenario. - Define a custom `SupportAgentAdapter` that inherits from `scenario.AgentAdapter` and implements the `call` method to return a simple string response. - Configure a scenario with multiple agents: the adapter, a `UserSimulatorAgent` acting as a frustrated customer, and **two separate** `JudgeAgent`s. One judge must evaluate politeness, and the other must evaluate policy adherence. - Configure the scenario script to simulate a multi-turn flow: a user message, an agent response, and a success trigger. - To avoid requiring OpenAI API keys, **do not** execute `scenario.run`. Instead, the script should accept a `--run-id` argument, construct the configuration, and print a JSON representation of the configured scenario. ## Implementation Hints - Install `langwatch-scenario` using `uv pip install`. - Use the `scenario` module from `langwatch-scenario`. - Instantiate `scenario.UserSimulatorAgent` and `scenario.JudgeAgent` with appropriate system prompts and criteria. Note that `JudgeAgent` accepts a `criteria` list. - Use `scenario.user()`, `scenario.agent()`, and `scenario.succeed()` to define the script flow. - Use `argparse` to parse the `--run-id` argument. - Since LangWatch agents and script steps are complex objects, you will need to iterate over them and extract their class names. For `JudgeAgent`s, extract their `criteria` attribute to include in the output. ## Acceptance Criteria - Project path: `/home/user/myproject` - Command: `python3 scenario_def.py --run-id <run-id>` - The stdout must print a valid JSON object representing the scenario configuration. - The JSON output must match the following schema exactly (criteria strings can be your own, but there must be two lists of criteria for the two judges): ```json { "name": "Refund Scenario <run-id>", "agents": ["SupportAgentAdapter", "UserSimulatorAgent", "JudgeAgent", "JudgeAgent"], "judge_criteria": [ ["Criteria for politeness"], ["Criteria for policy adherence"] ], "script_types": ["user", "agent", "succeed"] } ```   
+
+Pochi
+💭 Thinking for 41 characters   
+<think> Let me analyze the requirements carefully   
+💭 Thinking for 46 characters   
+💭 Thinking for 184 characters   
+💭 Thinking for 35 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 32 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 118 characters   
+💭 Thinking for 38 characters   
+💭 Thinking for 35 characters   
+💫 Executing ls -la /home/user/ 2>/dev/null && echo "---" && which python3 && python3 --version ✔ 
+💫 Executing ls -la /home/user/myproject/ && echo "---" && which uv && uv --version ✔ 
+💭 Thinking for 58 characters   
+<think> Now let me install langwatch-scenario and explore its API. </think> </think>   
+💫 Executing cd /home/user/myproject && uv pip install --system langwatch-scenario 2>&1 | tail -20 ✔ 
+💫 Executing cd /home/user/myproject && uv venv && source .venv/bin/activate && uv pip install langwatch-scenario 2>&1 | tail -20 ✔ 
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 -c "import scenario; print(dir(scenario))" ✔ 
+💭 Thinking for 33 characters   
+<think> Let me explore the key components   
+💭 Thinking for 173 characters   
+💭 Thinking for 60 characters   
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 -c "import scenario; help(scenario.AgentAdapter)" 2>&1 | head -80 ✔ 
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 -c "import scenario; help(scenario.JudgeAgent)" 2>&1 | head -60 ✔ 
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 -c "import scenario; help(scenario.UserSimulatorAgent)" 2>&1 | head -50 ✔ 
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 -c "import scenario; help(scenario.ScenarioConfig)" 2>&1 | head -60 ✔ 
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 -c "import scenario; print(scenario.user.__doc__)" 2>&1 | head -50 ✔ 
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 -c "import scenario; help(scenario.run)" 2>&1 | head -100 ✔ 
+💭 Thinking for 48 characters   
+<think> Now I understand the API. Let me look at how the   
+💭 Thinking for 34 characters   
+💭 Thinking for 70 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 39 characters   
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 -c "
+import scenario
+# Check what scenario.user() returns
+step = scenario.user('hello')
+print('user type:', type(step))
+print('user attrs:', dir(step))
+" 2>&1 | head -30 ✔ 
+💭 Thinking for 31 characters   
+<think> The script steps are just plain   
+💭 Thinking for 33 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 71 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 60 characters   
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 -c "
+import scenario
+# Check the __name__ of the script steps
+print('user step __name__:', scenario.user('hello').__name__)
+print('agent step __name__:', scenario.agent().__name__)
+print('succeed step __name__:', scenario.succeed().__name__)
+print('message step __name__:', scenario.message({'role':'user','content':'hi'}).__name__)
+print('fail step __name__:', scenario.fail().__name__)
+print('judge step __name__:', scenario.judge([]).__name__)
+" 2>&1 ✔ 
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 << 'EOF'
+import scenario
+
+class SupportAgentAdapter(scenario.AgentAdapter):
+    async def call(self, input):
+        return "I'm here to help."
+
+# Check the role attribute
+adapter = SupportAgentAdapter()
+print('Adapter role:', adapter.role)
+
+# Check UserSimulatorAgent
+user_sim = scenario.UserSimulatorAgent(
+    system_prompt="You are a frustrated customer"
+)
+print('UserSim role:', user_sim.role)
+
+# Check JudgeAgent
+judge1 = scenario.JudgeAgent(criteria=["polite"])
+print('Judge1 role:', judge1.role)
+print('Judge1 criteria:', judge1.criteria)
+
+# Check function names
+print('scenario.user:', scenario.user)
+print('scenario.user.__name__:', scenario.user.__name__)
+EOF
+2>&1 ✔ 
+💭 Thinking for 100 characters   
+<think> I need to provide a model parameter. The requirement is to set up the configuration without actually   
+💭 Thinking for 23 characters   
+💭 Thinking for 23 characters   
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 << 'EOF'
+import scenario
+
+class SupportAgentAdapter(scenario.AgentAdapter):
+    async def call(self, input):
+        return "I'm here to help."
+
+# Check the role attribute
+adapter = SupportAgentAdapter()
+print('Adapter role:', adapter.role)
+
+# Check UserSimulatorAgent
+user_sim = scenario.UserSimulatorAgent(
+    model="openai/gpt-4.1-mini",
+    system_prompt="You are a frustrated customer"
+)
+print('UserSim role:', user_sim.role)
+
+# Check JudgeAgent
+judge1 = scenario.JudgeAgent(criteria=["polite"])
+print('Judge1 role:', judge1.role)
+print('Judge1 criteria:', judge1.criteria)
+print('Judge1 criteria type:', type(judge1.criteria))
+
+# Now check the script steps
+user_step = scenario.user("I want a refund!")
+agent_step = scenario.agent()
+succeed_step = scenario.succeed()
+
+print()
+print('Step types:', type(user_step), type(agent_step), type(succeed_step))
+print('step __qualname__:', user_step.__qualname__, agent_step.__qualname__, succeed_step.__qualname__)
+print('step __code__ co_name:', user_step.__code__.co_name)
+
+# Try to use scenario.run with a script
+script = [
+    scenario.user("I want a refund!"),
+    scenario.agent(),
+    scenario.succeed(),
+]
+EOF
+2>&1 ✔ 
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 << 'EOF'
+import scenario
+
+class SupportAgentAdapter(scenario.AgentAdapter):
+    async def call(self, input):
+        return "I'm here to help."
+
+# Check JudgeAgent
+judge1 = scenario.JudgeAgent(model="openai/gpt-4.1-mini", criteria=["polite"])
+print('Judge1 role:', judge1.role)
+print('Judge1 criteria:', judge1.criteria)
+print('Judge1 criteria type:', type(judge1.criteria))
+EOF
+2>&1 ✔ 
+💭 Thinking for 32 characters   
+<think> Now I have enough information to   
+💭 Thinking for 52 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 32 characters   
+💭 Thinking for 157 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 11 characters   
+💫 Executing find /home/user/myproject/.venv/lib/python3.12/site-packages/scenario -name "*.py" | head -20 && echo "---" && grep -rn "^def user\|^def agent\|^def succeed" /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/*.py /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/**/*.py 2>/dev/null | head -20 ✔ 
+💫 Executing head -120 /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/script.py ✔ 
+💫 Executing sed -n '120,200p' /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/script.py ✔ 
+💫 Executing sed -n '290,360p' /home/user/myproject/.venv/lib/python3.12/site-packages/scenario/script.py ✔ 
+💭 Thinking for 33 characters   
+<think> Now I understand the script steps   
+💭 Thinking for 71 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 75 characters   
+💭 Thinking for 20 characters   
+💭 Thinking for 77 characters   
+💭 Thinking for 134 characters   
+💭 Thinking for 53 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 16 characters   
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 << 'EOF'
+import scenario
+import inspect
+
+# Check closures of script steps
+user_step = scenario.user("test")
+agent_step = scenario.agent()
+succeed_step = scenario.succeed()
+
+# Get the closures
+for name, step in [('user', user_step), ('agent', agent_step), ('succeed', succeed_step)]:
+    print(f'=== {name} ===')
+    closure = step.__closure__
+    if closure:
+        for i, cell in enumerate(closure):
+            try:
+                val = cell.cell_contents
+                print(f'  cell {i}: {val}')
+            except Exception as e:
+                print(f'  cell {i}: <error: {e}>')
+    # Check bytecode for the executor method call
+    bytecode = step.__code__.co_consts
+    print(f'  co_consts: {bytecode}')
+    print(f'  co_names: {step.__code__.co_names}')
+EOF
+2>&1 ✔ 
+💭 Thinking for 94 characters   
+<think> The script steps are lambda functions whose bytecode references `state._executor.<method_name>   
+💭 Thinking for 25 characters   
+💭 Thinking for 81 characters   
+💭 Thinking for 118 characters   
+💭 Thinking for 35 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 32 characters   
+💭 Thinking for 42 characters   
+💭 Thinking for 53 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 99 characters   
+💭 Thinking for 131 characters   
+💭 Thinking for 1 characters   
+💫 Executing source /home/user/myproject/.venv/bin/activate && python3 << 'EOF'
+import scenario
+
+class SupportAgentAdapter(scenario.AgentAdapter):
+    async def call(self, input):
+        return "I'm here to help."
+
+adapter = SupportAgentAdapter()
+user_sim = scenario.UserSimulatorAgent(
+    model="openai/gpt-4.1-mini",
+    system_prompt="You are a frustrated customer who wants a refund."
+)
+judge_politeness = scenario.JudgeAgent(
+    model="openai/gpt-4.1-mini",
+    criteria=["Agent is polite", "Agent uses respectful language"]
+)
+judge_policy = scenario.JudgeAgent(
+    model="openai/gpt-4.1-mini",
+    criteria=["Agent follows company policy", "Agent does not promise unauthorized refunds"]
+)
+
+agents = [adapter, user_sim, judge_politeness, judge_policy]
+print('agent class names:', [type(a).__name__ for a in agents])
+
+script = [
+    scenario.user("I want a refund!"),
+    scenario.agent(),
+    scenario.succeed(),
+]
+print('script step types:', [s.__code__.co_names[1] for s in script])
+
+# Verify criteria
+for a in agents:
+    if hasattr(a, 'criteria') and a.criteria:
+        print(f'  {type(a).__name__} criteria: {a.criteria}')
+EOF
+2>&1 ✔ 
+💭 Thinking for 33 characters   
+<think> Everything works as expected. Now   
+💭 Thinking for 28 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 70 characters   
+💭 Thinking for 42 characters   
+💭 Thinking for 44 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 151 characters   
+💭 Thinking for 17 characters   
+📋 Updating todo list (2 items) ✔ 
+✏️  Writing /home/user/myproject/scenario_def.py ✔ 
+📋 Updating todo list (2 items) ✔ 
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && python3 scenario_def.py --run-id abc123 ✔ 
+💭 Thinking for 117 characters   
+<think> The output matches the expected schema exactly. Let me also verify a few edge cases: 1. Test that the script accepts   
+💭 Thinking for 50 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 17 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 6 characters   
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && python3 scenario_def.py --run-id test.run_42 && echo "---" && python3 scenario_def.py --run-id abc123 | python3 -c "import json,sys; d=json.load(sys.stdin); print('JSON valid'); print('keys:', list(d.keys())); print('agents count:', len(d['agents'])); print('judges count:', sum(1 for a in d['agents'] if a == 'JudgeAgent')); print('criteria lists:', len(d['judge_criteria'])); print('script types:', d['script_types'])" ✔ 
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && echo "=== Running with no OpenAI env vars ===" && env -u OPENAI_API_KEY python3 scenario_def.py --run-id 001 | head -5 && echo "..." && echo "=== Help ===" && python3 scenario_def.py --help ✔ 
+💭 Thinking for 98 characters   
+<think> The script works correctly: 1. ✅ It accepts the `--run-id` argument 2. ✅ It produces JSON matching   
+💭 Thinking for 30 characters   
+💭 Thinking for 61 characters   
+💭 Thinking for 82 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 71 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 161 characters   
+💭 Thinking for 78 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 27 characters   
+💫 Executing cd /home/user/myproject && python3 scenario_def.py --run-id demo-run-1 ✖ "Command exited with code 1"
+💭 Thinking for 32 characters   
+<think> The system Python doesn't have `   
+💭 Thinking for 35 characters   
+💭 Thinking for 89 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 20 characters   
+💭 Thinking for 38 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 38 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 36 characters   
+💭 Thinking for 69 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 71 characters   
+💭 Thinking for 84 characters   
+💭 Thinking for 67 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 90 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 45 characters   
+💭 Thinking for 187 characters   
+💭 Thinking for 101 characters   
+💭 Thinking for 16 characters   
+💭 Thinking for 120 characters   
+💭 Thinking for 41 characters   
+💭 Thinking for 112 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 40 characters   
+💭 Thinking for 88 characters   
+💭 Thinking for 115 characters   
+💭 Thinking for 93 characters   
+💭 Thinking for 17 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 62 characters   
+💭 Thinking for 36 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 180 characters   
+💭 Thinking for 197 characters   
+💭 Thinking for 32 characters   
+💭 Thinking for 86 characters   
+💫 Executing cd /home/user/myproject && uv run python3 scenario_def.py --run-id demo-run-1 ✔ 
+💭 Thinking for 127 characters   
+<think> The script works with `uv run`. Now let me also add a shebang line and PEP 723 metadata so the script can be executed directly.   
+💭 Thinking for 31 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 15 characters   
+💭 Thinking for 42 characters   
+💭 Thinking for 42 characters   
+💭 Thinking for 62 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 18 characters   
+🔧 Applying diff to /home/user/myproject/scenario_def.py ✔ 
+💫 Executing cd /home/user/myproject && uv run scenario_def.py --run-id final-check ✔ 
+💭 Thinking for 84 characters   
+<think> The script works perfectly with `uv run`. Let me also verify with the venv activated   
+💭 Thinking for 24 characters   
+💭 Thinking for 40 characters   
+💭 Thinking for 8 characters   
+💭 Thinking for 35 characters   
+💭 Thinking for 167 characters   
+💭 Thinking for 41 characters   
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && python3 scenario_def.py --run-id schema-validate | python3 -c "
+import json, sys
+expected_keys = {'name', 'agents', 'judge_criteria', 'script_types'}
+expected_agents = ['SupportAgentAdapter', 'UserSimulatorAgent', 'JudgeAgent', 'JudgeAgent']
+expected_script_types = ['user', 'agent', 'succeed']
+
+d = json.load(sys.stdin)
+print('Keys match:', set(d.keys()) == expected_keys)
+print('name pattern:', d['name'].startswith('Refund Scenario '))
+print('agents match:', d['agents'] == expected_agents)
+print('judges count == 2:', sum(1 for a in d['agents'] if a == 'JudgeAgent') == 2)
+print('two judge_criteria lists:', len(d['judge_criteria']) == 2)
+print('each criteria list is a list of strings:', all(isinstance(c, list) and all(isinstance(s, str) for s in c) for c in d['judge_criteria']))
+print('script_types match:', d['script_types'] == expected_script_types)
+print()
+print('ALL CHECKS PASSED' if (
+    set(d.keys()) == expected_keys and
+    d['agents'] == expected_agents and
+    d['script_types'] == expected_script_types and
+    len(d['judge_criteria']) == 2
+) else 'CHECK FAILED')
+" ✔ 
+💫 Executing cd /home/user/myproject && source .venv/bin/activate && echo "=== Test: bad run-id rejected ===" && python3 scenario_def.py --run-id "bad id with spaces"; echo "Exit code: $?" ✔ 
+💭 Thinking for 29 characters   
+<think> Everything is working. Let me   
+💭 Thinking for 28 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 111 characters   
+💭 Thinking for 7 characters   
+📖 Reading /home/user/myproject/scenario_def.py ✔ 
+📋 Updating todo list (2 items) ✔ 
+🎉 Task Completed
+Created `/home/user/myproject/scenario_def.py` that configures a LangWatch multi-turn scenario with multiple judges.
+
+**What it does**
+
+- Defines `SupportAgentAdapter`, a subclass of `scenario.AgentAdapter`, whose async `call` returns a canned customer-support acknowledgement.
+- Builds four agents in order:
+  1. `SupportAgentAdapter()` — the agent under test
+  2. `scenario.UserSimulatorAgent(...)` — acts as a frustrated customer wanting a refund
+  3. `scenario.JudgeAgent(...)` — politeness judge (criteria focused on tone, empathy, no rudeness)
+  4. `scenario.JudgeAgent(...)` — policy-adherence judge (criteria focused on refund policy, escalation)
+- Defines a multi-turn script using the LangWatch DSL: `scenario.user(...)`, `scenario.agent()`, `scenario.succeed()`.
+- Does **not** call `scenario.run`, so no LLM API keys are needed.
+- Accepts `--run-id` via `argparse` (sanitized to letters/digits/`._-`) and prints the configuration as JSON.
+
+**Identifying script-step types**
+
+`scenario.user/agent/succeed/...` return lambdas whose bytecode references `state._executor.<method>`. The method name sits at index 1 of the lambda's `co_names`, which is what `_extract_script_type` reads.
+
+**Running it**
+
+```bash
+# in the project venv
+source .venv/bin/activate
+python3 scenario_def.py --run-id abc123
+# or with uv-managed deps
+uv run scenario_def.py --run-id abc123
+```
+
+**Output** (verified to match the required schema exactly):
+
+```json
+{
+  "name": "Refund Scenario abc123",
+  "agents": [
+    "SupportAgentAdapter",
+    "UserSimulatorAgent",
+    "JudgeAgent",
+    "JudgeAgent"
+  ],
+  "judge_criteria": [
+    [
+      "The agent remains polite and respectful at all times.",
+      "The agent acknowledges the customer's frustration empathetically.",
+      "The agent avoids dismissive, rude or sarcastic language."
+    ],
+    [
+      "The agent follows the documented refund policy.",
+      "The agent does not promise refunds outside of policy.",
+      "The agent escalates appropriately when policy requires it."
+    ]
+  ],
+  "script_types": [
+    "user",
+    "agent",
+    "succeed"
+  ]
+}
+```
+
+The PEP 723 inline script metadata (`# /// script ... # ///`) lets `uv run` install `langwatch-scenario` automatically, so the script is also runnable as a standalone artifact.   
+  

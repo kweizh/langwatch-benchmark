@@ -1,0 +1,19 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2, anyio-4.14.1
+collected 8 items
+
+../tests/test_final_state.py ........                                    [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_script_runs_successfully
+PASSED ../tests/test_final_state.py::test_single_batch_evaluation_run_initialized
+PASSED ../tests/test_final_state.py::test_evaluator_called_once_per_row
+PASSED ../tests/test_final_state.py::test_evaluator_payload_shape
+PASSED ../tests/test_final_state.py::test_all_questions_covered_exactly_once
+PASSED ../tests/test_final_state.py::test_contexts_grounded_in_knowledge_base
+PASSED ../tests/test_final_state.py::test_summary_artifact
+PASSED ../tests/test_final_state.py::test_stdout_reports_row_count
+============================== 8 passed in 7.05s ===============================

@@ -1,0 +1,98 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T16:06:21.634408+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 7,
+            "passed": 5,
+            "failed": 2,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783872375026,
+            "stop": 1783872381634
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_cli_smoke",
+                "status": "passed",
+                "duration": 1729,
+                "start": 1783872375055,
+                "stop": 1783872376784,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_retrieve_is_deterministic_and_non_empty",
+                "status": "passed",
+                "duration": 4349,
+                "start": 1783872376784,
+                "stop": 1783872381133,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_run_pipeline_returns_answer_and_verdict",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783872381133,
+                "stop": 1783872381133,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_llm_judge_evaluator_invoked",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783872381133,
+                "stop": 1783872381134,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_spans_emitted_and_evaluation_bound_to_answer_span",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783872381134,
+                "stop": 1783872381134,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_judge_result_persisted",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 115,
+                "start": 1783872381134,
+                "stop": 1783872381249,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "runs = {'run_a': {'result': {'answer': 'Based on the retrieved context: To attach an evaluation to a LangWatch trace, call `l...n represents a single operation within a trace, such as a retrieval step, an LLM call, or an answer-generation step.']}\n\n    def test_judge_result_persisted(runs):\n        payload = runs[\"run_a\"][\"judge_json\"]\n        assert payload is not None, (\n            f\"Expected {JUDGE_RESULT_PATH} to be written by run_pipeline().\"\n        )\n>       assert bool(payload.get(\"passed\")) is VERDICT_A[\"passed\"], (\n            f\"judge_result.json 'passed' must equal the evaluator verdict \"\n            f\"{VERDICT_A['passed']}, got {payload.get('passed')!r}\"\n        )\nE       AssertionError: judge_result.json 'passed' must equal the evaluator verdict True, got None\nE       assert False is True\nE        +  where False = bool(None)\nE        +    where None = <built-in method get of dict object at 0x74c8a1d38f80>('passed')\nE        +      where <built-in method get of dict object at 0x74c8a1d38f80> = {'judgement': {'passed': True, 'score': 0.86, 'label': 'pass', 'details': 'Answer is faithful to the retrieved context and addresses the question.'}}.get\n\n/tests/test_final_state.py:471: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_final_state.py::test_verdict_tracks_evaluator_response",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 384,
+                "start": 1783872381250,
+                "stop": 1783872381634,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "trace": "runs = {'run_a': {'result': {'answer': 'Based on the retrieved context: To attach an evaluation to a LangWatch trace, call `l...n represents a single operation within a trace, such as a retrieval step, an LLM call, or an answer-generation step.']}\n\n    def test_verdict_tracks_evaluator_response(runs):\n        result_b = runs[\"run_b\"][\"result\"]\n        judgement_b = result_b.get(\"judgement\", {})\n        json_b = runs[\"run_b\"][\"judge_json\"]\n    \n        assert bool(judgement_b.get(\"passed\")) is VERDICT_B[\"passed\"], (\n            \"When the evaluator returns a different verdict, the returned judgement must \"\n            f\"change accordingly. Expected passed={VERDICT_B['passed']}, \"\n            f\"got {judgement_b.get('passed')!r}\"\n        )\n        assert abs(float(judgement_b.get(\"score\")) - VERDICT_B[\"score\"]) < 1e-6, (\n            f\"Returned judgement 'score' must equal {VERDICT_B['score']} for the second run, \"\n            f\"got {judgement_b.get('score')!r}\"\n        )\n        assert judgement_b.get(\"label\") == VERDICT_B[\"label\"], (\n            f\"Returned judgement 'label' must equal {VERDICT_B['label']!r} for the second run, \"\n            f\"got {judgement_b.get('label')!r}\"\n        )\n    \n        assert json_b is not None, (\n            f\"Expected {JUDGE_RESULT_PATH} to be rewritten on the second run.\"\n        )\n        assert bool(json_b.get(\"passed\")) is VERDICT_B[\"passed\"], (\n            \"judge_result.json must be rewritten with the evaluator's new verdict; \"\n            f\"expected passed={VERDICT_B['passed']}, got {json_b.get('passed')!r}\"\n        )\n>       assert abs(float(json_b.get(\"score\")) - VERDICT_B[\"score\"]) < 1e-6, (\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^\n            f\"judge_result.json 'score' must equal {VERDICT_B['score']} on the second run, \"\n            f\"got {json_b.get('score')!r}\"\n        )\nE       TypeError: float() argument must be a string or a real number, not 'NoneType'\n\n/tests/test_final_state.py:517: TypeError",
+                "message": "The test failed in the call phase"
+            }
+        ]
+    }
+}

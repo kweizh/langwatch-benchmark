@@ -1,0 +1,143 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2, anyio-4.14.1
+collected 6 items
+
+../tests/test_final_state.py .FFF..                                      [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_happy_path_explicit_version _______________________
+
+    def test_happy_path_explicit_version():
+        _cleanup("result.json", "trace_spans.jsonl")
+        out_path = os.path.join(PROJECT_DIR, "result.json")
+        proc = _run(
+            [
+                "--handle",
+                HANDLE,
+                "--version",
+                "2",
+                "--vars",
+                json.dumps(FULL_VARS),
+                "--out",
+                out_path,
+            ]
+        )
+>       assert proc.returncode == 0, (
+            f"Expected exit code 0 for the happy path.\n"
+            f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+        )
+E       AssertionError: Expected exit code 0 for the happy path.
+E         stdout:
+E         2026-07-12 16:17:27,487 - langwatch.prompts.local_loader - INFO - Successfully loaded prompt 'support-triage-agent' from local file: /home/user/myproject/prompts/.materialized/support-triage-agent.prompt.yaml
+E         
+E         stderr:
+E         Traceback (most recent call last):
+E           File "/home/user/myproject/run.py", line 226, in <module>
+E             main()
+E           File "/home/user/myproject/run.py", line 222, in main
+E             run(args.handle, vars_dict, args.version, args.out)
+E           File "/home/user/myproject/run.py", line 183, in run
+E             f.write(json.dump(record) + "\n")
+E                     ^^^^^^^^^^^^^^^^^
+E         TypeError: dump() missing 1 required positional argument: 'fp'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...p(record) + "\\n")\n            ^^^^^^^^^^^^^^^^^\nTypeError: dump() missing 1 required positional argument: \'fp\'\n').returncode
+
+/tests/test_final_state.py:80: AssertionError
+_________________________ test_trace_linkage_artifact __________________________
+
+    def test_trace_linkage_artifact():
+        # Depends on the happy-path run having produced the trace artifact.
+        _cleanup("result.json", "trace_spans.jsonl")
+        out_path = os.path.join(PROJECT_DIR, "result.json")
+        proc = _run(
+            [
+                "--handle",
+                HANDLE,
+                "--version",
+                "2",
+                "--vars",
+                json.dumps(FULL_VARS),
+                "--out",
+                out_path,
+            ]
+        )
+>       assert proc.returncode == 0, (
+            f"Expected exit code 0 before checking the trace artifact.\n"
+            f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+        )
+E       AssertionError: Expected exit code 0 before checking the trace artifact.
+E         stdout:
+E         2026-07-12 16:17:31,096 - langwatch.prompts.local_loader - INFO - Successfully loaded prompt 'support-triage-agent' from local file: /home/user/myproject/prompts/.materialized/support-triage-agent.prompt.yaml
+E         
+E         stderr:
+E         Traceback (most recent call last):
+E           File "/home/user/myproject/run.py", line 226, in <module>
+E             main()
+E           File "/home/user/myproject/run.py", line 222, in main
+E             run(args.handle, vars_dict, args.version, args.out)
+E           File "/home/user/myproject/run.py", line 183, in run
+E             f.write(json.dump(record) + "\n")
+E                     ^^^^^^^^^^^^^^^^^
+E         TypeError: dump() missing 1 required positional argument: 'fp'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...p(record) + "\\n")\n            ^^^^^^^^^^^^^^^^^\nTypeError: dump() missing 1 required positional argument: \'fp\'\n').returncode
+
+/tests/test_final_state.py:144: AssertionError
+_______________________ test_default_version_resolution ________________________
+
+    def test_default_version_resolution():
+        _cleanup("result_default.json")
+        out_path = os.path.join(PROJECT_DIR, "result_default.json")
+        default_vars = {
+            "customer_name": "Bob Diaz",
+            "account_tier": "Free",
+            "issue_summary": "App crashes on login",
+            "priority": "P3",
+        }
+        proc = _run(
+            [
+                "--handle",
+                HANDLE,
+                "--vars",
+                json.dumps(default_vars),
+                "--out",
+                out_path,
+            ]
+        )
+>       assert proc.returncode == 0, (
+            f"Expected exit code 0 when --version is omitted.\n"
+            f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+        )
+E       AssertionError: Expected exit code 0 when --version is omitted.
+E         stdout:
+E         2026-07-12 16:17:34,409 - langwatch.prompts.local_loader - INFO - Successfully loaded prompt 'support-triage-agent' from local file: /home/user/myproject/prompts/.materialized/support-triage-agent.prompt.yaml
+E         
+E         stderr:
+E         Traceback (most recent call last):
+E           File "/home/user/myproject/run.py", line 226, in <module>
+E             main()
+E           File "/home/user/myproject/run.py", line 222, in main
+E             run(args.handle, vars_dict, args.version, args.out)
+E           File "/home/user/myproject/run.py", line 183, in run
+E             f.write(json.dump(record) + "\n")
+E                     ^^^^^^^^^^^^^^^^^
+E         TypeError: dump() missing 1 required positional argument: 'fp'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/user/myproject/.venv/bin/python', '/home/user/myproject/run.py', '--handle', 'support-tr...p(record) + "\\n")\n            ^^^^^^^^^^^^^^^^^\nTypeError: dump() missing 1 required positional argument: \'fp\'\n').returncode
+
+/tests/test_final_state.py:216: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_run_script_exists
+PASSED ../tests/test_final_state.py::test_version_mismatch_fails
+PASSED ../tests/test_final_state.py::test_missing_variable_fails
+FAILED ../tests/test_final_state.py::test_happy_path_explicit_version - Asser...
+FAILED ../tests/test_final_state.py::test_trace_linkage_artifact - AssertionE...
+FAILED ../tests/test_final_state.py::test_default_version_resolution - Assert...
+========================= 3 failed, 3 passed in 17.76s =========================

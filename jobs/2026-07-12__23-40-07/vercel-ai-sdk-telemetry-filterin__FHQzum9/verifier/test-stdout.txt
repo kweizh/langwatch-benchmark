@@ -1,0 +1,61 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: xprocess-1.0.2, json-ctrf-0.5.2
+collected 2 items
+
+../tests/test_final_state.py FF                                          [100%]
+
+=================================== FAILURES ===================================
+_______________________________ test_safe_prompt _______________________________
+
+start_mock_server = None
+
+    def test_safe_prompt(start_mock_server):
+        if os.path.exists(LOG_FILE):
+            os.remove(LOG_FILE)
+    
+        result = run_script("Hello world")
+        assert result.returncode == 0, f"Script failed with error: {result.stderr}"
+    
+        # Wait for telemetry to be written
+        time.sleep(1)
+    
+>       assert os.path.exists(LOG_FILE), "Telemetry log file was not created by the mock server."
+E       AssertionError: Telemetry log file was not created by the mock server.
+E       assert False
+E        +  where False = <function exists at 0x7ef6fdc3f560>('/home/user/myproject/telemetry.log')
+E        +    where <function exists at 0x7ef6fdc3f560> = <module 'posixpath' (frozen)>.exists
+E        +      where <module 'posixpath' (frozen)> = os.path
+
+/tests/test_final_state.py:82: AssertionError
+---------------------------- Captured stdout setup -----------------------------
+/tests/.pytest_cache/d/.xprocess/mock_server$ python3 /tmp/mock_server.py
+process 'mock_server' started pid=2700
+mock_server process startup detected
+____________________________ test_sensitive_prompt _____________________________
+
+start_mock_server = None
+
+    def test_sensitive_prompt(start_mock_server):
+        if os.path.exists(LOG_FILE):
+            os.remove(LOG_FILE)
+    
+        result = run_script("My password is SECRET_TOKEN")
+        assert result.returncode == 0, f"Script failed with error: {result.stderr}"
+    
+        # Wait for telemetry to be written
+        time.sleep(1)
+    
+>       assert os.path.exists(LOG_FILE), "Telemetry log file was not created by the mock server."
+E       AssertionError: Telemetry log file was not created by the mock server.
+E       assert False
+E        +  where False = <function exists at 0x7ef6fdc3f560>('/home/user/myproject/telemetry.log')
+E        +    where <function exists at 0x7ef6fdc3f560> = <module 'posixpath' (frozen)>.exists
+E        +      where <module 'posixpath' (frozen)> = os.path
+
+/tests/test_final_state.py:98: AssertionError
+=========================== short test summary info ============================
+FAILED ../tests/test_final_state.py::test_safe_prompt - AssertionError: Telem...
+FAILED ../tests/test_final_state.py::test_sensitive_prompt - AssertionError: ...
+============================== 2 failed in 5.11s ===============================

@@ -1,0 +1,74 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T15:45:47.475525+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 5,
+            "passed": 5,
+            "failed": 0,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783871143675,
+            "stop": 1783871147475
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_run_pipeline_returns_non_empty_answer",
+                "status": "passed",
+                "duration": 2286,
+                "start": 1783871143687,
+                "stop": 1783871145973,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_all_spans_reach_existing_exporter",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783871145973,
+                "stop": 1783871145974,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_excluded_spans_not_exported_to_langwatch",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783871145974,
+                "stop": 1783871145974,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_included_spans_exported_to_langwatch",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783871145974,
+                "stop": 1783871145974,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_cli_smoke",
+                "status": "passed",
+                "duration": 1500,
+                "start": 1783871145975,
+                "stop": 1783871147475,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            }
+        ]
+    }
+}

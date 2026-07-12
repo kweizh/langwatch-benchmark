@@ -1,0 +1,44 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-7.4.4, pluggy-1.4.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2
+collected 1 item
+
+../tests/test_final_state.py F                                           [100%]
+
+=================================== FAILURES ===================================
+_____________________________ test_process_rag_cli _____________________________
+
+    def test_process_rag_cli():
+        run_id = get_run_id()
+        output_file = f"summary_{run_id}.json"
+        output_path = os.path.join(PROJECT_DIR, output_file)
+    
+        # Setup: clean up existing output file if any
+        if os.path.exists(output_path):
+            os.remove(output_path)
+    
+        # Verification Step 2: Run the command
+        result = subprocess.run(
+            ["python3", "process_rag.py", "--input", "rag_history.csv", "--output", output_file],
+            cwd=PROJECT_DIR,
+            capture_output=True,
+            text=True
+        )
+    
+>       assert result.returncode == 0, f"Command failed with exit code {result.returncode}.\nStdout: {result.stdout}\nStderr: {result.stderr}"
+E       AssertionError: Command failed with exit code 1.
+E         Stdout: 
+E         Stderr: Traceback (most recent call last):
+E           File "/home/user/myproject/process_rag.py", line 25, in <module>
+E             import langwatch  # noqa: E402  (must come after the csv tweak above)
+E             ^^^^^^^^^^^^^^^^
+E         ModuleNotFoundError: No module named 'langwatch'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['python3', 'process_rag.py', '--input', 'rag_history.csv', '--output', 'summary_zry0k7rjxv.json...02  (must come after the csv tweak above)\n    ^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named \'langwatch\'\n').returncode
+
+/tests/test_final_state.py:28: AssertionError
+=========================== short test summary info ============================
+FAILED ../tests/test_final_state.py::test_process_rag_cli - AssertionError: C...
+============================== 1 failed in 0.04s ===============================

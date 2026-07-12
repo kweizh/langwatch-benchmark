@@ -1,0 +1,10 @@
+{
+  "lockfileVersion": 1,
+  "prompts": {
+    "customer-support-bot": {
+      "version": 3,
+      "versionId": "local",
+      "materialized": "prompts/.materialized/customer-support-bot.prompt.yaml"
+    }
+  }
+}

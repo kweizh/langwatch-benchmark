@@ -1,0 +1,197 @@
+- Initializing MCP connections...
+You
+# LangWatch: Client-Side Groundedness Evaluation on a RAG Span ## Background You are building a Retrieval-Augmented Generation (RAG) pipeline in Python and want to attach a **custom, client-side groundedness evaluation** to the LangWatch span that produced the answer. Groundedness measures how much of the generated answer is actually supported by the retrieved context (a faithfulness / anti-hallucination proxy). LangWatch lets you log such custom evaluations directly onto the active span with `langwatch.get_current_span().add_evaluation(...)`, so the score, pass/fail decision, and a human-readable label all show up on the exact span that generated the answer. Your job is to implement the pipeline, a **non-trivial, deterministic groundedness scorer**, and wire the computed evaluation onto the answer-generation span. ## Requirements Work inside a Python project at `/home/user/project`. Implement a module named `pipeline.py` at the project root exposing these callables: * `retrieve(query: str) -> list[str]`: Deterministically retrieve context passages for `query` from a fixed in-code document corpus (see the corpus described in Implementation Hints). Retrieval MUST be a pure function of the query and corpus (no randomness, no network). * `compute_groundedness(answer: str, contexts: list[str]) -> dict`: Compute the groundedness of `answer` against the retrieved `contexts` and return a dict with keys `score` (float), `passed` (bool), `label` (str), and `details` (str). The metric and thresholds are specified precisely below and MUST be implemented exactly so the score is reproducible. * `run_pipeline(query: str) -> str`: Run the end-to-end pipeline under a LangWatch trace, emit the spans described below, compute groundedness on the produced answer, log it as a custom evaluation on the **answer-generation span** via `langwatch.get_current_span().add_evaluation(...)`, and return the answer string. Also provide a CLI entrypoint `main.py`. ### Groundedness metric specification (must be implemented exactly) 1. **Tokenize** a string by lowercasing it and extracting every maximal run matching the regular expression `[a-z0-9]+`. 2. **Drop stopwords** — remove any token contained in this exact stopword set: `{"a","an","the","is","are","was","were","of","to","in","on","and","or","for","with","as","at","by","it","its","this","that","these","those","be","from"}`. 3. Let `A` be the **set** of remaining tokens of `answer`, and `C` be the **set** of remaining tokens of the concatenation of all strings in `contexts` (joined with a single space). 4. If `A` is empty, `score = 0.0`. Otherwise `score = |A ∩ C| / |A|`, then round to 4 decimal places using Python's built-in `round(value, 4)`. 5. Map `score` to `passed` / `label`: * `score >= 0.75` → `passed = True`, `label = "grounded"` * `0.4 <= score < 0.75` → `passed = False`, `label = "weakly_grounded"` * `score < 0.4` → `passed = False`, `label = "hallucinated"` 6. `details` must be a non-empty human-readable string that includes the numeric score. ### Span & evaluation wiring * The trace root span must be named `rag_pipeline`. * Retrieval happens in a child span named `retrieve_context`. * Answer generation happens in a child span named `generate_answer`. No real LLM/network call is required — a deterministic answer derived from the retrieved context is acceptable (this task is about the evaluation wiring, not answer quality). * The groundedness evaluation MUST be added while the `generate_answer` span is the current span, using `langwatch.get_current_span().add_evaluation(...)`, and the evaluation `name` MUST be exactly `groundedness`. The `passed`, `score`, `label`, and `details` passed to `add_evaluation` MUST equal the values returned by `compute_groundedness` for the produced answer and retrieved contexts. * Read the LangWatch API key and endpoint from the environment (`LANGWATCH_API_KEY`, `LANGWATCH_ENDPOINT`). Do not hardcode credentials. ## Implementation Hints * Install all Python dependencies with `uv` inside a virtual environment (some LangWatch-related packages misbehave with the system pip). LangWatch pulls in the OpenTelemetry SDK and OTLP/HTTP exporter transitively. * Initialize the SDK with `langwatch.setup(...)`, reading the API key and endpoint from the environment. * Use `langwatch.get_current_span().add_evaluation(name=..., passed=..., score=..., label=..., details=...)` — this attaches the evaluation to the active span. Calling it from inside the `generate_answer` span context is what binds it to the correct span. * LangWatch exports over a batching processor; ensure spans are flushed before the process exits so nothing is lost. * Keep `retrieve` and `compute_groundedness` pure and deterministic so the same query always yields the same score. * Suggested fixed corpus (you may format it as you like, but retrieval must be deterministic): a small list of short factual passages about a handful of topics (e.g. LangWatch observability, OpenTelemetry tracing, RAG retrieval). A simple deterministic retrieval rule is to score each passage by token overlap with the query and return the top passages. ## Acceptance Criteria * Project path: /home/user/project * Command: `python main.py ""` * Input argument: a single free-text `<query>` string. * The stdout MUST contain a line in the format `Answer: <text>` where `<text>` is a non-empty string. * The stdout MUST contain a line in the format `Groundedness: <score> <label>` where `<score>` is the numeric groundedness score and `<label>` is the computed label. * Importable contract (used by the verifier), all in `pipeline.py`: * `retrieve(query: str) -> list[str]` returns a non-empty, deterministic list of context strings. * `compute_groundedness(answer: str, contexts: list[str]) -> dict` returns `{"score": float, "passed": bool, "label": str, "details": str}` computed exactly per the metric specification above. * `run_pipeline(query: str) -> str` returns a non-empty answer string, emits spans `rag_pipeline`, `retrieve_context`, and `generate_answer`, and internally retrieves context via the same logic as `retrieve`. * Observable evaluation behavior (checked on the spans LangWatch exports to `POST {LANGWATCH_ENDPOINT}/api/otel/v1/traces`): * A custom evaluation named `groundedness` is attached to the `generate_answer` span (not to the root or retrieval span). * The attached evaluation's `passed`, `score`, and `label` equal the values returned by `compute_groundedness(answer, retrieve(query))` for the same query, and `details` is a non-empty string.   
+
+Pochi
+💭 Thinking for 441 characters   
+📋 Updating todo list (5 items) ✔ 
+📂 Listing files in /home/user/project ✔ 
+📖 Reading /home/user/project/pipeline.py ✔ 
+📖 Reading /home/user/project/main.py ✔ 
+📖 Reading /home/user/project/README.md ✔ 
+📋 Updating todo list (5 items) ✔ 
+💫 Executing ls /home/user/project/.venv/lib/ 2>/dev/null && ls /home/user/project/.venv/lib/python*/site-packages/ 2>/dev/null | grep -i langwatch || echo "langwatch not installed" ✔ 
+💫 Executing ls /home/user/project/.venv/lib/python3.12/site-packages/langwatch/ ✔ 
+📖 Reading /home/user/project/.venv/lib/python3.12/site-packages/langwatch/__init__.py ✔ 
+📖 Reading /home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/span.py ✔ 
+📖 Reading /home/user/project/.venv/lib/python3.12/site-packages/langwatch/telemetry/tracing.py ✔ 
+Now I have a thorough understanding of the LangWatch SDK. Let me check the `setup` function and how `force_flush` works:   
+📖 Reading /home/user/project/.venv/lib/python3.12/site-packages/langwatch/utils/initialization.py ✔ 
+📋 Updating todo list (5 items) ✔ 
+Now I have all the information I need. Let me implement `pipeline.py`:   
+✏️  Writing /home/user/project/pipeline.py ✔ 
+📋 Updating todo list (5 items) ✔ 
+The existing `main.py` already matches the acceptance criteria. Let me verify it's correct:   
+📖 Reading /home/user/project/main.py ✔ 
+The `main.py` is correct as-is. Now let me run tests to verify the implementation:   
+📋 Updating todo list (2 items) ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import pipeline
+
+# Test 1: retrieve is deterministic and non-empty
+q = 'What is LangWatch observability?'
+contexts = pipeline.retrieve(q)
+print('retrieve result:', len(contexts), 'passages')
+assert len(contexts) > 0, 'retrieve must return at least one passage'
+
+# Test 2: same query gives same result (determinism)
+assert pipeline.retrieve(q) == contexts, 'retrieve must be deterministic'
+
+# Test 3: compute_groundedness exact spec
+answer = 'LangWatch is an observability platform that monitors LLM applications and traces.'
+result = pipeline.compute_groundedness(answer, contexts)
+print('groundedness result:', result)
+assert isinstance(result['score'], float)
+assert isinstance(result['passed'], bool)
+assert isinstance(result['label'], str)
+assert isinstance(result['details'], str)
+assert len(result['details']) > 0
+assert result['label'] in ('grounded', 'weakly_grounded', 'hallucinated')
+
+# Test 4: empty answer => score = 0.0
+empty_result = pipeline.compute_groundedness('', contexts)
+print('empty answer score:', empty_result['score'])
+assert empty_result['score'] == 0.0
+
+# Test 5: perfect overlap => score = 1.0
+# craft an answer from only context words
+context_words = ' '.join(contexts)
+import re
+tokens = re.findall(r'[a-z0-9]+', context_words.lower())
+stopwords = {'a','an','the','is','are','was','were','of','to','in','on','and','or','for','with','as','at','by','it','its','this','that','these','those','be','from'}
+non_stop = [t for t in tokens if t not in stopwords][:10]
+perfect_answer = ' '.join(non_stop)
+perfect_result = pipeline.compute_groundedness(perfect_answer, contexts)
+print('perfect overlap score:', perfect_result['score'])
+assert perfect_result['score'] == 1.0, f'Expected 1.0, got {perfect_result[\"score\"]}'
+
+# Test 6: threshold mapping
+# score >= 0.75 -> grounded
+r1 = pipeline.compute_groundedness.__doc__  # just access it
+assert pipeline.compute_groundedness('xyz abc def', ['xyz abc def extra words here'])['label'] in ('grounded', 'weakly_grounded', 'hallucinated')
+
+print()
+print('All unit tests passed!')
+"
+ ✔ 
+💫 Executing cd /home/user/project && LANGWATCH_API_KEY=test-key LANGWATCH_ENDPOINT=http://localhost:9999 .venv/bin/python main.py "What is LangWatch observability?" 2>/dev/null ✖ "Command exited with code 1"
+💫 Executing cd /home/user/project && LANGWATCH_API_KEY=test-key LANGWATCH_ENDPOINT=http://localhost:9999 .venv/bin/python main.py "What is LangWatch observability?" 2>&1 ✖ "Command exited with code 1"
+Two issues to fix: 1. `pandas` not installed (needed by `langwatch.evaluations`) 2. The `add_evaluation` call indirectly imports `pandas` Let me install pandas and then check if there's a lighter way to call `add_evaluation`:   
+💫 Executing cd /home/user/project && .venv/bin/pip install pandas -q 2>&1 | tail -5 ✔ 
+💫 Executing ls /home/user/project/.venv/bin/ | grep -E "pip|uv|python" ✔ 
+💫 Executing which uv && uv --version ✔ 
+💫 Executing cd /home/user/project && uv pip install pandas --python .venv/bin/python 2>&1 | tail -5 ✔ 
+💫 Executing cd /home/user/project && LANGWATCH_API_KEY=test-key LANGWATCH_ENDPOINT=http://localhost:9999 .venv/bin/python main.py "What is LangWatch observability?" 2>&1 | grep -v "Transient\|retrying\|Failed to export" ✔ 
+💫 Executing cd /home/user/project && uv pip install tqdm --python .venv/bin/python -q 2>&1 | tail -3 && LANGWATCH_API_KEY=test-key LANGWATCH_ENDPOINT=http://localhost:9999 .venv/bin/python main.py "What is LangWatch observability?" 2>&1 | grep -v "Transient\|retrying\|Failed to export" ✔ 
+The pipeline works correctly. Let me also run a test with a different query to verify different groundedness labels work:   
+💫 Executing cd /home/user/project && LANGWATCH_API_KEY=test-key LANGWATCH_ENDPOINT=http://localhost:9999 .venv/bin/python main.py "How does RAG retrieval work with OpenTelemetry tracing?" 2>&1 | grep -v "Transient\|retrying\|Failed to export" ✔ 
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import pipeline
+
+# Verify the groundedness threshold boundaries exactly
+# score >= 0.75 -> grounded, passed=True
+# 0.4 <= score < 0.75 -> weakly_grounded, passed=False
+# score < 0.4 -> hallucinated, passed=False
+
+# Test exact boundary at 0.75
+# 3 tokens in answer, 3 overlap -> 1.0 (grounded)
+r = pipeline.compute_groundedness('langwatch observability platform', ['langwatch observability platform traces'])
+print('score=1.0 test:', r['label'], r['passed'])
+assert r['label'] == 'grounded' and r['passed'] == True
+
+# Test weakly_grounded: 2 out of 4 non-stop tokens overlap -> 0.5
+# answer tokens after stop-word removal: 'quantum', 'physics', 'langwatch', 'traces'
+# context tokens include: 'langwatch', 'traces' but not 'quantum', 'physics'
+r2 = pipeline.compute_groundedness('quantum physics langwatch traces', ['langwatch traces monitoring'])
+print('weakly_grounded test score:', r2['score'], 'label:', r2['label'])
+assert r2['label'] == 'weakly_grounded' and r2['passed'] == False
+
+# Test hallucinated: 0 overlap
+r3 = pipeline.compute_groundedness('unicorn fairy dragon magic wizard', ['langwatch observability platform'])
+print('hallucinated test score:', r3['score'], 'label:', r3['label'])
+assert r3['label'] == 'hallucinated' and r3['passed'] == False
+
+# Test empty answer
+r4 = pipeline.compute_groundedness('', ['some context here'])
+print('empty test score:', r4['score'])
+assert r4['score'] == 0.0 and r4['label'] == 'hallucinated'
+
+# Test round() to 4 decimal places
+# e.g. 1/3 -> 0.3333
+r5 = pipeline.compute_groundedness('foo bar baz', ['foo context'])
+print('1/3 score:', r5['score'])
+assert r5['score'] == round(1/3, 4)
+
+print()
+print('All boundary/edge-case tests passed!')
+"
+ ✔ 
+All tests pass. Let me also verify the span structure and evaluation wiring are set up correctly by checking the `add_evaluation` call directly against the `generate_answer` span:   
+💫 Executing cd /home/user/project && .venv/bin/python -c "
+import os, pipeline
+
+# Verify that run_pipeline returns a non-empty string (no langwatch calls, just check logic)
+# We can do a dry-run with env vars set to bogus values since langwatch.setup will call force_flush
+os.environ['LANGWATCH_API_KEY'] = 'test'
+os.environ['LANGWATCH_ENDPOINT'] = 'http://localhost:1'
+
+# Test with the importable API
+contexts = pipeline.retrieve('What is LangWatch?')
+print('Contexts retrieved:', len(contexts))
+assert len(contexts) >= 1
+
+answer_sim = pipeline._generate_answer('What is LangWatch?', contexts)
+print('Simulated answer:', answer_sim[:80], '...')
+assert len(answer_sim) > 0
+
+eval_result = pipeline.compute_groundedness(answer_sim, contexts)
+print('Evaluation:', eval_result)
+assert set(eval_result.keys()) == {'score', 'passed', 'label', 'details'}
+assert isinstance(eval_result['score'], float)
+assert isinstance(eval_result['passed'], bool)
+assert isinstance(eval_result['label'], str)
+assert isinstance(eval_result['details'], str) and len(eval_result['details']) > 0
+
+print()
+print('Importable API contract verified!')
+" 2>&1 | grep -v "Transient\|retrying\|Failed\|exporting\|HTTPConnection"
+ ✔ 
+📋 Updating todo list (1 items) ✔ 
+🎉 Task Completed
+The implementation is complete. Here's what was built in `/home/user/project/pipeline.py`:
+
+## What was implemented
+
+### `retrieve(query: str) -> list[str]`
+- Uses a **fixed 5-passage in-code corpus** covering LangWatch, OpenTelemetry, RAG, groundedness, and span instrumentation
+- Scores each passage by token-overlap with the (stop-word-filtered) query tokens and returns the **top-2 passages** deterministically — no randomness, no network
+
+### `compute_groundedness(answer: str, contexts: list[str]) -> dict`
+Implements the specification exactly:
+1. Tokenizes via `re.findall(r"[a-z0-9]+", text.lower())`
+2. Drops the 24 specified stopwords
+3. Computes `|A ∩ C| / |A|` (set-based), rounded with `round(value, 4)`
+4. Maps score to label: `≥0.75` → `grounded/True`, `0.4–0.75` → `weakly_grounded/False`, `<0.4` → `hallucinated/False`
+5. Returns `{"score": float, "passed": bool, "label": str, "details": str}`
+
+### `run_pipeline(query: str) -> str`
+Span hierarchy as required:
+```
+rag_pipeline  (root trace)
+  retrieve_context   (type=rag)
+  generate_answer    (type=llm)  ← add_evaluation("groundedness", ...) called here
+```
+- Calls `langwatch.setup(api_key=..., endpoint_url=...)` from environment variables
+- Uses `langwatch.get_current_span().add_evaluation(name="groundedness", ...)` **inside** the `generate_answer` span context manager, binding the evaluation to the correct span
+- Flushes the OTLP batching exporter with `force_flush()` before exit
+
+### CLI output format
+```
+$ python main.py "What is LangWatch observability?"
+Answer: LangWatch is an observability platform for LLM applications. OpenTelemetry is an open-source observability framework...
+Groundedness: 1.0 grounded
+```
+
+### Dependencies installed
+- `pandas` and `tqdm` — required transitively by `langwatch.evaluations` when `add_evaluation` is called   
+  

@@ -1,0 +1,92 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T15:58:44.558022+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "7.4.4"
+        },
+        "summary": {
+            "tests": 7,
+            "passed": 7,
+            "failed": 0,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783871921676,
+            "stop": 1783871924557
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_run_exits_successfully",
+                "status": "passed",
+                "duration": 2862,
+                "start": 1783871921692,
+                "stop": 1783871924554,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_no_mockvalser_crash",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783871924555,
+                "stop": 1783871924555,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_top_level_shape",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783871924555,
+                "stop": 1783871924556,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_predictor_serialized_structurally",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783871924556,
+                "stop": 1783871924556,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_demos_preserved",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783871924556,
+                "stop": 1783871924556,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_records_with_nested_predictor",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783871924557,
+                "stop": 1783871924557,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_qa_program_fixture_intact",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783871924557,
+                "stop": 1783871924557,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            }
+        ]
+    }
+}

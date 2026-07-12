@@ -1,0 +1,122 @@
+{
+    "id": "1dbecf7a-c5ce-4596-adb1-b83d7f10fd64",
+    "task_name": "fix-dspy-visualizer-crash",
+    "trial_name": "fix-dspy-visualizer-crash__aNATgRB",
+    "trial_uri": "file:///home/kw/code/zealt/pochi-harbor/jobs/2026-07-12__23-53-36/fix-dspy-visualizer-crash__aNATgRB",
+    "task_id": {
+        "path": "/home/kw/code/zealt/langwatch-benchmark/tasks/fix-dspy-visualizer-crash"
+    },
+    "source": "tasks",
+    "task_checksum": "2dff01152b834efe57165a86b781a68361d06385fddd35489afa54b7eac86419",
+    "config": {
+        "task": {
+            "path": "/home/kw/code/zealt/langwatch-benchmark/tasks/fix-dspy-visualizer-crash",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "tasks"
+        },
+        "trial_name": "fix-dspy-visualizer-crash__aNATgRB",
+        "trials_dir": "jobs/2026-07-12__23-53-36",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": null,
+            "import_path": "agents.pochi:Pochi",
+            "model_name": "zai/glm-5.2",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "env": {
+                "POCHI_API_KEY": "${POCHI_API_KEY}"
+            },
+            "mcp_servers": []
+        },
+        "environment": {
+            "type": "daytona",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": 1024,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": [
+                {
+                    "type": "bind",
+                    "source": "test_initial_state.py",
+                    "target": "/bootstrap/test_initial_state.py"
+                }
+            ],
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [
+            "/home/user"
+        ],
+        "extra_instruction_paths": [],
+        "job_id": "57a05174-832c-4b89-8b7d-f5c3710bab0e"
+    },
+    "agent_info": {
+        "name": "pochi",
+        "version": "0.6.17",
+        "model_info": {
+            "name": "glm-5.2",
+            "provider": "zai"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 0,
+        "n_cache_tokens": 0,
+        "n_output_tokens": 2576541,
+        "cost_usd": null,
+        "rollout_details": null,
+        "metadata": null
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0
+        }
+    },
+    "exception_info": null,
+    "started_at": "2026-07-12T15:53:39.822909Z",
+    "finished_at": "2026-07-12T16:01:33.192752Z",
+    "environment_setup": {
+        "started_at": "2026-07-12T15:53:39.916859Z",
+        "finished_at": "2026-07-12T15:53:44.916983Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-07-12T15:53:44.916999Z",
+        "finished_at": "2026-07-12T15:53:50.460094Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-07-12T15:53:50.460240Z",
+        "finished_at": "2026-07-12T16:00:56.557979Z"
+    },
+    "verifier": {
+        "started_at": "2026-07-12T16:01:21.461004Z",
+        "finished_at": "2026-07-12T16:01:32.162356Z"
+    },
+    "step_results": null
+}

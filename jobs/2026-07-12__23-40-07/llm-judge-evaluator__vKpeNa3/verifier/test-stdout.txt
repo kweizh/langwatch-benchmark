@@ -1,0 +1,23 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2, anyio-4.14.1
+collected 7 items
+
+../tests/test_final_state.py .......                                     [100%]
+
+==================================== PASSES ====================================
+_________________ test_retrieve_is_deterministic_and_non_empty _________________
+---------------------------- Captured stdout setup -----------------------------
+2026-07-12 15:53:23,618 - langwatch.client - WARNING - An existing global tracer provider was found. Attaching LangWatch exporter to the existing provider. Set `ignore_global_tracer_provider_override_warning=True` to suppress this warning.
+------------------------------ Captured log setup ------------------------------
+WARNING  langwatch.client:client.py:649 An existing global tracer provider was found. Attaching LangWatch exporter to the existing provider. Set `ignore_global_tracer_provider_override_warning=True` to suppress this warning.
+=========================== short test summary info ============================
+PASSED ../tests/test_final_state.py::test_cli_smoke
+PASSED ../tests/test_final_state.py::test_retrieve_is_deterministic_and_non_empty
+PASSED ../tests/test_final_state.py::test_run_pipeline_returns_answer_and_verdict
+PASSED ../tests/test_final_state.py::test_llm_judge_evaluator_invoked
+PASSED ../tests/test_final_state.py::test_spans_emitted_and_evaluation_bound_to_answer_span
+PASSED ../tests/test_final_state.py::test_judge_result_persisted
+PASSED ../tests/test_final_state.py::test_verdict_tracks_evaluator_response
+============================== 7 passed in 7.88s ===============================

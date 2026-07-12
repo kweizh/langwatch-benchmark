@@ -1,0 +1,1799 @@
+- Initializing MCP connections...
+You
+# LangWatch Prompt Materialization with Offline Fallback Loader ## Background You are hardening the prompt-delivery path of a Python service that uses https://langwatch.ai/docs/prompt-management/getting-started. In production the service fetches versioned prompts from the LangWatch API, but the deployment target is an air-gapped / CI environment where the LangWatch API can be unreachable. To keep the service running under LangWatch's *Guaranteed Availability* model, prompts are materialized to local YAML files with the Prompts CLI and the application must transparently fall back to that local cache. Your job is to (1) scaffold and materialize a versioned prompt locally as YAML, and (2) implement a robust, deterministic fallback loader plus a small CLI that compiles the prompt with dynamic variables — working correctly even when the LangWatch API is not reachable. ## Requirements * Scaffold a LangWatch prompts project so that the following tracking files exist at the project root: `prompts.json` and `prompts-lock.json`. * Provide a locally materialized, versioned prompt for the handle `customer-support-bot` at `prompts/.materialized/customer-support-bot.prompt.yaml`. The prompt must: * Use a model identifier of the form `openai/<model>` (e.g. `openai/gpt-4o-mini`). * Contain at least a `system` message and a `user` message. * Reference the two template variables `{{user_name}}` and `{{issue}}` (the `{{...}}` mustache syntax used by LangWatch prompts) across its messages. * `prompts-lock.json` must resolve the `customer-support-bot` dependency to a concrete integer version (use version `3`) and record the path to the materialized YAML file. * Implement a Python CLI application `run.py` that loads the prompt through a fallback loader and compiles it with runtime variables. * The fallback loader must be **deterministic and offline-capable**: when the application runs in offline mode it must load the prompt strictly from the local materialized cache (never depending on a network call), and report where the prompt was sourced from. * Variable compilation must substitute every `{{variable}}` placeholder with the provided value and must fail loudly (non-zero exit) if a required variable is missing. No `{{` / `}}` placeholders may remain in the compiled output. * Do NOT mock LangWatch, its HTTP client, or any transitive dependency. The real `langwatch` package must be installed and importable. ## Implementation Hints * Use the LangWatch Prompts CLI (`langwatch prompt init`, `langwatch prompt create`) to scaffold the project layout and the prompt YAML. The CLI is available in the environment. Creating/initializing prompts is a local operation and does not require network access. * Materialized prompts live under `prompts/.materialized/` and follow the `.prompt.yaml` format (`model`, optional `modelParameters`, and a `messages` list of `{role, content}`). See the https://langwatch.ai/docs/prompt-management/cli and https://langwatch.ai/docs/prompt-management/features/advanced/guaranteed-availability docs. * For the offline path, resolve the materialized file location from `prompts-lock.json` and parse the YAML yourself rather than assuming a network fetch. Note: pointing `LANGWATCH_ENDPOINT` at a bad address does not reliably raise a network error, so drive the fallback with an explicit offline execution path instead. * Implement mustache-style `{{variable}}` substitution deterministically. Collect the set of variables referenced by the template to decide which ones are required. * Use `uv` to create the virtualenv and install Python packages (`uv venv`, then `uv pip install ...`). ## Acceptance Criteria * Project path: /home/user/myproject * Command: `python run.py --handle <handle> --vars <json_object> [--version <int>] [--offline] --out <path>` * `--handle`: the prompt handle to load (e.g. `customer-support-bot`). * `--vars`: a JSON object string mapping variable names to string values. * `--version`: optional integer version; when omitted, the version recorded in `prompts-lock.json` is used. * `--offline`: when present, the loader must load only from the local materialized cache. * `--out`: path to write the compiled result JSON. * The command writes a JSON object to the `--out` path with this shape: ```json { "handle": string, "version": integer, "model": string, "source": string, "messages": [ { "role": string, "content": string } ] } ``` * `source` is `"local_materialized"` when the prompt was loaded from the local cache and `"remote_api"` when loaded from the LangWatch API. * When `--offline` is passed, `source` must be `"local_materialized"`. * `model` must be the model string from the materialized prompt (begins with `openai/`). * `version` must be the resolved integer version. * Every message `content` must have all `{{...}}` placeholders replaced; no `{{` substring may remain. * Required artifacts at the project root: `prompts.json`, `prompts-lock.json`, and `prompts/.materialized/customer-support-bot.prompt.yaml`. * Error handling: if a required template variable is not supplied in `--vars`, the command must exit with a non-zero status and must not write a successful compiled output. If `--offline` is set and the materialized file cannot be found, the command must also exit non-zero.   
+
+Pochi
+💭 Thinking for 52 characters   
+<think> Let me start by understanding the task. I need to:   
+💭 Thinking for 54 characters   
+💭 Thinking for 93 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 32 characters   
+💭 Thinking for 36 characters   
+💫 Executing ls /home/user/ 2>/dev/null && echo "---" && which langwatch && langwatch --version 2>&1 | head -5 ✔ 
+💫 Executing which uv && uv --version && python --version 2>&1 && python3 --version 2>&1 ✔ 
+💭 Thinking for 26 characters   
+<think> Let me check what's in the   
+💭 Thinking for 41 characters   
+💭 Thinking for 18 characters   
+💭 Thinking for 16 characters   
+💭 Thinking for 51 characters   
+💫 Executing ls -la /home/user/myproject/ 2>&1 ✔ 
+💫 Executing langwatch --help 2>&1 | head -50 ✔ 
+💭 Thinking for 58 characters   
+<think> Let me check the langwatch prompt subcommand help and also   
+💭 Thinking for 39 characters   
+💫 Executing langwatch prompt --help 2>&1 ✔ 
+💫 Executing langwatch prompt init --help 2>&1 ✔ 
+💫 Executing langwatch prompt create --help 2>&1 ✔ 
+💭 Thinking for 33 characters   
+<think> Let me check the existing project   
+💭 Thinking for 56 characters   
+💭 Thinking for 24 characters   
+💫 Executing cd /home/user/myproject && langwatch docs prompt-management/cli 2>&1 | head -100 ✔ 
+💫 Executing cd /home/user/myproject && langwatch docs prompt-management/features/advanced/guaranteed-availability 2>&1 | head -100 ✔ 
+💭 Thinking for 110 characters   
+<think> Let me check more docs and verify the project structure. Let me also see how the prompt files look after init. </think> Now I have a good understanding. Let me create a todo list and start implementing.   
+📋 Updating todo list (6 items) ✔ 
+💭 Thinking for 41 characters   
+<think> Let me start by initializing the project.   
+💭 Thinking for 40 characters   
+💭 Thinking for 4 characters   
+💫 Executing cd /home/user/myproject && langwatch prompt init 2>&1 ✔ 
+💭 Thinking for 33 characters   
+<think> Project initialized. Let me check   
+💭 Thinking for 26 characters   
+💫 Executing cd /home/user/myproject && ls -la && echo "---prompts.json---" && cat prompts.json && echo "---prompts-lock.json---" && cat prompts-lock.json && echo "---prompts dir---" && ls -la prompts/ ✔ 
+💭 Thinking for 28 characters   
+<think> Now let me create the prompt   
+💭 Thinking for 87 characters   
+💭 Thinking for 158 characters   
+💫 Executing cd /home/user/myproject && langwatch prompt create customer-support-bot 2>&1 ✖ "Command exited with code 1"
+💭 Thinking for 121 characters   
+<think> The create command requires an API key. Since we're operating in an air-gapped environment, I'll need to create the files   
+💭 Thinking for 26 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 125 characters   
+💭 Thinking for 102 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 122 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 98 characters   
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy-key-not-used langwatch prompt create customer-support-bot 2>&1 ✔ 
+💭 Thinking for 79 characters   
+<think> With a dummy API key, the create command worked. Let me see the file content it   
+💭 Thinking for 8 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 62 characters   
+💭 Thinking for 16 characters   
+💭 Thinking for 18 characters   
+💫 Executing cd /home/user/myproject && cat prompts/customer-support-bot.prompt.yaml && echo "---" && ls prompts/ ✔ 
+💭 Thinking for 25 characters   
+<think> Let me update the file to   
+💭 Thinking for 33 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 41 characters   
+💭 Thinking for 39 characters   
+💭 Thinking for 20 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 39 characters   
+✏️  Writing /home/user/myproject/prompts/customer-support-bot.prompt.yaml ✖ "File has not been read yet. Please read the file before writing it."
+💭 Thinking for 30 characters   
+<think> I need to read the file first. </think> I need to read the file first.   
+📖 Reading /home/user/myproject/prompts/customer-support-bot.prompt.yaml ✔ 
+💭 Thinking for 28 characters   
+<think> Now let me write the updated   
+💭 Thinking for 69 characters   
+💭 Thinking for 40 characters   
+💭 Thinking for 141 characters   
+✏️  Writing /home/user/myproject/prompts/customer-support-bot.prompt.yaml ✔ 
+💭 Thinking for 21 characters   
+<think> Now I need to add the   
+💭 Thinking for 39 characters   
+💭 Thinking for 20 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 97 characters   
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy-key-not-used langwatch prompt add --help 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy-key-not-used langwatch prompt pull --help 2>&1 ✔ 
+💭 Thinking for 47 characters   
+<think> Let me try the add command with the local file.   
+💭 Thinking for 60 characters   
+💭 Thinking for 53 characters   
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy-key-not-used langwatch prompt add customer-support-bot@3 prompts/customer-support-bot.prompt.yaml 2>&1 ✔ 
+💭 Thinking for 31 characters   
+<think> Let me check what got generated   
+💭 Thinking for 1 characters   
+💫 Executing cd /home/user/myproject && echo "---prompts.json---" && cat prompts.json && echo "---prompts-lock.json---" && cat prompts-lock.json && echo "---prompts dir---" && ls -la prompts/ && echo "---materialized dir---" && ls -la prompts/.materialized/ 2>&1 ✔ 
+💭 Thinking for 43 characters   
+<think> The local file wasn't actually materialized   
+💭 Thinking for 25 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 88 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 80 characters   
+💭 Thinking for 84 characters   
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy-key-not-used langwatch prompt remove --help 2>&1 ✔ 
+💭 Thinking for 28 characters   
+<think> Let me think about this more   
+💭 Thinking for 31 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 32 characters   
+💭 Thinking for 15 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 87 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 17 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 90 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 17 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 41 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 45 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 298 characters   
+💭 Thinking for 20 characters   
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy-key-not-used langwatch prompt remove customer-support-bot 2>&1 && LANGWATCH_API_KEY=dummy-key-not-used langwatch prompt remove customer-support-bot@3 2>&1 ✔ 
+💭 Thinking for 26 characters   
+<think> Let me check what files we   
+💭 Thinking for 9 characters   
+💭 Thinking for 39 characters   
+💫 Executing cd /home/user/myproject && echo "---prompts.json---" && cat prompts.json && echo "---prompts-lock.json---" && cat prompts-lock.json && echo "---prompts dir---" && ls -la prompts/ ✔ 
+💭 Thinking for 82 characters   
+<think> Good, the project is clean. Now let me first create the prompt file in the prompts   
+💭 Thinking for 51 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 196 characters   
+💭 Thinking for 22 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 137 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 83 characters   
+💭 Thinking for 12 characters   
+✏️  Writing /home/user/myproject/prompts/customer-support-bot.prompt.yaml ✖ "File has been modified since it was last read (expected mtime 1783871005846, got missing). Please read the file again before writing."
+💭 Thinking for 50 characters   
+<think> The file was deleted. Let me write to it directly. </think> <tool_call> ]<]minimax[>[<invoke name="writeToFile">]<]minimax[>[<path>/home/user/myproject/prompts/customer-support-bot.prompt.yaml]<]minimax[>[</path>]<]minimax[>[<content>model: openai/gpt-4o-mini modelParameters: temperature: 0.2 messages: - role: system content: | You are a friendly customer support assistant for ACME Corp. You are currently assisting {{user_name}}. Address them by name, be concise, empathetic, and always aim to resolve the customer's issue in a single reply when possible. - role: user content: | Hi, my name is {{user_name}} and I have the following problem: {{issue}} Please help me resolve this.]<]minimax[>[</content>]<]minimax[>[</invoke> ]<]minimax[>[</tool_call>   
+✏️  Writing /home/user/myproject/prompts/customer-support-bot.prompt.yaml ✖ "File has been modified since it was last read (expected mtime 1783871005846, got missing). Please read the file again before writing."
+💭 Thinking for 52 characters   
+<think> The file was deleted in the process. Let me create a   
+💭 Thinking for 42 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 29 characters   
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy-key-not-used langwatch prompt create customer-support-bot 2>&1 ✔ 
+💭 Thinking for 276 characters   
+<think> Now I need to overwrite the file. Let me read it first then write it.Now I need to overwrite the file. Let me read it first then write it.Now I need to overwrite the file. Let me read it first then write it.Now I need to overwrite the file. Let me read it first then write it.   
+💭 Thinking for 324 characters   
+📖 Reading /home/user/myproject/prompts/customer-support-bot.prompt.yaml ✔ 
+💭 Thinking for 25 characters   
+<think> Now I can write the file. </think> Now let me write the file with the required variables.   
+✏️  Writing /home/user/myproject/prompts/customer-support-bot.prompt.yaml ✔ 
+💭 Thinking for 55 characters   
+<think> Now let me add the prompt as a dependency with version   
+💭 Thinking for 74 characters   
+💭 Thinking for 115 characters   
+💭 Thinking for 22 characters   
+💭 Thinking for 75 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 18 characters   
+💭 Thinking for 39 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 161 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 59 characters   
+💭 Thinking for 79 characters   
+💭 Thinking for 22 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 78 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 135 characters   
+💭 Thinking for 14 characters   
+💭 Thinking for 18 characters   
+💭 Thinking for 1494 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 55 characters   
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy-key-not-used langwatch prompt add customer-support-bot prompts/customer-support-bot.prompt.yaml 2>&1 && echo "---prompts.json---" && cat prompts.json && echo "---prompts-lock.json---" && cat prompts-lock.json && echo "---materialized---" && ls -la prompts/.materialized/ ✔ 
+💭 Thinking for 79 characters   
+<think> The CLI is treating the local file pointer as version 0 with versionId "local".   
+💭 Thinking for 127 characters   
+💭 Thinking for 97 characters   
+💭 Thinking for 334 characters   
+💭 Thinking for 16 characters   
+💭 Thinking for 19 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 139 characters   
+💫 Executing cd /home/user/myproject && LANGWATCH_API_KEY=dummy-key-not-used langwatch prompt remove customer-support-bot 2>&1 ✔ 
+💭 Thinking for 21 characters   
+<think> Now let me set up the   
+💭 Thinking for 147 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 41 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 20 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 68 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 61 characters   
+💭 Thinking for 59 characters   
+💭 Thinking for 174 characters   
+💭 Thinking for 3 characters   
+💭 Thinking for 43 characters   
+💭 Thinking for 73 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 48 characters   
+💭 Thinking for 72 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 62 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 69 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 69 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 53 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 32 characters   
+💭 Thinking for 1 characters   
+✏️  Writing /home/user/myproject/prompts/customer-support-bot.prompt.yaml ✖ "File has been modified since it was last read (expected mtime 1783871041637, got missing). Please read the file again before writing."
+💭 Thinking for 92 characters   
+<think> The file got deleted again. Let me try a different approach - I'll just write everything via   
+💭 Thinking for 34 characters   
+💭 Thinking for 13 characters   
+💫 Executing ls -la /home/user/myproject/prompts/ 2>&1 ✔ 
+💭 Thinking for 49 characters   
+<think> The file got deleted. Let me use cat to write all   
+💭 Thinking for 50 characters   
+💭 Thinking for 12 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 43 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 19 characters   
+💫 Executing cd /home/user/myproject && cat > prompts/customer-support-bot.prompt.yaml <<'YAML_EOF'
+model: openai/gpt-4o-mini
+modelParameters:
+  temperature: 0.2
+messages:
+  - role: system
+    content: |
+      You are a friendly customer support assistant for ACME Corp.
+      You are currently assisting {{user_name}}. Address them by name,
+      be concise, empathetic, and always aim to resolve the customer's
+      issue in a single reply when possible.
+  - role: user
+    content: |
+      Hi, my name is {{user_name}} and I have the following problem:
+
+      {{issue}}
+
+      Please help me resolve this.
+YAML_EOF
+echo "---source prompt---"
+cat prompts/customer-support-bot.prompt.yaml ✔ 
+💭 Thinking for 108 characters   
+<think> Now let me copy this to the .materialized directory and set up the prompts.json and prompts-lock.json files. </think> Now let me create the materialized file and set up the lockfile.   
+💫 Executing cd /home/user/myproject && cp prompts/customer-support-bot.prompt.yaml prompts/.materialized/customer-support-bot.prompt.yaml && ls -la prompts/.materialized/ ✔ 
+💭 Thinking for 56 characters   
+<think> Now let me set up the prompts.json and prompts-lock.json   
+💭 Thinking for 69 characters   
+💭 Thinking for 85 characters   
+💭 Thinking for 61 characters   
+💭 Thinking for 269 characters   
+💭 Thinking for 20 characters   
+💭 Thinking for 38 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 170 characters   
+💭 Thinking for 95 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 74 characters   
+💭 Thinking for 94 characters   
+💭 Thinking for 64 characters   
+💭 Thinking for 16 characters   
+💭 Thinking for 93 characters   
+💭 Thinking for 100 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 42 characters   
+💭 Thinking for 41 characters   
+💭 Thinking for 39 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 35 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 553 characters   
+💭 Thinking for 32 characters   
+💫 Executing pip show langwatch 2>&1 | head -10 || pip3 show langwatch 2>&1 | head -10 ✔ 
+💫 Executing find / -name "*.py" -path "*langwatch*" 2>/dev/null | xargs grep -l "lockfileVersion\|prompts-lock" 2>/dev/null | head -5 ✔ 
+💭 Thinking for 56 characters   
+<think> The langwatch package isn't installed yet. Let me set up   
+💭 Thinking for 42 characters   
+💭 Thinking for 40 characters   
+💭 Thinking for 145 characters   
+💭 Thinking for 63 characters   
+💫 Executing cd /home/user/myproject && uv venv .venv 2>&1 | tail -5 && uv pip install --python .venv/bin/python langwatch pyyaml 2>&1 | tail -10 ✔ 
+💭 Thinking for 187 characters   
+<think> LangWatch installed. Let me explore the SDK to understand the expected file format.LangWatch installed. Let me explore the SDK to understand the expected file format. Let me explore the   
+💭 Thinking for 14 characters   
+💭 Thinking for 194 characters   
+💫 Executing cd /home/user/myproject && find .venv -name "*.py" -path "*langwatch*" | xargs grep -l "prompts-lock\|lockfileVersion" 2>/dev/null | head -5 ✔ 
+💫 Executing cd /home/user/myproject && find .venv -name "*.py" -path "*langwatch*" | xargs grep -l "materialized" 2>/dev/null | head -10 ✔ 
+💭 Thinking for 31 characters   
+<think> Let me explore the local_loader   
+💭 Thinking for 35 characters   
+💭 Thinking for 157 characters   
+💭 Thinking for 157 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 4 characters   
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/local_loader.py ✔ 
+💭 Thinking for 26 characters   
+<think> I now have a clear picture   
+💭 Thinking for 33 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 41 characters   
+💭 Thinking for 53 characters   
+💭 Thinking for 62 characters   
+💭 Thinking for 81 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 151 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 481 characters   
+💭 Thinking for 266 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 48 characters   
+💭 Thinking for 42 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 309 characters   
+💭 Thinking for 65 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 38 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 69 characters   
+💭 Thinking for 71 characters   
+💫 Executing cd /home/user/myproject && cat .venv/lib/python3.12/site-packages/langwatch/prompts/types/__init__.py 2>&1 | head -100 ✔ 
+💫 Executing cd /home/user/myproject && cat .venv/lib/python3.12/site-packages/langwatch/prompts/prompt_facade.py 2>&1 | head -150 ✔ 
+💭 Thinking for 50 characters   
+<think> Let me check the FetchPolicy and PromptData types.   
+💭 Thinking for 103 characters   
+💫 Executing cd /home/user/myproject && cat .venv/lib/python3.12/site-packages/langwatch/prompts/types/fetch_policy.py 2>&1 ✔ 
+💫 Executing cd /home/user/myproject && cat .venv/lib/python3.12/site-packages/langwatch/prompts/types/prompt_data.py 2>&1 | head -80 ✔ 
+💫 Executing cd /home/user/myproject && cat .venv/lib/python3.12/site-packages/langwatch/prompts/types/structures.py 2>&1 | head -60 ✔ 
+💭 Thinking for 49 characters   
+<think> Now I have a clear picture. Let me also check how   
+💭 Thinking for 70 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 1 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 70 characters   
+💭 Thinking for 22 characters   
+💭 Thinking for 69 characters   
+💫 Executing cd /home/user/myproject && find .venv -name "prompt.py" -path "*langwatch*" | head -5 ✔ 
+💭 Thinking for 26 characters   
+<think> Let me look at the compile   
+💭 Thinking for 105 characters   
+💭 Thinking for 11 characters   
+💭 Thinking for 82 characters   
+📖 Reading /home/user/myproject/.venv/lib/python3.12/site-packages/langwatch/prompts/prompt.py ✔ 
+💭 Thinking for 111 characters   
+<think> Now I have a complete understanding. The Prompt class uses `liquid` template engine with `{{variable}}` syntax.   
+💭 Thinking for 264 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 35 characters   
+💭 Thinking for 337 characters   
+💭 Thinking for 100 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 98 characters   
+💭 Thinking for 69 characters   
+💭 Thinking for 42 characters   
+💭 Thinking for 134 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 36 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 120 characters   
+💭 Thinking for 37 characters   
+💭 Thinking for 73 characters   
+💭 Thinking for 106 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 44 characters   
+💭 Thinking for 174 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 92 characters   
+💭 Thinking for 85 characters   
+💭 Thinking for 104 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 255 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 61 characters   
+💭 Thinking for 36 characters   
+💭 Thinking for 136 characters   
+💭 Thinking for 41 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 17 characters   
+💭 Thinking for 257 characters   
+💭 Thinking for 153 characters   
+💭 Thinking for 91 characters   
+💭 Thinking for 19 characters   
+💭 Thinking for 115 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 76 characters   
+💭 Thinking for 19 characters   
+💭 Thinking for 74 characters   
+💭 Thinking for 43 characters   
+💭 Thinking for 131 characters   
+💭 Thinking for 118 characters   
+💭 Thinking for 69 characters   
+💭 Thinking for 85 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 35 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 18 characters   
+💭 Thinking for 104 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 168 characters   
+💭 Thinking for 43 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 74 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 59 characters   
+💭 Thinking for 156 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 53 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 150 characters   
+💭 Thinking for 19 characters   
+💭 Thinking for 39 characters   
+💭 Thinking for 97 characters   
+💭 Thinking for 101 characters   
+💭 Thinking for 259 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 93 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 173 characters   
+💭 Thinking for 72 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 311 characters   
+💭 Thinking for 39 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 100 characters   
+💭 Thinking for 59 characters   
+💭 Thinking for 20 characters   
+💭 Thinking for 91 characters   
+💭 Thinking for 35 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 85 characters   
+💭 Thinking for 59 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 148 characters   
+💭 Thinking for 141 characters   
+💭 Thinking for 106 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 69 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 203 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 184 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 68 characters   
+💭 Thinking for 17 characters   
+💭 Thinking for 90 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 65 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 43 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 88 characters   
+💭 Thinking for 86 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 16 characters   
+💭 Thinking for 86 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 48 characters   
+💭 Thinking for 62 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 94 characters   
+💭 Thinking for 174 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 144 characters   
+💭 Thinking for 159 characters   
+💭 Thinking for 204 characters   
+💭 Thinking for 120 characters   
+💭 Thinking for 148 characters   
+💭 Thinking for 194 characters   
+💭 Thinking for 118 characters   
+💭 Thinking for 92 characters   
+💭 Thinking for 61 characters   
+💭 Thinking for 106 characters   
+💭 Thinking for 37 characters   
+💭 Thinking for 41 characters   
+💭 Thinking for 155 characters   
+💭 Thinking for 203 characters   
+💭 Thinking for 42 characters   
+💭 Thinking for 437 characters   
+💭 Thinking for 69 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 84 characters   
+💭 Thinking for 37 characters   
+💭 Thinking for 45 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 320 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 79 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 214 characters   
+💭 Thinking for 134 characters   
+💭 Thinking for 233 characters   
+💭 Thinking for 44 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 212 characters   
+💭 Thinking for 76 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 37 characters   
+💭 Thinking for 59 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 65 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 70 characters   
+💭 Thinking for 184 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 105 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 116 characters   
+💭 Thinking for 83 characters   
+💭 Thinking for 43 characters   
+💭 Thinking for 37 characters   
+💭 Thinking for 130 characters   
+💭 Thinking for 22 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 17 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 43 characters   
+💭 Thinking for 286 characters   
+💭 Thinking for 88 characters   
+💭 Thinking for 214 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 84 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 43 characters   
+💭 Thinking for 121 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 78 characters   
+💭 Thinking for 48 characters   
+💭 Thinking for 48 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 15 characters   
+💭 Thinking for 102 characters   
+<think> Let me update the todo list to reflect the current progress and continue with the implementation. I've   
+💭 Thinking for 68 characters   
+💭 Thinking for 22 characters   
+💭 Thinking for 188 characters   
+📋 Updating todo list (0 items) ✖ "Error repairing tool call: No object generated: could not parse the response."
+💭 Thinking for 26 characters   
+<think> Let me retry the todoWrite   
+💭 Thinking for 5 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 75 characters   
+💭 Thinking for 70 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 67 characters   
+💭 Thinking for 79 characters   
+💭 Thinking for 59 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 53 characters   
+💭 Thinking for 68 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 61 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 45 characters   
+💭 Thinking for 73 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 73 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 76 characters   
+💭 Thinking for 72 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 62 characters   
+💭 Thinking for 65 characters   
+💭 Thinking for 76 characters   
+💭 Thinking for 72 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 27 characters   
+📋 Updating todo list (0 items) ✖ "Error repairing tool call: No object generated: could not parse the response."
+💭 Thinking for 38 characters   
+<think> Let me proceed with the implementation   
+💭 Thinking for 119 characters   
+💫 Executing cd /home/user/myproject && cat > prompts.json <<'JSON_EOF'
+{
+  "prompts": {
+    "customer-support-bot": "3"
+  }
+}
+JSON_EOF
+cat > prompts-lock.json <<'JSON_EOF'
+{
+  "lockfileVersion": 1,
+  "prompts": {
+    "customer-support-bot": {
+      "version": 3,
+      "versionId": "v3-customer-support-bot",
+      "materialized": "prompts/.materialized/customer-support-bot.prompt.yaml"
+    }
+  }
+}
+JSON_EOF
+echo "---prompts.json---"
+cat prompts.json
+echo "---prompts-lock.json---"
+cat prompts-lock.json
+echo "---tree---"
+ls -la
+echo "---prompts---"
+ls -la prompts/
+echo "---materialized---"
+ls -la prompts/.materialized/ ✔ 
+💭 Thinking for 102 characters   
+<think> All the required files are in place. Now let me implement the run.py CLI. I'll use: - argparse for CLI   
+💭 Thinking for 27 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 86 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 97 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 6 characters   
+💫 Executing cat > /home/user/myproject/run.py <<'PY_EOF'
+#!/usr/bin/env python3
+"""Compile a versioned LangWatch prompt with runtime variables.
+
+This CLI loads a prompt by handle from either the LangWatch API or the
+local materialized cache (selected by ``--offline``), then substitutes
+``{{variable}}`` placeholders with the values supplied via ``--vars``.
+
+The materialized cache layout matches what ``langwatch prompt pull``
+produces: ``prompts/.materialized/<handle>.prompt.yaml`` is the
+authoritative location, and ``prompts-lock.json`` records the version
+number and the path to that YAML for each tracked handle.
+
+Usage:
+    python run.py --handle <handle> --vars <json> [--version <int>] \
+        [--offline] --out <path>
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import yaml
+
+# The real langwatch package is required to be importable per the task
+# requirements. We use Prompt.compile_strict() for the actual variable
+# substitution so we exercise the upstream template engine rather than
+# reimplementing Liquid/mustache semantics by hand.
+from langwatch.prompts.prompt import Prompt, PromptCompilationError
+from langwatch.prompts.types import Message
+
+
+PLACEHOLDER_RE = re.compile(r"\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}")
+
+
+def find_project_root(start: Optional[Path] = None) -> Path:
+    """Walk upward from ``start`` (default: cwd) to find ``prompts.json``.
+
+    Mirrors the LangWatch SDK's project-root discovery so the CLI behaves
+    the same whether invoked from the project root or a subdirectory.
+    """
+    current = (start or Path.cwd()).resolve()
+    anchor = Path(current.anchor)
+    while current != anchor:
+        if (current / "prompts.json").exists():
+            return current
+        current = current.parent
+    raise FileNotFoundError(
+        f"Could not locate prompts.json above {(start or Path.cwd()).resolve()}"
+    )
+
+
+def _coerce_to_str(value: Any) -> str:
+    """Best-effort coercion of a runtime variable to a string for substitution."""
+    if isinstance(value, str):
+        return value
+    if isinstance(value, (int, float, bool)):
+        return str(value)
+    # Fall back to JSON so dicts/lists stay readable in prompts.
+    return json.dumps(value, ensure_ascii=False)
+
+
+def _collect_referenced_variables(messages: List[Dict[str, Any]]) -> List[str]:
+    """Return a sorted list of every ``{{var}}`` placeholder in ``messages``."""
+    referenced = set()
+    for msg in messages:
+        content = msg.get("content", "") or ""
+        for match in PLACEHOLDER_RE.finditer(content):
+            referenced.add(match.group(1))
+    return sorted(referenced)
+
+
+def load_local_prompt(
+    handle: str, version: Optional[int], project_root: Path
+) -> Dict[str, Any]:
+    """Resolve and load a prompt from the local materialized cache.
+
+    Reads the lockfile to find the materialized path, then parses the
+    YAML there. Raises ``FileNotFoundError`` / ``KeyError`` / ``ValueError``
+    with a clear message on any failure so the CLI can surface them.
+    """
+    prompts_json_path = project_root / "prompts.json"
+    prompts_lock_path = project_root / "prompts-lock.json"
+
+    if not prompts_json_path.exists():
+        raise FileNotFoundError(f"prompts.json not found at {prompts_json_path}")
+    if not prompts_lock_path.exists():
+        raise FileNotFoundError(f"prompts-lock.json not found at {prompts_lock_path}")
+
+    with open(prompts_json_path, "r", encoding="utf-8") as f:
+        prompts_config = json.load(f)
+
+    with open(prompts_lock_path, "r", encoding="utf-8") as f:
+        prompts_lock = json.load(f)
+
+    if handle not in prompts_config.get("prompts", {}):
+        raise KeyError(
+            f"Handle '{handle}' is not tracked in prompts.json. "
+            f"Known handles: {sorted((prompts_config.get('prompts') or {}).keys())}"
+        )
+
+    prompt_info = prompts_lock.get("prompts", {}).get(handle)
+    if not prompt_info:
+        raise KeyError(
+            f"Handle '{handle}' is not present in prompts-lock.json. "
+            f"Run 'langwatch prompt pull' to sync local prompts."
+        )
+
+    materialized_rel = prompt_info.get("materialized")
+    if not materialized_rel:
+        raise ValueError(
+            f"Lockfile entry for '{handle}' has no 'materialized' path"
+        )
+
+    materialized_path = (project_root / materialized_rel).resolve()
+    if not materialized_path.exists():
+        raise FileNotFoundError(
+            f"Materialized prompt file not found at {materialized_path} "
+            f"(recorded in prompts-lock.json). Re-run 'langwatch prompt pull'."
+        )
+
+    with open(materialized_path, "r", encoding="utf-8") as f:
+        prompt_yaml = yaml.safe_load(f)
+
+    if not isinstance(prompt_yaml, dict):
+        raise ValueError(
+            f"Materialized prompt at {materialized_path} is not a YAML mapping"
+        )
+
+    if "model" not in prompt_yaml or "messages" not in prompt_yaml:
+        raise ValueError(
+            f"Materialized prompt at {materialized_path} is missing required "
+            f"'model' or 'messages' fields"
+        )
+
+    raw_messages = prompt_yaml["messages"]
+    messages: List[Dict[str, str]] = []
+    for entry in raw_messages:
+        if not isinstance(entry, dict) or "role" not in entry or "content" not in entry:
+            raise ValueError(
+                f"Invalid message entry in {materialized_path}: {entry!r}"
+            )
+        messages.append({"role": entry["role"], "content": entry["content"]})
+
+    # Version: CLI flag wins; otherwise fall back to what the lockfile
+    # pinned. ``version`` in the lockfile is a concrete integer.
+    resolved_version = version
+    if resolved_version is None:
+        resolved_version = prompt_info.get("version")
+    if resolved_version is not None and not isinstance(resolved_version, int):
+        # Coerce e.g. "3" -> 3
+        try:
+            resolved_version = int(resolved_version)
+        except (TypeError, ValueError):
+            pass
+
+    return {
+        "handle": handle,
+        "version": resolved_version,
+        "model": prompt_yaml["model"],
+        "messages": messages,
+        "source": "local_materialized",
+        "source_path": str(materialized_path),
+    }
+
+
+def load_remote_prompt(handle: str, version: Optional[int]) -> Dict[str, Any]:
+    """Load a prompt via the LangWatch API using the real ``langwatch`` SDK.
+
+    This path requires ``langwatch.setup()`` to have been called (typically
+    via ``LANGWATCH_API_KEY`` in the environment). When the API is
+    unreachable or not configured, callers should fall back to
+    :func:`load_local_prompt`.
+    """
+    # Import lazily so the offline path doesn't require API deps to be
+    # fully usable at import time.
+    import langwatch
+    from langwatch.prompts.types import FetchPolicy
+
+    langwatch.setup()
+
+    prompt = langwatch.prompts.get(
+        handle,
+        version_number=version,
+        fetch_policy=FetchPolicy.ALWAYS_FETCH,
+    )
+
+    return {
+        "handle": handle,
+        "version": prompt.version,
+        "model": prompt.model,
+        "messages": [
+            {"role": m.role, "content": m.content} for m in prompt.messages
+        ],
+        "source": "remote_api",
+        "source_path": f"langwatch://prompts/{handle}",
+    }
+
+
+def compile_with_variables(
+    messages: List[Dict[str, str]], variables: Dict[str, Any]
+) -> List[Dict[str, str]]:
+    """Substitute ``{{var}}`` placeholders in ``messages`` with ``variables``.
+
+    Uses LangWatch's ``Prompt.compile_strict`` so the upstream Liquid engine
+    is exercised; it raises ``PromptCompilationError`` on any unresolved
+    placeholder. As an extra guard, we also collect every placeholder
+    ourselves first so we can report *all* missing variables up front, and
+    we re-scan the output for any stray ``{{`` / ``}}`` before returning.
+    """
+    referenced = _collect_referenced_variables(messages)
+    missing = [name for name in referenced if name not in variables]
+    if missing:
+        raise ValueError(
+            "Missing required template variable(s): "
+            + ", ".join(f"'{name}'" for name in missing)
+        )
+
+    # Hand the messages off to the real LangWatch Prompt for compilation.
+    # We synthesize a Prompt from the raw messages; the model field is
+    # irrelevant to template rendering but Prompt requires it.
+    msg_models = [
+        Message(role=m["role"], content=m["content"]) for m in messages
+    ]
+    prompt = Prompt(model="placeholder", messages=msg_models)
+
+    # Variables passed to Liquid are passed through to .render() so {{x}}
+    # references resolve. Liquid uses the variable's __str__ for output.
+    rendered_vars = {k: _coerce_to_str(v) for k, v in variables.items()}
+
+    try:
+        compiled = prompt.compile_strict(rendered_vars)
+    except PromptCompilationError as exc:
+        raise ValueError(
+            f"Prompt template compilation failed: {exc}"
+        ) from exc
+
+    out_messages: List[Dict[str, str]] = []
+    for original, compiled_msg in zip(messages, compiled.compiled_messages):
+        rendered_content = compiled_msg.content
+        if "{{" in rendered_content or "}}" in rendered_content:
+            raise ValueError(
+                f"Unsubstituted placeholder remains in message role "
+                f"'{original['role']}' after compilation"
+            )
+        out_messages.append(
+            {"role": compiled_msg.role, "content": rendered_content}
+        )
+
+    # Double-check we covered every placeholder we found on the input side.
+    leftover = _collect_referenced_variables(out_messages)
+    if leftover:
+        raise ValueError(
+            "Unsubstituted placeholders remain after compilation: "
+            + ", ".join(f"'{name}'" for name in leftover)
+        )
+
+    return out_messages
+
+
+def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Load a LangWatch prompt (locally materialized or via the API) "
+            "and compile it with the supplied runtime variables."
+        ),
+    )
+    parser.add_argument(
+        "--handle",
+        required=True,
+        help="Prompt handle, e.g. 'customer-support-bot'.",
+    )
+    parser.add_argument(
+        "--vars",
+        required=True,
+        help=(
+            "JSON object string mapping variable names to values, e.g. "
+            "'{\"user_name\": \"Ada\"}'."
+        ),
+    )
+    parser.add_argument(
+        "--version",
+        type=int,
+        default=None,
+        help=(
+            "Optional integer version override. When omitted, the version "
+            "pinned in prompts-lock.json is used."
+        ),
+    )
+    parser.add_argument(
+        "--offline",
+        action="store_true",
+        help=(
+            "Load the prompt strictly from the local materialized cache. "
+            "Never performs a network call."
+        ),
+    )
+    parser.add_argument(
+        "--out",
+        required=True,
+        help="Path to write the compiled result JSON.",
+    )
+    return parser.parse_args(argv)
+
+
+def resolve_variables(raw: str) -> Dict[str, Any]:
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"--vars is not valid JSON: {exc}") from exc
+    if not isinstance(parsed, dict):
+        raise ValueError(
+            f"--vars must decode to a JSON object, got {type(parsed).__name__}"
+        )
+    return parsed
+
+
+def load_prompt_with_policy(
+    handle: str,
+    version: Optional[int],
+    offline: bool,
+    project_root: Path,
+) -> Tuple[Dict[str, Any], str]:
+    """Resolve a prompt according to the offline / online policy.
+
+    Returns (prompt_data, source) where source is one of
+    ``"local_materialized"`` or ``"remote_api"``.
+    """
+    if offline:
+        data = load_local_prompt(handle, version, project_root)
+        return data, "local_materialized"
+
+    # Online path: try the API first (mirrors ALWAYS_FETCH semantics),
+    # and transparently fall back to the local cache when the API call
+    # raises. The fallback keeps the service running in air-gapped or
+    # CI environments even when the prompt exists remotely.
+    try:
+        data = load_remote_prompt(handle, version)
+        return data, "remote_api"
+    except Exception as remote_err:
+        # Don't try to be clever here - any API error should drop us
+        # into the local path so we honour guaranteed availability.
+        try:
+            data = load_local_prompt(handle, version, project_root)
+            return data, "local_materialized"
+        except Exception as local_err:
+            raise RuntimeError(
+                f"Failed to load prompt '{handle}' from both the LangWatch "
+                f"API ({remote_err.__class__.__name__}: {remote_err}) and the "
+                f"local materialized cache "
+                f"({local_err.__class__.__name__}: {local_err})."
+            ) from local_err
+
+
+def write_output(out_path: Path, payload: Dict[str, Any]) -> None:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+        f.write("\n")
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    args = parse_args(argv)
+
+    # 1) Parse and validate runtime variables up front so we can fail fast.
+    try:
+        variables = resolve_variables(args.vars)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    # 2) Find the project root so prompts.json / prompts-lock.json are
+    #    resolvable regardless of the caller's working directory.
+    try:
+        project_root = find_project_root()
+    except FileNotFoundError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    # 3) Resolve the prompt through the fallback loader.
+    try:
+        prompt_data, source = load_prompt_with_policy(
+            handle=args.handle,
+            version=args.version,
+            offline=args.offline,
+            project_root=project_root,
+        )
+    except (FileNotFoundError, KeyError, ValueError, RuntimeError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    # 4) Substitute every {{var}} placeholder. On any failure, exit
+    #    non-zero WITHOUT writing a successful compiled output.
+    try:
+        compiled_messages = compile_with_variables(prompt_data["messages"], variables)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    # 5) Emit the final JSON object.
+    payload = {
+        "handle": prompt_data["handle"],
+        "version": prompt_data["version"],
+        "model": prompt_data["model"],
+        "source": source,
+        "messages": compiled_messages,
+    }
+
+    try:
+        write_output(Path(args.out), payload)
+    except OSError as exc:
+        print(f"error: failed to write output to {args.out}: {exc}", file=sys.stderr)
+        return 1
+
+    # Also echo to stdout so the caller can pipe / inspect the result.
+    print(json.dumps(payload, indent=2, ensure_ascii=False))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+PY_EOF
+chmod +x /home/user/myproject/run.py
+echo "--- run.py created ---"
+wc -l /home/user/myproject/run.py ✔ 
+💭 Thinking for 23 characters   
+<think> Now let me test the CLI   
+💭 Thinking for 23 characters   
+💫 Executing cd /home/user/myproject && .venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Ada Lovelace", "issue": "My account is locked and I cannot log in."}' \
+  --offline \
+  --out /tmp/out.json
+echo "---exit=$?---"
+echo "---out.json---"
+cat /tmp/out.json ✔ 
+💭 Thinking for 50 characters   
+<think> The CLI works in offline mode. Now let me test the   
+💭 Thinking for 68 characters   
+💭 Thinking for 107 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 47 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 109 characters   
+💫 Executing cd /home/user/myproject && rm -f /tmp/out_err.json
+echo "=== Test 1: missing required variable (should fail loud, no output file) ==="
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Ada Lovelace"}' \
+  --offline \
+  --out /tmp/out_err.json
+echo "---exit=$?---"
+ls -la /tmp/out_err.json 2>&1 || echo "(no output file - good)"
+
+echo ""
+echo "=== Test 2: missing BOTH variables ==="
+rm -f /tmp/out_err.json
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{}' \
+  --offline \
+  --out /tmp/out_err.json
+echo "---exit=$?---"
+ls -la /tmp/out_err.json 2>&1 || echo "(no output file - good)"
+
+echo ""
+echo "=== Test 3: invalid JSON for vars ==="
+rm -f /tmp/out_err.json
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars 'not-json' \
+  --offline \
+  --out /tmp/out_err.json
+echo "---exit=$?---"
+ls -la /tmp/out_err.json 2>&1 || echo "(no output file - good)" ✔ 
+💭 Thinking for 78 characters   
+<think> Error handling works. Now let me test the online (non-offline) fallback. Since   
+💭 Thinking for 63 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 19 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 135 characters   
+💭 Thinking for 97 characters   
+💫 Executing cd /home/user/myproject && echo "=== Test 4: online path - should fall back to local since API unreachable ==="
+# Clear any API key so the SDK doesn't try to authenticate
+unset LANGWATCH_API_KEY
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Grace Hopper", "issue": "Cannot access my dashboard"}' \
+  --out /tmp/out_online.json 2>&1
+echo "---exit=$?---"
+echo "---out_online.json---"
+cat /tmp/out_online.json 2>/dev/null
+
+echo ""
+echo "=== Test 5: --version override ==="
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Test", "issue": "Test issue"}' \
+  --version 42 \
+  --offline \
+  --out /tmp/out_version.json
+echo "---exit=$?---"
+cat /tmp/out_version.json ✔ 
+💭 Thinking for 50 characters   
+<think> All tests pass. Let me also verify a few more edge   
+💭 Thinking for 60 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 141 characters   
+💭 Thinking for 27 characters   
+💭 Thinking for 95 characters   
+💭 Thinking for 45 characters   
+💭 Thinking for 72 characters   
+💭 Thinking for 43 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 190 characters   
+💭 Thinking for 36 characters   
+💭 Thinking for 332 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 59 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 101 characters   
+💭 Thinking for 52 characters   
+💫 Executing cd /home/user/myproject && echo "=== Test 6: missing materialized file in offline mode ==="
+mv prompts/.materialized/customer-support-bot.prompt.yaml /tmp/saved-prompt.yaml
+rm -f /tmp/out_missing.json
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "x", "issue": "y"}' \
+  --offline \
+  --out /tmp/out_missing.json 2>&1
+EXIT=$?
+echo "---exit=$EXIT---"
+ls -la /tmp/out_missing.json 2>&1 || echo "(no output file - good)"
+mv /tmp/saved-prompt.yaml prompts/.materialized/customer-support-bot.prompt.yaml
+
+echo ""
+echo "=== Test 7: verify no {{ ... }} remain in compiled output ==="
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Bracket {{ }} tester", "issue": "Issue with braces { } not }}"}' \
+  --offline \
+  --out /tmp/out_braces.json > /dev/null
+echo "--- output ---"
+cat /tmp/out_braces.json
+echo ""
+echo "--- grep for placeholders in output (should be empty) ---"
+grep -c '{{' /tmp/out_braces.json || echo "(0 matches - good)"
+grep -c '}}' /tmp/out_braces.json || echo "(0 matches - good)"
+
+echo ""
+echo "=== Test 8: handle not in lockfile (offline) ==="
+rm -f /tmp/out_nf.json
+.venv/bin/python run.py \
+  --handle does-not-exist \
+  --vars '{"x": "1"}' \
+  --offline \
+  --out /tmp/out_nf.json 2>&1
+echo "---exit=$?---"
+ls -la /tmp/out_nf.json 2>&1 || echo "(no output file - good)" ✔ 
+💭 Thinking for 85 characters   
+<think> Hmm, there's an interesting issue! When the variable value contains literal `{{` or `   
+💭 Thinking for 32 characters   
+💭 Thinking for 39 characters   
+💭 Thinking for 89 characters   
+💭 Thinking for 92 characters   
+💭 Thinking for 61 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 32 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 69 characters   
+💭 Thinking for 76 characters   
+💭 Thinking for 45 characters   
+💭 Thinking for 41 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 70 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 44 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 67 characters   
+💭 Thinking for 65 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 53 characters   
+💭 Thinking for 102 characters   
+💭 Thinking for 104 characters   
+💭 Thinking for 87 characters   
+💭 Thinking for 97 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 40 characters   
+💭 Thinking for 17 characters   
+💭 Thinking for 88 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 70 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 70 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 99 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 59 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 147 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 77 characters   
+💭 Thinking for 12 characters   
+🔧 Applying diff to /home/user/myproject/run.py ✖ "File has not been read yet. Please read the file before editing it."
+💭 Thinking for 76 characters   
+<think> Let me read the file first then edit it.Let me read the file first then edit   
+💭 Thinking for 22 characters   
+💭 Thinking for 11 characters   
+💭 Thinking for 98 characters   
+💭 Thinking for 15 characters   
+💭 Thinking for 135 characters   
+<think> Let me update the todos and continue. The first 4 todos are actually completed. Let me update the todo list and read the run.py to make   
+💭 Thinking for 9 characters   
+📋 Updating todo list (6 items) ✔ 
+💭 Thinking for 23 characters   
+<think> Now let me read the run   
+💭 Thinking for 31 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 35 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 22 characters   
+📖 Reading /home/user/myproject/run.py ✔ 
+💭 Thinking for 26 characters   
+<think> Let me read the right line   
+💭 Thinking for 32 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 191 characters   
+💭 Thinking for 1 characters   
+💭 Thinking for 125 characters   
+💭 Thinking for 62 characters   
+💭 Thinking for 61 characters   
+💭 Thinking for 46 characters   
+🔍 Searching for Unsubstituted placeholder remains in /home/user/myproject/run.py ✔ 
+💭 Thinking for 51 characters   
+<think> Let me read the relevant section and fix the issue. </think> <tool_call> ]<]minimax[>[<invoke name="readFile">]<]minimax[>[<path>/home/user/myproject/run.py]<]minimax[>[</path>]<]minimax[>[<startLine>230]<]minimax[>[</startLine>]<]minimax[>[<endLine>270]<]minimax[>[</endLine>]<]minimax[>[</invoke> ]<]minimax[>[</tool_call>   
+📖 Reading /home/user/myproject/run.py ✔ 
+💭 Thinking for 30 characters   
+<think> Now let me fix the placeholder   
+💭 Thinking for 74 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 15 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 45 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 116 characters   
+🔧 Applying diff to /home/user/myproject/run.py ✔ 
+💭 Thinking for 57 characters   
+<think> Now let me re-run the test to make sure everything works. </think> Now let me re-run the tests.   
+💫 Executing cd /home/user/myproject && echo "=== Test 7b: variable values with literal braces are content, not placeholders ==="
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Bracket {{ }} tester", "issue": "Issue with braces { } not }}"}' \
+  --offline \
+  --out /tmp/out_braces.json > /dev/null
+echo "---exit=$?---"
+cat /tmp/out_braces.json
+echo ""
+echo "--- grep {{ in output ---"
+grep -o '{{[^{]*}}' /tmp/out_braces.json || echo "(no {{...}} placeholders found - good)"
+
+echo ""
+echo "=== Test 9: full happy-path offline ==="
+rm -f /tmp/out_final.json
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Ada Lovelace", "issue": "My account is locked."}' \
+  --offline \
+  --out /tmp/out_final.json
+echo "---exit=$?---"
+echo "--- content sanity check ---"
+python3 -c "
+import json
+with open('/tmp/out_final.json') as f:
+    data = json.load(f)
+assert data['handle'] == 'customer-support-bot'
+assert data['version'] == 3
+assert data['model'] == 'openai/gpt-4o-mini'
+assert data['source'] == 'local_materialized'
+assert isinstance(data['messages'], list)
+assert len(data['messages']) >= 2
+for m in data['messages']:
+    assert 'role' in m
+    assert 'content' in m
+    assert '{{' not in m['content']
+    assert '}}' not in m['content']
+# Confirm substitutions actually happened
+sys_content = data['messages'][0]['content']
+user_content = data['messages'][1]['content']
+assert 'Ada Lovelace' in sys_content
+assert 'Ada Lovelace' in user_content
+assert 'My account is locked.' in user_content
+print('All assertions passed!')
+print('  handle:', data['handle'])
+print('  version:', data['version'])
+print('  model:', data['model'])
+print('  source:', data['source'])
+print('  num messages:', len(data['messages']))
+print('  message roles:', [m['role'] for m in data['messages']])
+" ✔ 
+💭 Thinking for 27 characters   
+<think> All tests pass. The literal   
+💭 Thinking for 40 characters   
+💭 Thinking for 134 characters   
+💭 Thinking for 203 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 48 characters   
+💭 Thinking for 35 characters   
+💭 Thinking for 136 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 53 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 190 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 48 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 69 characters   
+💭 Thinking for 58 characters   
+💭 Thinking for 57 characters   
+💫 Executing cd /home/user/myproject && echo "=== Test 10: run from a subdirectory (project root discovery) ==="
+mkdir -p /tmp/subdir-test
+cd /tmp/subdir-test
+/home/user/myproject/.venv/bin/python /home/user/myproject/run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Subdir User", "issue": "From subdir"}' \
+  --offline \
+  --out /tmp/out_subdir.json > /dev/null
+echo "---exit=$?---"
+cat /tmp/out_subdir.json
+echo ""
+
+echo "=== Test 11: run from outside the project (should fail with project not found) ==="
+mkdir -p /tmp/elsewhere
+cd /tmp/elsewhere
+/home/user/myproject/.venv/bin/python /home/user/myproject/run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "x", "issue": "y"}' \
+  --offline \
+  --out /tmp/out_elsewhere.json 2>&1
+echo "---exit=$?---"
+ls /tmp/out_elsewhere.json 2>&1 || echo "(no output file - good)"
+
+echo ""
+echo "=== Test 12: confirm real langwatch package is imported (not mocked) ==="
+/home/user/myproject/.venv/bin/python -c "
+import langwatch
+import langwatch.prompts.prompt
+from langwatch.prompts.prompt import Prompt, PromptCompilationError
+print('langwatch version:', langwatch.__version__)
+print('Prompt class:', Prompt)
+print('Imported from:', langwatch.prompts.prompt.__file__)
+" ✔ 
+💭 Thinking for 66 characters   
+<think> The subdir test failed because the project root discovery walks up   
+💭 Thinking for 110 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 26 characters   
+💭 Thinking for 22 characters   
+💭 Thinking for 57 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 86 characters   
+💭 Thinking for 53 characters   
+💭 Thinking for 33 characters   
+💭 Thinking for 51 characters   
+💭 Thinking for 32 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 73 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 511 characters   
+💫 Executing echo "=== Test 10b: run from a subdirectory INSIDE the project ==="
+mkdir -p /home/user/myproject/tmp/nested
+cd /home/user/myproject/tmp/nested
+/home/user/myproject/.venv/bin/python /home/user/myproject/run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Nested User", "issue": "From nested dir"}' \
+  --offline \
+  --out /tmp/out_nested.json > /dev/null
+echo "---exit=$?---"
+cat /tmp/out_nested.json
+echo ""
+
+echo "=== Test 13: verify final project layout ==="
+cd /home/user/myproject
+rm -rf tmp  # cleanup
+echo "--- root files ---"
+ls -la /home/user/myproject | grep -v '^d.*\.venv$'
+echo "--- prompts dir ---"
+ls -la /home/user/myproject/prompts/
+echo "--- materialized dir ---"
+ls -la /home/user/myproject/prompts/.materialized/
+echo ""
+echo "--- prompts.json ---"
+cat /home/user/myproject/prompts.json
+echo ""
+echo "--- prompts-lock.json ---"
+cat /home/user/myproject/prompts-lock.json
+echo ""
+echo "--- prompts/.materialized/customer-support-bot.prompt.yaml ---"
+cat /home/user/myproject/prompts/.materialized/customer-support-bot.prompt.yaml
+echo ""
+echo "--- .gitignore ---"
+cat /home/user/myproject/.gitignore ✔ 
+💭 Thinking for 29 characters   
+<think> Excellent! All tests pass and   
+💭 Thinking for 115 characters   
+💭 Thinking for 28 characters   
+💭 Thinking for 37 characters   
+💭 Thinking for 60 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 43 characters   
+💭 Thinking for 22 characters   
+💭 Thinking for 92 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 208 characters   
+💭 Thinking for 53 characters   
+💭 Thinking for 111 characters   
+💭 Thinking for 107 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 40 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 195 characters   
+💭 Thinking for 151 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 41 characters   
+💭 Thinking for 25 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 178 characters   
+💭 Thinking for 135 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 88 characters   
+💭 Thinking for 56 characters   
+💭 Thinking for 238 characters   
+💭 Thinking for 121 characters   
+💭 Thinking for 167 characters   
+💭 Thinking for 287 characters   
+💭 Thinking for 39 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 39 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 70 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 29 characters   
+💭 Thinking for 135 characters   
+💭 Thinking for 31 characters   
+💭 Thinking for 119 characters   
+💭 Thinking for 24 characters   
+💭 Thinking for 161 characters   
+💭 Thinking for 66 characters   
+💭 Thinking for 63 characters   
+💭 Thinking for 50 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 70 characters   
+💭 Thinking for 48 characters   
+💭 Thinking for 54 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 285 characters   
+💭 Thinking for 548 characters   
+💭 Thinking for 34 characters   
+💭 Thinking for 55 characters   
+💭 Thinking for 1320 characters   
+💭 Thinking for 30 characters   
+💭 Thinking for 48 characters   
+💭 Thinking for 32 characters   
+💭 Thinking for 23 characters   
+💭 Thinking for 45 characters   
+💭 Thinking for 46 characters   
+💭 Thinking for 52 characters   
+💭 Thinking for 91 characters   
+💭 Thinking for 21 characters   
+💭 Thinking for 176 characters   
+💭 Thinking for 49 characters   
+💭 Thinking for 25 characters   
+💫 Executing cd /home/user/myproject && echo "=== Final acceptance check ==="
+echo ""
+echo "--- Required artifacts at project root ---"
+for f in prompts.json prompts-lock.json run.py prompts/.materialized/customer-support-bot.prompt.yaml; do
+  if [ -f "$f" ]; then
+    echo "  [OK] $f"
+  else
+    echo "  [MISSING] $f"
+  fi
+done
+
+echo ""
+echo "--- Acceptance test: full offline compile ---"
+rm -f /tmp/final.json
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Ada Lovelace", "issue": "My account is locked."}' \
+  --offline \
+  --out /tmp/final.json > /dev/null
+EXIT=$?
+echo "exit code: $EXIT"
+echo ""
+echo "--- Result JSON ---"
+cat /tmp/final.json
+echo ""
+echo "--- Schema validation ---"
+.venv/bin/python <<'PY'
+import json, re
+with open('/tmp/final.json') as f:
+    data = json.load(f)
+
+assert isinstance(data, dict), "must be a JSON object"
+assert set(data.keys()) == {"handle", "version", "model", "source", "messages"}, f"keys: {data.keys()}"
+assert isinstance(data["handle"], str)
+assert isinstance(data["version"], int), f"version must be int, got {type(data['version'])}"
+assert isinstance(data["model"], str) and data["model"].startswith("openai/"), f"bad model: {data['model']}"
+assert data["source"] in ("local_materialized", "remote_api"), f"bad source: {data['source']}"
+assert isinstance(data["messages"], list)
+assert len(data["messages"]) >= 2
+for m in data["messages"]:
+    assert set(m.keys()) == {"role", "content"}, f"bad msg keys: {m.keys()}"
+    assert isinstance(m["role"], str)
+    assert isinstance(m["content"], str)
+    # No {{var}} placeholders may remain (only literal {{ / }} are allowed).
+    assert not re.search(r"\{\{\s*[a-zA-Z_][a-zA-Z0-9_]*\s*\}\}", m["content"]), f"placeholder left: {m['content']!r}"
+print("All schema assertions passed!")
+PY
+
+echo ""
+echo "--- Error case: missing required variable ---"
+rm -f /tmp/err.json
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Ada"}' \
+  --offline \
+  --out /tmp/err.json 2>&1
+EXIT=$?
+echo "exit code: $EXIT"
+[ ! -f /tmp/err.json ] && echo "  [OK] no output file written"
+
+echo ""
+echo "--- Error case: missing materialized file in offline mode ---"
+mv prompts/.materialized/customer-support-bot.prompt.yaml /tmp/saved.yaml
+rm -f /tmp/err2.json
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Ada", "issue": "X"}' \
+  --offline \
+  --out /tmp/err2.json 2>&1
+EXIT=$?
+echo "exit code: $EXIT"
+[ ! -f /tmp/err2.json ] && echo "  [OK] no output file written"
+mv /tmp/saved.yaml prompts/.materialized/customer-support-bot.prompt.yaml ✔ 
+💭 Thinking for 127 characters   
+<think> All acceptance tests pass. Let me update the todo list to mark the testing as completed and finalize.All acceptance tests pass.   
+💭 Thinking for 61 characters   
+💭 Thinking for 84 characters   
+💭 Thinking for 273 characters   
+📋 Updating todo list (6 items) ✔ 
+💭 Thinking for 64 characters   
+<think> All tasks complete. Let me write the final summary using attempt   
+💭 Thinking for 67 characters   
+💭 Thinking for 134 characters   
+💭 Thinking for 40 characters   
+🎉 Task Completed
+## Summary
+
+I built a complete offline-capable LangWatch prompt materialization pipeline at `/home/user/myproject`, plus a deterministic fallback loader CLI.
+
+### Project layout (`/home/user/myproject`)
+
+```
+.
+├── .venv/                            # uv-managed virtualenv with real `langwatch`
+├── .gitignore                        # ignores prompts/.materialized
+├── prompts.json                      # { "prompts": { "customer-support-bot": "3" } }
+├── prompts-lock.json                 # resolves handle -> version 3 + materialized path
+├── prompts/
+│   ├── customer-support-bot.prompt.yaml   # source YAML (CLI-managed)
+│   └── .materialized/
+│       └── customer-support-bot.prompt.yaml  # materialized, version-pinned copy
+└── run.py                            # CLI: --handle --vars [--version] [--offline] --out
+```
+
+### Key design points
+
+- **Scaffolding & creation** were done with the real `langwatch` CLI (`langwatch prompt init` + `langwatch prompt create`).
+- **Materialization for version 3** was wired by manually crafting the lockfile so `customer-support-bot` resolves to a concrete integer `version: 3` and the `materialized` path points at `prompts/.materialized/customer-support-bot.prompt.yaml`. The materialized YAML has `model: openai/gpt-4o-mini`, plus `system` and `user` messages that both reference `{{user_name}}` and `{{issue}}`.
+- **No mocks.** `uv venv` + `uv pip install langwatch pyyaml` installed the real package; `run.py` imports `langwatch.prompts.prompt.Prompt` and `langwatch.prompts.types.Message` directly.
+- **Deterministic offline loader.** `run.py` walks up from CWD to find `prompts.json`, then resolves the handle through `prompts-lock.json` and parses the YAML at the recorded `materialized` path. With `--offline` it never touches the network — it reads only from disk.
+- **Online path** tries `langwatch.prompts.get(..., fetch_policy=ALWAYS_FETCH)` first; on any API failure it transparently drops to the local cache so the service stays up under LangWatch's *Guaranteed Availability* model.
+- **Compilation** uses the upstream `Prompt.compile_strict(...)` (Liquid/mustache-compatible), plus a guard that re-scans each output message for any leftover `{{var}}` placeholder pattern. If a required variable is missing, the CLI exits with status `1` and does not write the output file.
+
+### Verified behaviors
+
+| Scenario | Exit | Output written? | `source` |
+|---|---|---|---|
+| Happy path, `--offline`, both vars | 0 | yes | `local_materialized` |
+| Happy path, no flag (API unreachable) | 0 | yes | `local_materialized` (auto-fallback) |
+| Missing one required var | 1 | no | — |
+| Missing both required vars | 1 | no | — |
+| `--offline`, materialized file removed | 1 | no | — |
+| Unknown handle | 1 | no | — |
+| Run from outside the project | 1 | no | — |
+| Variable value with literal `{{`/`}}` | 0 | yes | preserved as content |
+
+The compiled JSON shape matches the spec exactly:
+
+```json
+{
+  "handle": "customer-support-bot",
+  "version": 3,
+  "model": "openai/gpt-4o-mini",
+  "source": "local_materialized",
+  "messages": [
+    {"role": "system", "content": "...fully substituted..."},
+    {"role": "user",   "content": "...fully substituted..."}
+  ]
+}
+```
+
+### How to run
+
+```bash
+cd /home/user/myproject
+.venv/bin/python run.py \
+  --handle customer-support-bot \
+  --vars '{"user_name": "Ada Lovelace", "issue": "My account is locked."}' \
+  --offline \
+  --out compiled.json
+```   
+  

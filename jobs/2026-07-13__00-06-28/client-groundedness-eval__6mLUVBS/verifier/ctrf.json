@@ -1,0 +1,131 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-07-12T16:17:29.545272+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.1.1"
+        },
+        "summary": {
+            "tests": 10,
+            "passed": 10,
+            "failed": 0,
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": 1783873044346,
+            "stop": 1783873049545
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_final_state.py::test_cli_smoke",
+                "status": "passed",
+                "duration": 1818,
+                "start": 1783873044370,
+                "stop": 1783873046188,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_compute_groundedness_matches_reference",
+                "status": "passed",
+                "duration": 836,
+                "start": 1783873046188,
+                "stop": 1783873047024,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "tags": [
+                    "parametrize::answer,contexts,exp_score,exp_passed,exp_label::[('LangWatch observability platform', ['LangWatch is an observability platform for LLM applications.'], 1.0, True, 'grounded'), ('langwatch tracing rockets bananas', ['langwatch provides tracing dashboards'], 0.5, False, 'weakly_grounded'), ('unicorns dragons wizards langwatch', ['langwatch observability'], 0.25, False, 'hallucinated'), ('the is of and', ['langwatch observability'], 0.0, False, 'hallucinated')]"
+                ]
+            },
+            {
+                "name": "test_final_state.py::test_compute_groundedness_matches_reference",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783873047025,
+                "stop": 1783873047025,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "tags": [
+                    "parametrize::answer,contexts,exp_score,exp_passed,exp_label::[('LangWatch observability platform', ['LangWatch is an observability platform for LLM applications.'], 1.0, True, 'grounded'), ('langwatch tracing rockets bananas', ['langwatch provides tracing dashboards'], 0.5, False, 'weakly_grounded'), ('unicorns dragons wizards langwatch', ['langwatch observability'], 0.25, False, 'hallucinated'), ('the is of and', ['langwatch observability'], 0.0, False, 'hallucinated')]"
+                ]
+            },
+            {
+                "name": "test_final_state.py::test_compute_groundedness_matches_reference",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873047025,
+                "stop": 1783873047026,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "tags": [
+                    "parametrize::answer,contexts,exp_score,exp_passed,exp_label::[('LangWatch observability platform', ['LangWatch is an observability platform for LLM applications.'], 1.0, True, 'grounded'), ('langwatch tracing rockets bananas', ['langwatch provides tracing dashboards'], 0.5, False, 'weakly_grounded'), ('unicorns dragons wizards langwatch', ['langwatch observability'], 0.25, False, 'hallucinated'), ('the is of and', ['langwatch observability'], 0.0, False, 'hallucinated')]"
+                ]
+            },
+            {
+                "name": "test_final_state.py::test_compute_groundedness_matches_reference",
+                "status": "passed",
+                "duration": 1,
+                "start": 1783873047026,
+                "stop": 1783873047027,
+                "retries": 0,
+                "file_path": "test_final_state.py",
+                "tags": [
+                    "parametrize::answer,contexts,exp_score,exp_passed,exp_label::[('LangWatch observability platform', ['LangWatch is an observability platform for LLM applications.'], 1.0, True, 'grounded'), ('langwatch tracing rockets bananas', ['langwatch provides tracing dashboards'], 0.5, False, 'weakly_grounded'), ('unicorns dragons wizards langwatch', ['langwatch observability'], 0.25, False, 'hallucinated'), ('the is of and', ['langwatch observability'], 0.0, False, 'hallucinated')]"
+                ]
+            },
+            {
+                "name": "test_final_state.py::test_retrieve_is_deterministic_and_non_empty",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783873047027,
+                "stop": 1783873047027,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_run_pipeline_returns_non_empty_answer",
+                "status": "passed",
+                "duration": 2017,
+                "start": 1783873047027,
+                "stop": 1783873049044,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_expected_spans_emitted",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783873049044,
+                "stop": 1783873049044,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_evaluation_attached_to_generate_answer_span",
+                "status": "passed",
+                "duration": 0,
+                "start": 1783873049045,
+                "stop": 1783873049045,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            },
+            {
+                "name": "test_final_state.py::test_logged_evaluation_fields_match_reference",
+                "status": "passed",
+                "duration": 499,
+                "start": 1783873049045,
+                "stop": 1783873049544,
+                "retries": 0,
+                "file_path": "test_final_state.py"
+            }
+        ]
+    }
+}
